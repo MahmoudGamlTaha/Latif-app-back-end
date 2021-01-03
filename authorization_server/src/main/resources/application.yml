@@ -1,0 +1,28 @@
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: INFO
+server:
+  error:
+    whitelabel:
+      enabled: true
+  port: 9090
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 2
+      minimum-idle: 1
+      pool-name: data-source
+    url: jdbc:postgresql://localhost:5432/Latif_APP
+    password: 4715192
+    username: postgres
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  mvc:
+    throw-exception-if-no-handler-found: true
