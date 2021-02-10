@@ -21,7 +21,7 @@ public class OrderDetailDTO {
 
     private Integer amount;
 
-    private CategoryDTO category;
+    private ItemObjectCategoryVO category;
 
     private ColorDTO color;
 }
