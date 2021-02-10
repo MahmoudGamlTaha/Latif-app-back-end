@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -96,10 +99,16 @@ public class UserAdsController extends PublicApiController {
     }
 
     @GetMapping(value = "/ads/search")
-    public ResponseEntity<List<UserAdsVO>> searchProduct(@RequestParam("page") Integer page,
+    public ResponseEntity<List<UserAdsVO>> searchAds(@RequestParam("page") Integer page,
                                                                @RequestParam("size") Integer size,
                                                                @RequestParam("keyword") String keyword) {
         List<UserAdsVO> products = userAdsService.searchItemDisplay(keyword, page, size);
         return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/ads/create", method = RequestMethod.POST)
+    public ResponseEntity<UserAdsVO> createUserAds(@RequestBody UserAdsVO userAdsVO){
+    //	UserAdsVO  userAdsV= userAdsService.createUserAds(userAdsVO);
+    	return null;
     }
 }

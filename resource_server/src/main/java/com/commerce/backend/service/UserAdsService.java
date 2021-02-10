@@ -31,4 +31,5 @@ public interface UserAdsService {
     List<UserAdsVO> createUserAds(UserAdsVO ads);
 
     List<UserAdsVO> searchItemDisplay(String keyword, Integer page, Integer size);
+   
 }

@@ -35,6 +35,7 @@ public class UserAds {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ads_sequence")
 	@SequenceGenerator(name="ads_sequence", sequenceName= "ads_sequence", allocationSize = 1)
+	@Column(name = "id")
     private long id;
 	
 	@Column(name = "code", length = 250, unique = true)
