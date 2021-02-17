@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "cart")
+@Table(name = "shopping_cart")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,7 +26,7 @@ public class Cart {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CartItem> cartItemList;
 
     @ManyToOne
@@ -42,7 +42,7 @@ public class Cart {
     @Column(name = "total_price")
     private Float totalPrice;
 
-    @Column(name = "date_created", insertable = false)
+    @Column(name = "created_at", insertable = false)
     private Date dateCreated;
 
 }

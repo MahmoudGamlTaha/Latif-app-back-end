@@ -17,13 +17,12 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-public class ProductController extends PublicApiController {
+public class ItemObjectController extends PublicApiController {
 
     private final ProductService productService;
 
-
     @Autowired
-    public ProductController(ProductService productService) {
+    public ItemObjectController(ProductService productService) {
         this.productService = productService;
     }
 

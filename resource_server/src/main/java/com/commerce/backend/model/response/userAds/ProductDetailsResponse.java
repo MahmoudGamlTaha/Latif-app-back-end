@@ -1,4 +1,4 @@
-package com.commerce.backend.model.response.product;
+package com.commerce.backend.model.response.userAds;
 
 import com.commerce.backend.model.dto.ItemObjectCategoryVO;
 import com.commerce.backend.model.dto.ProductVariantDetailDTO;

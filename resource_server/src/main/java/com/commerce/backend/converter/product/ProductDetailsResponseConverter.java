@@ -1,6 +1,6 @@
 package com.commerce.backend.converter.product;
 
-import com.commerce.backend.model.dto.CategoryDTO;
+import com.commerce.backend.model.dto.ItemObjectCategoryVO;
 import com.commerce.backend.model.dto.ColorDTO;
 import com.commerce.backend.model.dto.ProductVariantDetailDTO;
 import com.commerce.backend.model.entity.Product;
@@ -19,7 +19,7 @@ public class ProductDetailsResponseConverter implements Function<Product, Produc
         productDetailsResponse.setUrl(product.getUrl());
         productDetailsResponse.setLongDesc(product.getLongDesc());
         productDetailsResponse.setSku(product.getSku());
-        productDetailsResponse.setCategory(CategoryDTO.builder().name(product.getProductCategory().getName()).build());
+        productDetailsResponse.setCategory(ItemObjectCategoryVO.builder().name(product.getProductCategory().getName()).build());
         productDetailsResponse.setProductVariantDetails(
                 product.getProductVariantList()
                         .stream()

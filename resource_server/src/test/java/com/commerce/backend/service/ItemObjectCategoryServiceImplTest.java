@@ -1,11 +1,11 @@
 package com.commerce.backend.service;
 
-import com.commerce.backend.converter.category.ProductCategoryResponseConverter;
+import com.commerce.backend.converter.category.ItemObjectCategoryResponseConverter;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
-import com.commerce.backend.model.dto.CategoryDTO;
-import com.commerce.backend.model.entity.ProductCategory;
-import com.commerce.backend.model.response.category.ProductCategoryResponse;
-import com.commerce.backend.service.cache.ProductCategoryCacheService;
+import com.commerce.backend.model.dto.ItemObjectCategoryVO;
+import com.commerce.backend.model.entity.ItemObjectCategory;
+import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
+import com.commerce.backend.service.cache.ItemObjectCategoryCacheService;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,16 +29,16 @@ import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
-class ProductCategoryServiceImplTest {
+class ItemObjectCategoryServiceImplTest {
 
     @InjectMocks
-    private ProductCategoryServiceImpl productCategoryService;
+    private ItemObjectCategoryServiceImpl productCategoryService;
 
     @Mock
-    private ProductCategoryCacheService productCategoryCacheService;
+    private ItemObjectCategoryCacheService productCategoryCacheService;
 
     @Mock
-    private ProductCategoryResponseConverter productCategoryResponseConverter;
+    private ItemObjectCategoryResponseConverter productCategoryResponseConverter;
 
     private Faker faker;
 
@@ -52,20 +52,20 @@ class ProductCategoryServiceImplTest {
 
         // given
         String categoryName = faker.lorem().word();
-        ProductCategory productCategory = new ProductCategory();
+        ItemObjectCategory productCategory = new ItemObjectCategory();
         productCategory.setName(categoryName);
-        ProductCategoryResponse productCategoryResponse = new ProductCategoryResponse();
-        productCategoryResponse.setCategory(CategoryDTO.builder().name(categoryName).build());
+        ItemObjectCategoryResponse productCategoryResponse = new ItemObjectCategoryResponse();
+        productCategoryResponse.setCategory(ItemObjectCategoryVO.builder().name(categoryName).build());
 
-        List<ProductCategory> productCategoryList = Stream.generate(() -> productCategory)
+        List<ItemObjectCategory> productCategoryList = Stream.generate(() -> productCategory)
                 .limit(faker.number().randomDigitNotZero())
                 .collect(Collectors.toList());
 
         given(productCategoryCacheService.findAllByOrderByName()).willReturn(productCategoryList);
-        given(productCategoryResponseConverter.apply(any(ProductCategory.class))).willReturn(productCategoryResponse);
+        given(productCategoryResponseConverter.apply(any(ItemObjectCategory.class))).willReturn(productCategoryResponse);
 
         // when
-        List<ProductCategoryResponse> productCategoryResponseList = productCategoryService.findAllByOrderByName();
+        List<ItemObjectCategoryResponse> productCategoryResponseList = productCategoryService.findAllByOrderByName();
 
         // then
         then(productCategoryResponseList.size()).isEqualTo(productCategoryList.size());

@@ -1,6 +1,6 @@
 package com.commerce.backend.converter.order;
 
-import com.commerce.backend.model.dto.CategoryDTO;
+import com.commerce.backend.model.dto.ItemObjectCategoryVO;
 import com.commerce.backend.model.dto.ColorDTO;
 import com.commerce.backend.model.dto.DiscountDTO;
 import com.commerce.backend.model.dto.OrderDetailDTO;
@@ -52,7 +52,7 @@ public class OrderResponseConverter implements Function<Order, OrderResponse> {
                                 .cargoPrice(orderDetails.getProductVariant().getCargoPrice())
                                 .thumb(orderDetails.getProductVariant().getThumb())
                                 .amount(orderDetails.getAmount())
-                                .category(CategoryDTO
+                                .category(ItemObjectCategoryVO
                                         .builder()
                                         .name(orderDetails.getProductVariant().getProduct().getProductCategory().getName())
                                         .build())

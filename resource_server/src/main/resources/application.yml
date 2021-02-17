@@ -17,7 +17,7 @@ spring:
       minimum-idle: 2
       pool-name: data-source
     url: jdbc:postgresql://localhost:5432/Latif_APP
-    password: 4715192
+    password: 1234
     username: postgres
   jackson:
     date-format: MMMM dd yyyy / HH:mm

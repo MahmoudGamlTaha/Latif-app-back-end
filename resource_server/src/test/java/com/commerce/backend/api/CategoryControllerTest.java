@@ -1,8 +1,8 @@
 package com.commerce.backend.api;
 
 
-import com.commerce.backend.model.response.category.ProductCategoryResponse;
-import com.commerce.backend.service.ProductCategoryService;
+import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
+import com.commerce.backend.service.ItemObjectCategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +42,7 @@ class CategoryControllerTest {
     @Autowired
     ObjectMapper objectMapper;
     @MockBean
-    private ProductCategoryService productCategoryService;
+    private ItemObjectCategoryService productCategoryService;
     @Autowired
     private MockMvc mockMvc;
     private Faker faker;
@@ -56,7 +56,7 @@ class CategoryControllerTest {
     void it_should_get_all_categories() throws Exception {
 
         // given
-        List<ProductCategoryResponse> productCategoryResponses = Stream.generate(ProductCategoryResponse::new)
+        List<ItemObjectCategoryResponse> productCategoryResponses = Stream.generate(ItemObjectCategoryResponse::new)
                 .limit(faker.number().randomDigitNotZero())
                 .collect(Collectors.toList());
 

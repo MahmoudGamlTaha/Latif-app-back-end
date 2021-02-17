@@ -36,10 +36,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
-@WebMvcTest(ProductController.class)
+@WebMvcTest(ItemObjectController.class)
 @AutoConfigureWebClient
 @ComponentScan(basePackages = {"com.commerce.backend.constants"})
-class ProductControllerTest {
+class ItemObjectControllerTest {
 
     @Autowired
     ObjectMapper objectMapper;

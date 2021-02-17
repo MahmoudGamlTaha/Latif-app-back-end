@@ -23,4 +23,5 @@ public class CartItemDTO {
     private Integer stock;
 
     private ColorDTO color;
+    
 }
