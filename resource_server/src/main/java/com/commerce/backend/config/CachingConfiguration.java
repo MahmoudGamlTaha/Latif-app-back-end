@@ -26,10 +26,12 @@ public class CachingConfiguration {
         CaffeineCache productDisplayCache = buildCache("product_variant", ticker, 10, MINUTES);
         CaffeineCache productCategoryCache = buildCache("item_category", ticker, 1, HOURS);
         CaffeineCache productColorCache = buildCache("product_color", ticker, 1, HOURS);
+        CaffeineCache blog = buildCache("blog", ticker, 1, HOURS);
+        CaffeineCache blogCategory = buildCache("blog_category", ticker, 1, HOURS);
 
         SimpleCacheManager manager = new SimpleCacheManager();
 
-        manager.setCaches(Arrays.asList(productCache, productDisplayCache, productCategoryCache, productColorCache));
+        manager.setCaches(Arrays.asList(productCache, productDisplayCache, productCategoryCache, productColorCache, blog, blogCategory));
 
         return manager;
     }
