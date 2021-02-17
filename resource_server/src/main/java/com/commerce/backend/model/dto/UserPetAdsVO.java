@@ -7,10 +7,13 @@ import com.commerce.backend.model.entity.UserAdsImage;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 @Getter
 @Setter
-@Builder
+@NoArgsConstructor
+@ToString
 public class UserPetAdsVO extends UserAdsVO{
 
 private String image;

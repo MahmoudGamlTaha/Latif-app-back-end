@@ -3,20 +3,29 @@ package com.commerce.backend.api;
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.error.exception.InvalidArgumentException;
 import com.commerce.backend.model.dto.UserAdsVO;
+import com.commerce.backend.model.dto.UserPetAdsVO;
+import com.commerce.backend.model.request.userAds.UserAdsGeneralAdsRequest;
+import com.commerce.backend.model.request.userAds.UserPetsAdsRequest;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import com.commerce.backend.service.UserAdsService;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,8 +33,8 @@ import java.util.Objects;
 public class UserAdsController extends PublicApiController {
 
     private final UserAdsService userAdsService;
-
-
+     
+    
     @Autowired
     public UserAdsController(UserAdsService userAdsService) {
         this.userAdsService = userAdsService;
@@ -71,17 +80,17 @@ public class UserAdsController extends PublicApiController {
     }
 
     @GetMapping(value = "/ads/related/{url}")
-    public ResponseEntity<List<UserAdsVO>> getByRelated(@PathVariable("url") String url) {
-        if (url.isBlank()) {
-            throw new InvalidArgumentException("Invalid url params");
+    public ResponseEntity<List<UserAdsVO>> getByRelated(UserAdsVO userAds) {
+        if (userAds == null) {
+            throw new InvalidArgumentException("Invalid  params");
         }
-        List<UserAdsVO> products = userAdsService.getRelatedAds(url);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        List<UserAdsVO> userAdsVO = userAdsService.getRelatedAds(userAds);
+        return new ResponseEntity<>(userAdsVO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/ads/recent")
-    public ResponseEntity<List<UserAdsVO>> getByNewlyAdded() {
-        List<UserAdsVO> userAds = userAdsService.getNewlyAddedAds();
+    public ResponseEntity<List<UserAdsVO>> getByNewlyAdded(@RequestParam(value ="ads_type", required = false)  AdsType type,  @RequestParam(value="cat_id", required = false) Long cat_id) {
+        List<UserAdsVO> userAds = userAdsService.getNewlyAddedAds(type, cat_id);
         return new ResponseEntity<>(userAds, HttpStatus.OK);
     }
 
@@ -106,9 +115,52 @@ public class UserAdsController extends PublicApiController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
     
-    @RequestMapping(value = "/ads/create", method = RequestMethod.POST)
-    public ResponseEntity<UserAdsVO> createUserAds(@RequestBody UserAdsVO userAdsVO){
-    //	UserAdsVO  userAdsV= userAdsService.createUserAds(userAdsVO);
+    @PostMapping(value = "/ads/item-acc/create")
+    public ResponseEntity<UserAdsVO> createUserAds(@RequestBody UserAdsGeneralAdsRequest userAdsRequest){
+    	
+    	this.userAdsService.createUserAds(userAdsRequest);
     	return null;
+    }
+    
+    @PostMapping(value = "/ads/food/create")
+    public ResponseEntity<UserAdsVO> createFoodAds(@RequestBody UserPetsAdsRequest userPetsAdsRequest){
+    	
+    	return null;
+    }
+    @PostMapping(value = "/ads/service/create")
+    public ResponseEntity<UserAdsVO> createrServiceAds(@RequestBody UserPetsAdsRequest userPetsAdsRequest){
+    	
+    	return null;
+    }
+   
+    @PostMapping(value = "/ads/pet/create")
+    public ResponseEntity<UserAdsVO> createPetAds(@RequestBody UserPetsAdsRequest userPetsAdsRequest){
+    	
+    	return null;
+    }
+    @GetMapping(value = "/ads/form")
+    public ResponseEntity<String> getCreateAdsForm(AdsType form){
+      if(form == AdsType.PETS) {
+    	  return new ResponseEntity<String>(new UserPetAdsVO().toString(), HttpStatus.OK);
+      }
+      if(form == AdsType.ACCESORIESS) {
+    	  
+      }
+      if(form == AdsType.SERVICE) {
+    	  
+      }
+      if(form == AdsType.PET_CARE) {
+    	  
+      }
+     
+    	return null;
+    }
+    
+    @GetMapping(value = "/ads/type")
+    @ResponseBody
+     public ResponseEntity<List<AdsType>> getAdsType(){
+    	getLogger().info("array {}", (Object)Arrays.asList( AdsType.class.getEnumConstants()));
+    
+        return new ResponseEntity<>(Arrays.asList( AdsType.class.getEnumConstants()), HttpStatus.OK) ;	
     }
 }

@@ -7,10 +7,13 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.commerce.backend.constants.AdsType;
+import com.commerce.backend.constants.FoodType;
+import com.commerce.backend.constants.TrainningType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,7 +48,10 @@ public class UserPetAds extends UserAds {
 	private Boolean vaccinationCertifcate;
 	
 	@Column(name = "trainning")
-	private Boolean trainning;
+	private TrainningType trainning;
+	
+	@Column(name = "food")
+	private FoodType food;
 	
 	@Column(name = "barking_problem")
 	private Boolean barkingProblem;
@@ -59,8 +65,11 @@ public class UserPetAds extends UserAds {
 	@Column(name = "diseases_disabilities")
 	private Boolean diseasesDisabilities;
 	
+	@ManyToOne
+	@JoinColumn(name ="category_type")
+	private PetCategory petCategoryType;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name ="category_id")
 	private PetCategory category;
 	

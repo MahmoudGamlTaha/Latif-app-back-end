@@ -5,7 +5,10 @@ import lombok.Getter;
 @Getter
 public enum CategoryType {
   PET(1),
-  ACCESSORIES(2);
+  ACCESSORIES(2),
+  SERVICE(3),
+  PET_CARE(4),
+  FOOD(5);
 	int type;
 	String value;
    CategoryType(int type) {
