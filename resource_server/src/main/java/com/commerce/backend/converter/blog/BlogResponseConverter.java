@@ -1,6 +1,5 @@
 package com.commerce.backend.converter.blog;
 
-import com.commerce.backend.model.dto.BlogDTO;
 import com.commerce.backend.model.entity.Blog;
 import com.commerce.backend.model.response.blog.BlogResponse;
 import org.springframework.stereotype.Component;
@@ -14,14 +13,11 @@ public class BlogResponseConverter implements Function<Blog, BlogResponse> {
     public BlogResponse apply(Blog blog) {
         BlogResponse blogResponse = new BlogResponse();
         blogResponse.setId(blog.getId());
+        blogResponse.setTitle(blog.getTitle());
         blogResponse.setCategory(blog.getCategory().getName());
-        blogResponse.setBlog(BlogDTO.builder()
-                .category(blog.getCategory().getName())
-                .title(blog.getTitle())
-                .description(blog.getDescription())
-                .image(blog.getImage())
-                .path(blog.getPath())
-                .build());
+        blogResponse.setDescription(blog.getDescription());
+        blogResponse.setImage(blog.getImage());
+        blogResponse.setPath(blog.getPath());
         return blogResponse;
     }
 }

@@ -9,13 +9,13 @@ import java.util.function.Function;
 
 @Component
 public class BlogCategoryResponseConverter implements Function<BlogCategory, BlogCategoryResponse> {
+
     @Override
-    public BlogCategoryResponse apply(BlogCategory blogCategories) {
+    public BlogCategoryResponse apply(BlogCategory blogCategory) {
         BlogCategoryResponse blogCategoryResponse = new BlogCategoryResponse();
-        blogCategoryResponse.setCategory(BlogCategoryDTO.builder()
-                .name(blogCategories.getName())
-                .description(blogCategories.getDescription())
-                .build());
+        blogCategoryResponse.setId(blogCategory.getId());
+        blogCategoryResponse.setName(blogCategory.getName());
+        blogCategoryResponse.setDescription(blogCategory.getDescription());
         return blogCategoryResponse;
     }
 }

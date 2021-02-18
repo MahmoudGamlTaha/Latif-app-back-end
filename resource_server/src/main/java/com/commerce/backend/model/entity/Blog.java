@@ -6,11 +6,13 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Data
 @Entity
@@ -19,8 +21,8 @@ import java.util.Date;
 public class Blog {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@SequenceGenerator(name="blogs_sequence", sequenceName= "blogs_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seq-gen")
+    @SequenceGenerator(name="seq-gen", sequenceName= "blogs_id_seq", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
@@ -53,8 +55,4 @@ public class Blog {
 
     @Column(name = "updated_at")
     private Date updated_at;
-
-    public Blog() {
-
-    }
 }

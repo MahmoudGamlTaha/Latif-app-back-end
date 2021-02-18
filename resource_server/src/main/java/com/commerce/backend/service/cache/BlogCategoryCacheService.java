@@ -2,9 +2,9 @@ package com.commerce.backend.service.cache;
 
 import com.commerce.backend.dao.BlogCategoryRepository;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
-import com.commerce.backend.model.dto.BlogCategoryDTO;
 import com.commerce.backend.model.entity.BlogCategory;
 import com.commerce.backend.model.request.blog.BlogCategoryRequest;
+import com.commerce.backend.model.response.blog.BlogCategoryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 @CacheConfig(cacheNames = "blog_category")
@@ -33,35 +33,36 @@ public class BlogCategoryCacheService {
     }
 
     @Cacheable(key = "#id", unless = "{#root.caches[0].get(#id) == null, #result.equals(null)}")
-    public Optional<BlogCategory> findById(Long id)
+    public BlogCategoryResponse findById(Long id)
     {
-        Optional<BlogCategory> category = repo.findById(id);
-        if(!category.isPresent())
+        BlogCategory category = repo.findById(id).orElse(null);
+        if(Objects.isNull(category))
         {
             throw new ResourceNotFoundException("Category Not Found");
         }
-        return category;
+        return new BlogCategoryResponse(category);
     }
 
     @Cacheable(key = "#name", unless = "{#root.caches[0].get(#name) == null, #result.equals(null)}")
-    public Optional<BlogCategory> findByName(String name)
+    public BlogCategoryResponse findByName(String name)
     {
-        Optional<BlogCategory> category = repo.findByName(name);
-        if(!category.isPresent())
+        BlogCategory category = repo.findByName(name).orElse(null);
+        if(Objects.isNull(category))
         {
             throw new ResourceNotFoundException("Category Not Found");
         }
-        return category;
+        return new BlogCategoryResponse(category);
     }
 
     @Cacheable(key = "#root.methodName")
-    public BlogCategory createCategory(BlogCategoryRequest category)
+    public BlogCategoryResponse createCategory(BlogCategoryRequest category)
     {
         BlogCategory cat = BlogCategory.builder()
                 .name(category.getName())
                 .description(category.getDescription())
                 .created_at(new Date())
                 .build();
-        return repo.save(cat);
+        BlogCategory category1 = repo.save(cat);
+        return new BlogCategoryResponse(category1);
     }
 }

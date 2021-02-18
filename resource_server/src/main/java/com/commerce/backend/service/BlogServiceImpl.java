@@ -64,16 +64,9 @@ public class BlogServiceImpl implements BlogService{
      * return Blog By Id
      */
     @Override
-    public Blog getBlogById(Long id)
+    public BlogResponse getBlogById(Long id)
     {
-        Blog getBlog = blogCacheService.findById(id);
-
-        if(Objects.isNull(getBlog))
-        {
-            throw new ResourceNotFoundException("Not Found");
-        }
-
-        return getBlog;
+        return blogCacheService.findById(id);
     }
 
 
@@ -99,19 +92,9 @@ public class BlogServiceImpl implements BlogService{
      * @return
      * save blog
      */
-    public Blog saveBlog(BlogRequest blog)
+    public BlogResponse saveBlog(BlogRequest blog)
     {
-        BlogCategory category = blogCategoryRepository.findByName(blog.getCategory()).orElse(null);
-        Blog entity = Blog.builder()
-                          .title(blog.getTitle())
-                          .description(blog.getDescription())
-                          .category(category)
-                          .image(blog.getImage())
-                          .path(blog.getPath())
-                          .date(new Date())
-                          .created_at(new Date())
-                          .build();
-        return blogRepository.save(entity);
+        return blogCacheService.saveBlog(blog);
     }
 
 
@@ -120,12 +103,8 @@ public class BlogServiceImpl implements BlogService{
      * @param id
      * @return
      */
-    public BlogResponse deleteBlog(Long id)
+    public String deleteBlog(Long id)
     {
-        Blog blog = blogCacheService.deleteBlog(id);
-        BlogResponse blogResponse = new BlogResponse();
-        BlogDTO blogDTO = new BlogDTO(blog);
-        blogResponse.setBlog(blogDTO);
-        return blogResponse;
+        return blogCacheService.deleteBlog(id);
     }
 }

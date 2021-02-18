@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface BlogService {
     List<BlogResponse> getBlogs();
-    Blog getBlogById(Long id);
+    BlogResponse getBlogById(Long id);
     List<BlogResponse> getBlogByTitle(String title);
-    Blog saveBlog(BlogRequest blog);
-    BlogResponse deleteBlog(Long id);
+    BlogResponse saveBlog(BlogRequest blog);
+    String deleteBlog(Long id);
 }

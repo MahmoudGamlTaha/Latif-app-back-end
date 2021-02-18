@@ -1,15 +1,17 @@
 package com.commerce.backend.service;
 
+import com.commerce.backend.converter.blog.BlogCategoryResponseConverter;
 import com.commerce.backend.dao.BlogCategoryRepository;
-import com.commerce.backend.model.dto.BlogCategoryDTO;
 import com.commerce.backend.model.entity.BlogCategory;
 import com.commerce.backend.model.request.blog.BlogCategoryRequest;
+import com.commerce.backend.model.response.blog.BlogCategoryResponse;
 import com.commerce.backend.service.cache.BlogCategoryCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BlogCategoryServiceImpl {
@@ -17,28 +19,34 @@ public class BlogCategoryServiceImpl {
     @Autowired
     private final BlogCategoryRepository repo;
     private final BlogCategoryCacheService cacheService;
+    private final BlogCategoryResponseConverter blogCategoryResponseConverter;
 
-    public BlogCategoryServiceImpl(BlogCategoryRepository repo, BlogCategoryCacheService cacheService) {
+    public BlogCategoryServiceImpl(BlogCategoryRepository repo, BlogCategoryCacheService cacheService, BlogCategoryResponseConverter blogCategoryResponseConverter) {
         this.repo = repo;
         this.cacheService = cacheService;
+        this.blogCategoryResponseConverter = blogCategoryResponseConverter;
     }
 
-    public List<BlogCategory> findAll()
+    public List<BlogCategoryResponse> findAll()
     {
-        return this.cacheService.findAll();
+        List<BlogCategory> cat = cacheService.findAll();
+        return cat.
+                stream()
+                .map(blogCategoryResponseConverter)
+                .collect(Collectors.toList());
     }
 
-    public Optional<BlogCategory> findById(Long id)
+    public BlogCategoryResponse findById(Long id)
     {
         return cacheService.findById(id);
     }
 
-    public Optional<BlogCategory> findByName(String name)
+    public BlogCategoryResponse findByName(String name)
     {
         return cacheService.findByName(name);
     }
 
-    public BlogCategory createCategory(BlogCategoryRequest blog)
+    public BlogCategoryResponse createCategory(BlogCategoryRequest blog)
     {
         return cacheService.createCategory(blog);
     }

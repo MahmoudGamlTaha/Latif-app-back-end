@@ -1,26 +1,27 @@
 package com.commerce.backend.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Data
 @Entity
 @Table(name = "blog_categories")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
 public class BlogCategory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seq-gen")
+    @SequenceGenerator(name="seq-gen", sequenceName="blog_categories_id_seq", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
@@ -30,8 +31,9 @@ public class BlogCategory {
     @Column(name = "description")
     private String description;
 
-    @JsonIdentityReference(alwaysAsId = true)
-    @OneToMany(mappedBy = "category")
+    //@JsonIdentityReference(alwaysAsId = true)
+    @JsonBackReference
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Blog> blogs;
 
     @Column(name = "created_at")
@@ -39,8 +41,4 @@ public class BlogCategory {
 
     @Column(name = "updated_at")
     private Date updated_at;
-
-    public BlogCategory() {
-
-    }
 }
