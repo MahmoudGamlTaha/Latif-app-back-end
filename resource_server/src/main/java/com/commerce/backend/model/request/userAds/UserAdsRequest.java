@@ -20,6 +20,8 @@ public class UserAdsRequest {
 	private long createdBy;
 	
 	private boolean active;
+	
+	private String code;
 	 
 	@NotBlank
 	 @Size(min = 3, max = 80)

@@ -65,6 +65,9 @@ public class UserPetAds extends UserAds {
 	@Column(name = "diseases_disabilities")
 	private Boolean diseasesDisabilities;
 	
+	@Column(name = "diseases_disabilities_desc")
+	private String diseasesDisabilitiesDesc;
+	
 	@ManyToOne
 	@JoinColumn(name ="category_type")
 	private PetCategory petCategoryType;

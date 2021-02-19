@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserAccAdsRequest {
+public class UserAccAdsRequest extends UserAdsRequest {
  
 	private Boolean used; 
 	private Long category_type_id;
