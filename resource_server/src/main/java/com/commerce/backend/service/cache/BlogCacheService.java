@@ -9,7 +9,7 @@ import java.util.List;
 public interface BlogCacheService {
     List<Blog> findAll();
     BlogResponse findById(Long id);
-    List<Blog> getBlogByTitle(String title);
+    List<Blog> search(String keyword);
     BlogResponse saveBlog(BlogRequest blog);
     String deleteBlog(Long id);;
 }

@@ -1,5 +1,6 @@
 package com.commerce.backend.api;
 
+import com.commerce.backend.model.event.updateCategoryRequest;
 import com.commerce.backend.model.request.blog.BlogCategoryRequest;
 import com.commerce.backend.model.response.blog.BlogCategoryResponse;
 import com.commerce.backend.service.BlogCategoryServiceImpl;
@@ -34,16 +35,22 @@ public class blogCategoriesController extends PublicApiController{
     }
 
 
-    @GetMapping("/blogCategory/name={name}")
-    public BlogCategoryResponse getByName(@PathVariable String name)
+    @GetMapping("/blogCategory/keyword={keyword}")
+    public List<BlogCategoryResponse> search(@PathVariable String keyword)
     {
-        return blogCategoryService.findByName(name);
+        return blogCategoryService.search(keyword);
     }
 
     @PostMapping("/blogCategory/create")
     public BlogCategoryResponse createCategory(@RequestBody @Valid BlogCategoryRequest category)
     {
         return blogCategoryService.createCategory(category);
+    }
+
+    @PostMapping("/blogCategory/update")
+    public BlogCategoryResponse updateCategory(@RequestBody @Valid updateCategoryRequest catRequest)
+    {
+        return blogCategoryService.update(catRequest);
     }
 
     @PostMapping("/blogCategory/delete")

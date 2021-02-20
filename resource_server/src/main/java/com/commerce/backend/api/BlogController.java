@@ -1,10 +1,14 @@
 package com.commerce.backend.api;
 
+import com.commerce.backend.model.entity.Blog;
 import com.commerce.backend.model.request.blog.BlogRequest;
+import com.commerce.backend.model.request.blog.UpdateBlogRequest;
 import com.commerce.backend.model.response.blog.BlogResponse;
 import com.commerce.backend.service.BlogService;
 import com.commerce.backend.service.BlogServiceImpl;
+import io.swagger.models.Model;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,16 +37,22 @@ public class BlogController extends PublicApiController{
         return blogServiceImpl.getBlogById(id);
     }
 
-    @GetMapping("/blogs/title={title}")
-    public List<BlogResponse> getBlogByTitle(@PathVariable String title)
+    @GetMapping("/blogs/keyword={keyword}")
+    public List<BlogResponse> search(@PathVariable String keyword)
     {
-        return blogServiceImpl.getBlogByTitle(title);
+        return blogServiceImpl.search(keyword);
     }
 
     @PostMapping("/blogs/create")
     public BlogResponse createBlog(@RequestBody @Valid BlogRequest blog)
     {
         return blogServiceImpl.saveBlog(blog);
+    }
+
+    @PostMapping("/update")
+    public BlogResponse updateBlog(@RequestBody @Valid UpdateBlogRequest blogRequest)
+    {
+        return blogServiceImpl.update(blogRequest);
     }
 
     @PostMapping("/blogs/delete")

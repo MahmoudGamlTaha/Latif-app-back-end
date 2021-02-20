@@ -43,15 +43,10 @@ public class BlogCategoryCacheService {
         return new BlogCategoryResponse(category);
     }
 
-    @Cacheable(key = "#name", unless = "{#root.caches[0].get(#name) == null, #result.equals(null)}")
-    public BlogCategoryResponse findByName(String name)
+    @Cacheable(key = "#keyword", unless = "{#root.caches[0].get(#keyword) == null, #result.equals(null)}")
+    public List<BlogCategory>  search(String keyword)
     {
-        BlogCategory category = repo.findByName(name).orElse(null);
-        if(Objects.isNull(category))
-        {
-            throw new ResourceNotFoundException("Category Not Found");
-        }
-        return new BlogCategoryResponse(category);
+        return repo.findAll(keyword);
     }
 
     @Cacheable(key = "#root.methodName")
