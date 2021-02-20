@@ -6,6 +6,7 @@ import com.commerce.backend.model.dto.UserAdsVO;
 import com.commerce.backend.model.dto.UserPetAdsVO;
 import com.commerce.backend.model.request.userAds.UserAdsGeneralAdsRequest;
 import com.commerce.backend.model.request.userAds.UserPetsAdsRequest;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import com.commerce.backend.service.UserAdsService;
 
@@ -42,23 +43,22 @@ public class UserAdsController extends PublicApiController {
 
 
     @GetMapping(value = "/ads")
-    public ResponseEntity<List<UserAdsVO>> getAll(@RequestParam("page") Integer page,
+    public ResponseEntity<BasicResponse> getAll(@RequestParam(value ="page", required = false) Integer page,
     		                                                   @RequestParam(value = "type", required= false) AdsType type,
                                                                @RequestParam(value ="size", required= false) Integer pageSize,
                                                                @RequestParam(value = "sort", required = false) String sort,
                                                                @RequestParam(value = "itemType", required = false) Long itemType,
                                                                @RequestParam(value = "category", required = false) Long category,
                                                                @RequestParam(value = "minPrice", required = false) Float minPrice,
-                                                               @RequestParam(value = "maxPrice", required = false) Float maxPrice,
-                                                               @RequestParam(value = "color", required = false) String color) {
+                                                               @RequestParam(value = "maxPrice", required = false) Float maxPrice) {
         if (Objects.isNull(page) || page < 0) {
-            throw new InvalidArgumentException("Invalid page");
+          page = 1;
         }
         if (Objects.isNull(pageSize) || pageSize < 0) {
                pageSize = 20;
         }
-        List<UserAdsVO> userAds = userAdsService.getAll(type, page, pageSize, sort, category, minPrice, maxPrice, color);
-        return new ResponseEntity<>(userAds, HttpStatus.OK);
+        BasicResponse response = userAdsService.getAll(type, page, pageSize, sort, category, minPrice, maxPrice);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/ads/count")
@@ -115,11 +115,11 @@ public class UserAdsController extends PublicApiController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
     
-    @PostMapping(value = "/ads/item-acc/create")
-    public ResponseEntity<UserAdsVO> createUserAds(@RequestBody UserAdsGeneralAdsRequest userAdsRequest){
+    @PostMapping(value = "/ads/create")
+    public ResponseEntity<BasicResponse> createUserAds(@RequestBody UserAdsGeneralAdsRequest userAdsRequest){
     	
-    	this.userAdsService.createUserAds(userAdsRequest);
-    	return null;
+    	BasicResponse response = this.userAdsService.createUserAds(userAdsRequest);
+    	return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);
     }
     
     @PostMapping(value = "/ads/food/create")

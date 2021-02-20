@@ -19,6 +19,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.commerce.backend.constants.AdsType;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,6 +48,7 @@ public class UserAds {
 	
 	@ManyToOne
 	@JoinColumn(name = "created_by")
+	@JsonManagedReference
 	private User createdBy;
 	
 	@Column(name = "active")
@@ -72,5 +74,8 @@ public class UserAds {
 	
 	@Column(name = "short_description")
 	private String short_description;
+	
+	@Column(name = "price")
+	private Float price;
   
 }

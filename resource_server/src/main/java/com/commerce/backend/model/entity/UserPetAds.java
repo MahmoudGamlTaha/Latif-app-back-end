@@ -6,6 +6,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -29,9 +31,6 @@ public class UserPetAds extends UserAds {
 	@Column(name = "image")
 	private String image;
 	
-	@Column(name = "price")
-	private Float price;
-	
 	@Column(name = "breed")
 	private String breed;
 	
@@ -48,9 +47,11 @@ public class UserPetAds extends UserAds {
 	private Boolean vaccinationCertifcate;
 	
 	@Column(name = "trainning")
+	@Enumerated(EnumType.STRING)
 	private TrainningType trainning;
 	
 	@Column(name = "food")
+	@Enumerated(EnumType.STRING)
 	private FoodType food;
 	
 	@Column(name = "barking_problem")

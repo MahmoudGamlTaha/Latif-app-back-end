@@ -43,5 +43,7 @@ public class UserAdsRequest {
 	 @Size(min = 10, max= 200)
 	 @Pattern(regexp = "[0-9a-zA-Z #,-,_]+")
 	private String short_description;
+	 
+	 private Float price;
 
 }

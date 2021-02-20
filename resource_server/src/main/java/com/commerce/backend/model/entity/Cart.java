@@ -6,11 +6,14 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "cart")
+@Table(name = "shopping_cart")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,7 +28,7 @@ public class Cart {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
+    @JsonBackReference
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<CartItem> cartItemList;
 
@@ -42,7 +45,7 @@ public class Cart {
     @Column(name = "total_price")
     private Float totalPrice;
 
-    @Column(name = "date_created", insertable = false)
+    @Column(name = "created_at", insertable = false)
     private Date dateCreated;
 
 }

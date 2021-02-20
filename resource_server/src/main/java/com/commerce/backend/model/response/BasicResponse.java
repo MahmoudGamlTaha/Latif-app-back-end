@@ -1,5 +1,7 @@
 package com.commerce.backend.model.response;
 
+import java.util.HashMap;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,5 +9,6 @@ import lombok.Setter;
 @Setter
 public class BasicResponse {
   private String msg;
-  public boolean success;
+  private boolean success;
+  private HashMap<String, Object> response;
 }

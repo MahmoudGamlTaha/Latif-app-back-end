@@ -2,12 +2,19 @@ package com.commerce.backend.converter;
 
 import java.util.Date;
 
+import org.springframework.stereotype.Component;
+
 import com.commerce.backend.constants.AdsType;
+import com.commerce.backend.model.dto.ItemObjectCategoryVO;
+import com.commerce.backend.model.dto.UserAccVO;
 import com.commerce.backend.model.dto.UserAdsVO;
-import com.commerce.backend.model.entity.AccessoriesCategory;
+import com.commerce.backend.model.dto.UserMedicalVO;
+import com.commerce.backend.model.dto.UserPetAdsVO;
+import com.commerce.backend.model.dto.UserServiceVO;
 import com.commerce.backend.model.entity.ItemCategory;
 import com.commerce.backend.model.entity.ItemObjectCategory;
 import com.commerce.backend.model.entity.PetCategory;
+import com.commerce.backend.model.entity.ServiceCategory;
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.entity.UserAccAds;
 import com.commerce.backend.model.entity.UserAds;
@@ -15,32 +22,31 @@ import com.commerce.backend.model.entity.UserMedicalAds;
 import com.commerce.backend.model.entity.UserPetAds;
 import com.commerce.backend.model.entity.UserServiceAds;
 import com.commerce.backend.model.request.userAds.UserAdsGeneralAdsRequest;
-import com.commerce.backend.model.request.userAds.UserAdsRequest;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.google.common.base.Function;
 
+@Component
 public class UserAdsToVoConverter implements Function<UserAds, UserAdsVO> {
 
 	@Override
-	public UserAdsVO apply(UserAds input) {
+	public UserAdsVO apply(UserAds source) {
 		UserAdsVO userAdsVo = null;
-		if(input.getType() == AdsType.ACCESORIESS) {
-			
+		if(source.getType() == AdsType.ACCESORIESS) {
+			userAdsVo = new UserAccVO();
 		}
-		else if(input.getType() == AdsType.PET_CARE){
-			
+		else if(source.getType() == AdsType.PET_CARE){
+			userAdsVo = new UserMedicalVO();
 		}
-		else if(input.getType() == AdsType.PETS) {
-			
+		else if(source.getType() == AdsType.PETS) {
+			userAdsVo = new UserPetAdsVO();
 		}
-		else if(input.getType() == AdsType.SERVICE) {
-			
+		else if(source.getType() == AdsType.SERVICE) {
+			userAdsVo = new UserServiceVO();
 		}
-		
+		this.copyUserAdsEntityToVo(source, userAdsVo);
 		
 		return userAdsVo;
 	}
-	
+	@Deprecated
 	public UserAds transfromVOToEntity(UserAdsVO userAdsVo) {
 		UserAds userAds = null;
 		if(userAdsVo.getType() == AdsType.ACCESORIESS) {
@@ -60,11 +66,11 @@ public class UserAdsToVoConverter implements Function<UserAds, UserAdsVO> {
 		return userAds;
 	}
 	
+	
 	public UserAds transformRequestToEntity(UserAdsGeneralAdsRequest userAdsRequest) {
 		UserAds userAds = null;
 		if(userAdsRequest.getType() == AdsType.ACCESORIESS) {
 			userAds = new UserAccAds();
-			this.copyUserAdsObject(userAdsRequest, userAds);
 		}
 		else if(userAdsRequest.getType() == AdsType.PET_CARE){
 			userAds = new UserMedicalAds();
@@ -75,8 +81,7 @@ public class UserAdsToVoConverter implements Function<UserAds, UserAdsVO> {
 		else if(userAdsRequest.getType() == AdsType.SERVICE) {
 			userAds = new UserServiceAds();
 		}
-		
-		
+		  userAds = this.copyUserAdsObject(userAdsRequest, userAds);
 		return userAds;
 	}
 	
@@ -89,6 +94,7 @@ public class UserAdsToVoConverter implements Function<UserAds, UserAdsVO> {
 		destination.setLongitude(source.getUserAds().getLongitude());
 		destination.setName(source.getUserAds().getName());
 		destination.setShort_description(source.getUserAds().getShort_description());
+		destination.setPrice(source.getUserAds().getPrice());
 		User user = new User();
 		user.setId(source.getUserAds().getCreatedBy());
 		destination.setCreatedBy(user);
@@ -130,6 +136,46 @@ public class UserAdsToVoConverter implements Function<UserAds, UserAdsVO> {
 		}
 		else if(source.getType() == AdsType.SERVICE) {
 			((UserServiceAds)destination).setAllowServiceAtHome(source.getUserServiceAdsRequest().getAvaliable_at_home());
+			  ServiceCategory serviceCategory = new ServiceCategory();
+			  serviceCategory.setId((source.getUserServiceAdsRequest().getCategory_id()));
+			((UserServiceAds)destination).setServiceCategory(serviceCategory);
+			source.getUserServiceAdsRequest().setCategory_type_id(source.getUserServiceAdsRequest().getCategory_type_id());
+		}
+		return destination;
+	}
+	
+	public UserAdsVO copyUserAdsEntityToVo(UserAds source, UserAdsVO destination) {
+		assert(source.getType() == destination.getType());
+		destination.setActive(source.isActive());
+		destination.setCode(source.getCode());
+		destination.setDescription(source.getDescription());
+		destination.setLatitude(source.getLatitude());
+		destination.setLongitude(source.getLongitude());
+		destination.setName(source.getName());
+		destination.setShort_description(source.getShort_description());
+		destination.setPrice(source.getPrice());
+		User user = new User();
+		user.setId(source.getCreatedBy().getId());
+		destination.setCreatedBy(user);
+		destination.setCreated_at(new Date());
+		destination.setUpdated_at(new Date());
+		
+		if(source.getType() == AdsType.PETS) {
+			
+			((UserPetAdsVO)destination).setBarkingProblem(((UserPetAds)source).getBarkingProblem());
+			ItemObjectCategoryVO itemObjectCategoryVO = new ItemObjectCategoryVO(((UserPetAds)source).getCategory());
+			((UserPetAdsVO)destination).setCategory(itemObjectCategoryVO);
+			((UserPetAdsVO)destination).setBreed(((UserPetAds)source).getBreed());
+			((UserPetAdsVO)destination).setBarkingProblem(((UserPetAds)source).getBarkingProblem());
+			((UserPetAdsVO)destination).setFood(((UserPetAds)source).getFood());
+			((UserPetAdsVO)destination).setDiseasesDisabilities(((UserPetAds)source).getDiseasesDisabilities());;
+			((UserPetAdsVO)destination).setDiseasesDisabilitiesDesc(((UserPetAds)source).getDiseasesDisabilitiesDesc());
+			((UserPetAdsVO)destination).setNeutering(((UserPetAds)source).getNeutering());
+			((UserPetAdsVO)destination).setTrainning(((UserPetAds)source).getTrainning());
+			((UserPetAdsVO)destination).setPlayWithKids(((UserPetAds)source).getPlayWithKids());
+			((UserPetAdsVO)destination).setPassport(((UserPetAds)source).getPassport());
+			((UserPetAdsVO)destination).setVaccinationCertifcate(((UserPetAds)source).getVaccinationCertifcate());;
+			((UserPetAdsVO)destination).setImage(((UserPetAds)source).getImage());
 		}
 		return destination;
 	}

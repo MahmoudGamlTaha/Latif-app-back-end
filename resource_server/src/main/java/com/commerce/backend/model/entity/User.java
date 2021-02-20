@@ -6,15 +6,18 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = "cart")
+//@ToString(exclude = "cart")
 public class User {
 
     @Id
@@ -22,8 +25,9 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    //TODO remove this and use cart repository findByUserId instead
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  //  TODO remove this and use cart repository findByUserId instead
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Cart cart;
 
     @Column(name = "email")
@@ -32,10 +36,10 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "first_name")
+    @Column(name = "fname")
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "lname")
     private String lastName;
 
     @Column(name = "city")
@@ -50,17 +54,17 @@ public class User {
     @Column(name = "email_verified")
     private Integer emailVerified;
 
-    @Column(name = "registration_date", insertable = false)
-    @Type(type = "timestamp")
-    private Date registrationDate;
 
-    @Column(name = "phone")
+    @Column(name = "mobile")
     private String phone;
 
     @Column(name = "country")
     private String country;
 
-    @Column(name = "address")
+    @Column(name = "address1")
     private String address;
 
+    @Column(name = "created_at", insertable = false)
+    @Type(type = "timestamp")
+    private Date registrationDate;
 }

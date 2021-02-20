@@ -4,15 +4,18 @@ import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.model.dto.UserAdsVO;
 import com.commerce.backend.model.request.userAds.UserAdsGeneralAdsRequest;
 import com.commerce.backend.model.request.userAds.UserAdsRequest;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import com.commerce.backend.model.response.product.ProductResponse;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 public interface UserAdsService {
     ProductDetailsResponse findByUrl(String url);
 
-    List<UserAdsVO> getAll(AdsType type ,Integer page, Integer size, String sort, Long category, Float minPrice, Float maxPrice, String color);
+    BasicResponse getAll(AdsType type ,Integer page, Integer size, String sort, Long category, Float minPrice, Float maxPrice);
    
     Long getAllCount(UserAdsVO userAdsVO, Float minPrice, Float maxPrice);
     
@@ -31,7 +34,7 @@ public interface UserAdsService {
     
     List<UserAdsVO> getInterested(Long userId, String token);
   
-    List<UserAdsVO> createUserAds(UserAdsGeneralAdsRequest ads);
+    BasicResponse createUserAds(UserAdsGeneralAdsRequest ads);
     
 
     List<UserAdsVO> searchItemDisplay(String keyword, Integer page, Integer size);

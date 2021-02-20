@@ -132,7 +132,7 @@ class OrderServiceImplTest {
         productVariant.setStock(faker.number().randomDigitNotZero());
         Cart cart = new Cart();
         CartItem cartItem = new CartItem();
-        cartItem.setProductVariant(productVariant);
+     //   cartItem.setProductVariant(productVariant);
         cartItem.setAmount(productVariant.getStock() - 1);
         List<CartItem> cartItemList = new ArrayList<>();
         cartItemList.add(cartItem);
@@ -189,7 +189,7 @@ class OrderServiceImplTest {
         CartItem cartItem = new CartItem();
         ProductVariant productVariant = new ProductVariant();
         productVariant.setStock(faker.number().randomDigitNotZero());
-        cartItem.setProductVariant(productVariant);
+     //   cartItem.setProductVariant(productVariant);
         cartItem.setAmount(productVariant.getStock() + faker.number().randomDigitNotZero());
 
         List<CartItem> cartItemList = new ArrayList<>();
