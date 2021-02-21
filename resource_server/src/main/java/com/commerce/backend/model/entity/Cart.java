@@ -28,8 +28,9 @@ public class Cart {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+  
     @JsonBackReference
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CartItem> cartItemList;
 
     @ManyToOne
