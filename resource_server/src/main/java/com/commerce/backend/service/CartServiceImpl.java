@@ -48,9 +48,9 @@ public class CartServiceImpl implements CartService {
         if (Objects.nonNull(cart) && Objects.nonNull(cart.getCartItemList()) && !cart.getCartItemList().isEmpty()) {
             Optional<CartItem> cartItem = cart.getCartItemList()
                     .stream()
-                    .filter(ci -> ci.getProductVariant().getId().equals(productVariantId)).findFirst();
+                    .filter(ci -> ci.getItemObject().getId() == productVariantId).findFirst();
             if (cartItem.isPresent()) {
-                if (cartItem.get().getProductVariant().getStock() < (cartItem.get().getAmount() + amount)) {
+                if (cartItem.get().getItemObject().getStock() < (cartItem.get().getAmount() + amount)) {
                     throw new InvalidArgumentException("Product does not have desired stock.");
                 }
                 cartItem.get().setAmount(cartItem.get().getAmount() + amount);
@@ -72,7 +72,7 @@ public class CartServiceImpl implements CartService {
 
         CartItem cartItem = new CartItem();
         cartItem.setAmount(amount);
-        cartItem.setProductVariant(productVariant);
+    //    cartItem.setProductVariant(productVariant);
         cartItem.setCart(cart);
 
         if (Objects.isNull(cart.getCartItemList())) {
@@ -99,7 +99,7 @@ public class CartServiceImpl implements CartService {
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("CartItem not found"));
 
-        if (cartItem.getProductVariant().getStock() < (cartItem.getAmount() + amount)) {
+        if (cartItem.getItemObject().getStock() < (cartItem.getAmount() + amount)) {
             throw new InvalidArgumentException("Product does not have desired stock.");
         }
 
@@ -199,7 +199,7 @@ public class CartServiceImpl implements CartService {
         for (int i = 0; i < dbCartItemsList.size(); i++) {
             if (!dbCartItemsList.get(i).getId().equals(cartItemsList.get(i).getId()) &&
                     !dbCartItemsList.get(i).getAmount().equals(cartItemsList.get(i).getAmount()) &&
-                    !dbCartItemsList.get(i).getProductVariant().getId().equals(cartItemsList.get(i).getId())) {
+                    !(dbCartItemsList.get(i).getItemObject().getId() == cartItemsList.get(i).getId())) {
                 return false;
             }
         }
@@ -243,11 +243,11 @@ public class CartServiceImpl implements CartService {
         cart.setTotalPrice(0F);
 
         cart.getCartItemList().forEach(cartItem -> {
-            cart.setTotalCartPrice(cart.getTotalCartPrice() + (cartItem.getProductVariant().getPrice()) * cartItem.getAmount());
-            cart.setTotalCargoPrice(cart.getTotalCargoPrice() + (cartItem.getProductVariant().getCargoPrice()) * cartItem.getAmount());
+            cart.setTotalCartPrice(cart.getTotalCartPrice() + (cartItem.getItemObject().getPrice()) * cartItem.getAmount());
+         //   cart.setTotalCargoPrice(cart.getTotalCargoPrice() + (cartItem.getProductVariant().getCargoPrice()) * cartItem.getAmount());
             cart.setTotalPrice(
-                    cart.getTotalPrice() +
-                            (cartItem.getProductVariant().getPrice() + cartItem.getProductVariant().getCargoPrice()) * cartItem.getAmount());
+                    cart.getTotalPrice() +0);
+                         //   (cartItem.getItemObject().getItemObject().get + cartItem.getItemObject().getCargoPrice()) * cartItem.getAmount());
         });
 
         if (Objects.nonNull(cart.getDiscount())) {

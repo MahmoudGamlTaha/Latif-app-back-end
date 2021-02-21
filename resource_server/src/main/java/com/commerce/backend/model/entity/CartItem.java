@@ -25,11 +25,14 @@ public class CartItem {
     private Cart cart;
 
     @ManyToOne
-    @JoinColumn(name = "product_variant_id")
-    private ProductVariant productVariant;
+    @JoinColumn(name = "item_id")
+    private ItemObject itemObject;
 
     @Column(name = "amount")
     private Integer amount;
+    
+    @Column(name = "price")
+    private Float price;
 
 }
 

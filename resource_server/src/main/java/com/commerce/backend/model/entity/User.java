@@ -6,6 +6,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -14,7 +17,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = "cart")
+//@ToString(exclude = "cart")
 public class User {
 
     @Id
@@ -22,8 +25,9 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    //TODO remove this and use cart repository findByUserId instead
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  //  TODO remove this and use cart repository findByUserId instead
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Cart cart;
 
     @Column(name = "email")

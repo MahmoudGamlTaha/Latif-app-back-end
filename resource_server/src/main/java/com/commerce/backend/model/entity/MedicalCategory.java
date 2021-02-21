@@ -4,7 +4,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@DiscriminatorValue("3")
-public class ServiceCategory extends ItemObjectCategory {
+@DiscriminatorValue("4")
+public class MedicalCategory extends ItemObjectCategory {
      
 }

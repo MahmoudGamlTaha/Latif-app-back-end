@@ -35,4 +35,6 @@ public class UserAdsVO {
 	private String description;
 	
 	private String short_description;
+	
+	private Float price;
 }

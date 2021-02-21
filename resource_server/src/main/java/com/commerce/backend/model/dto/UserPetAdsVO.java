@@ -2,15 +2,19 @@ package com.commerce.backend.model.dto;
 
 import java.util.Set;
 
-
+import com.commerce.backend.constants.FoodType;
+import com.commerce.backend.constants.TrainningType;
 import com.commerce.backend.model.entity.UserAdsImage;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 @Getter
 @Setter
-@Builder
+@NoArgsConstructor
+@ToString
 public class UserPetAdsVO extends UserAdsVO{
 
 private String image;
@@ -27,7 +31,7 @@ private Boolean neutering;
 
 private Boolean vaccinationCertifcate;
 
-private Boolean trainning;
+private TrainningType trainning;
 
 private Boolean barkingProblem;
 
@@ -37,7 +41,11 @@ private Boolean playWithKids;
 
 private Boolean diseasesDisabilities;
 
+private String diseasesDisabilitiesDesc;
+
 private ItemObjectCategoryVO category;
+
+private FoodType food;
 
 private Set<UserAdsImage> petsImages; 
 

@@ -1,13 +1,12 @@
 package com.commerce.backend.constants;
 
+
 import lombok.Getter;
 
 @Getter
 public enum AdsType {
 	SERVICE(Values.SERVICE),
 	PETS(Values.PETS),
-	DELIVERY(Values.DELIVERY),
-	VETERINARY(Values.VETERINARY),
 	PET_CARE(Values.PET_CARE),
 	ACCESORIESS(Values.ACCESORIESS),
 	ALL(Values.ALL);

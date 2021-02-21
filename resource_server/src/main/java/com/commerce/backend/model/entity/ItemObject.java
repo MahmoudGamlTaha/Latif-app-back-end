@@ -58,4 +58,10 @@ public class ItemObject {
 	@Column(name = "updated_at")
 	private Date updated_at;
   
+	@Column(name = "stock")
+	private Long stock;
+	
+	@Column(name = "price")
+	private Float price;
+	
 }

@@ -62,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
             throw new InvalidArgumentException("Cart is not valid");
         }
 
-        if (cart.getCartItemList().stream().anyMatch(cartItem -> cartItem.getProductVariant().getStock() < cartItem.getAmount())) {
+        if (cart.getCartItemList().stream().anyMatch(cartItem -> cartItem.getItemObject().getStock() < cartItem.getAmount())) {
             throw new InvalidArgumentException("A product in your cart is out of stock.");
         }
 
@@ -84,11 +84,11 @@ public class OrderServiceImpl implements OrderService {
         saveOrder.setOrderDetailList(new ArrayList<>());
 
         cart.getCartItemList().forEach(cartItem -> {
-            cartItem.getProductVariant().setSellCount(cartItem.getProductVariant().getSellCount() + cartItem.getAmount());
+          //  cartItem.getItemObject().setSellCount(cartItem.getItemObject().getSellCount() + cartItem.getAmount());
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setAmount(cartItem.getAmount());
             orderDetail.setOrder(saveOrder);
-            orderDetail.setProductVariant(cartItem.getProductVariant());
+         ///   orderDetail.setProductVariant(cartItem.getItemObject());
             saveOrder.getOrderDetailList().add(orderDetail);
         });
 

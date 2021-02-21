@@ -6,6 +6,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +28,8 @@ public class Cart {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
+  
+    @JsonBackReference
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CartItem> cartItemList;
 

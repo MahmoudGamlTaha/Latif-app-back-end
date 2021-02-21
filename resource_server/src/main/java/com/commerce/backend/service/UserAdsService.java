@@ -2,34 +2,43 @@ package com.commerce.backend.service;
 
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.model.dto.UserAdsVO;
+import com.commerce.backend.model.request.userAds.UserAdsGeneralAdsRequest;
+import com.commerce.backend.model.request.userAds.UserAdsRequest;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import com.commerce.backend.model.response.product.ProductResponse;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 public interface UserAdsService {
     ProductDetailsResponse findByUrl(String url);
 
-    List<UserAdsVO> getAll(AdsType type ,Integer page, Integer size, String sort, Long category, Float minPrice, Float maxPrice, String color);
+    BasicResponse getAll(AdsType type ,Integer page, Integer size, String sort, Long category, Float minPrice, Float maxPrice);
    
-    Long getAllCount(String category, Float minPrice, Float maxPrice, String color);
+    Long getAllCount(UserAdsVO userAdsVO, Float minPrice, Float maxPrice);
     
     UserAdsVO findAdsById(Long id);
 
-    List<UserAdsVO> getRelatedAds(String url);
+    List<UserAdsVO> getRelatedAds(UserAdsVO userAds);
 
-    List<UserAdsVO> getNewlyAddedAds();
+    List<UserAdsVO> getNewlyAddedAds(AdsType adsType, Long Category);
     
-    List<UserAdsVO> getNearByAds(Integer page, Integer size, String sort, Long category, Float minPrice, Float maxPrice, String color);
+    List<UserAdsVO> getNearByAds(Integer page, Integer size, String sort, Long category, Float minPrice,
+			Float maxPrice, UserAdsVO adsCriteria);
 
-    List<UserAdsVO> getNearByAdsByCategory(Long category);
+    List<UserAdsVO> getNearByAdsByCategory(AdsType adsType, Long Category);
     
     List<UserAdsVO> getFavoriteAds(Long userId ,String token);
     
     List<UserAdsVO> getInterested(Long userId, String token);
   
-    List<UserAdsVO> createUserAds(UserAdsVO ads);
+    BasicResponse createUserAds(UserAdsGeneralAdsRequest ads);
+    
 
     List<UserAdsVO> searchItemDisplay(String keyword, Integer page, Integer size);
+
+	Long getAllCount(String category, Float minPrice, Float maxPrice, String color);
    
 }

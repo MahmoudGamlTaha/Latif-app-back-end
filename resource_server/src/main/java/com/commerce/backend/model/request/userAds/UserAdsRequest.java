@@ -1,7 +1,5 @@
 package com.commerce.backend.model.request.userAds;
 
-import java.util.Date;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -14,11 +12,16 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserAdsRequest {
+	
+	@NotBlank
 	private AdsType type;        
-		
+	
+	@NotBlank
 	private long createdBy;
 	
 	private boolean active;
+	
+	private String code;
 	 
 	@NotBlank
 	 @Size(min = 3, max = 80)
@@ -40,4 +43,7 @@ public class UserAdsRequest {
 	 @Size(min = 10, max= 200)
 	 @Pattern(regexp = "[0-9a-zA-Z #,-,_]+")
 	private String short_description;
+	 
+	 private Float price;
+
 }
