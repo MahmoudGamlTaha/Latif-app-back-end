@@ -66,15 +66,15 @@ public class BlogCacheServiceImpl implements BlogCacheService{
 
     /**
      *
-     * @param title
+     * @param keyword
      * @return
      * return blog by title
      */
     @Override
-    @Cacheable(key = "#root.methodName")
-    public List<Blog> getBlogByTitle(String title)
+    @Cacheable(key = "#keyword", unless = "{#root.caches[0].get(#keyword) == null, #result.equals(null)}")
+    public List<Blog> search(String keyword)
     {
-        return blogRepository.getBlogByTitle(title);
+        return blogRepository.findAll(keyword);
     }
 
 
@@ -82,7 +82,7 @@ public class BlogCacheServiceImpl implements BlogCacheService{
     @Cacheable(key = "#root.methodName")
     public BlogResponse saveBlog(BlogRequest blog)
     {
-        BlogCategory category = blogCategoryRepository.findByName(blog.getCategory()).orElse(null);
+        BlogCategory category = blogCategoryRepository.findById(blog.getCategory()).orElse(null);
         Blog entity = Blog.builder()
                 .title(blog.getTitle())
                 .description(blog.getDescription())

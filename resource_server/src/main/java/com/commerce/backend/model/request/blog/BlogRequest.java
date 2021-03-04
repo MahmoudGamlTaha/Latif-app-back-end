@@ -15,10 +15,7 @@ public class BlogRequest {
     @Pattern(regexp = "[0-9a-zA-Z #,_]+")
     String title;
 
-    @NotBlank
-    @Size(min = 3, max = 250)
-    @Pattern(regexp = "[0-9a-zA-Z #,_]+")
-    String category;
+    Long category;
 
     @NotBlank
     @Size(min = 40)

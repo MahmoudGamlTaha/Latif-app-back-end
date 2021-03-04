@@ -2,10 +2,18 @@ package com.commerce.backend.service;
 
 import com.commerce.backend.converter.blog.BlogCategoryResponseConverter;
 import com.commerce.backend.dao.BlogCategoryRepository;
+import com.commerce.backend.model.entity.Blog;
 import com.commerce.backend.model.entity.BlogCategory;
+import com.commerce.backend.model.event.updateCategoryRequest;
 import com.commerce.backend.model.request.blog.BlogCategoryRequest;
+import com.commerce.backend.model.request.blog.UpdateBlogRequest;
 import com.commerce.backend.model.response.blog.BlogCategoryResponse;
+import com.commerce.backend.model.response.blog.BlogResponse;
 import com.commerce.backend.service.cache.BlogCategoryCacheService;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,9 +49,36 @@ public class BlogCategoryServiceImpl {
         return cacheService.findById(id);
     }
 
-    public BlogCategoryResponse findByName(String name)
+    public List<BlogCategoryResponse> search(String keyword)
     {
-        return cacheService.findByName(name);
+        List<BlogCategory> cat = cacheService.search(keyword);
+        return cat.
+                stream()
+                .map(blogCategoryResponseConverter)
+                .collect(Collectors.toList());
+    }
+
+    public BlogCategoryResponse update(updateCategoryRequest CatRequest)
+    {
+        Configuration configuration = new Configuration();
+        configuration.configure("hibernate.cfg.xml");
+        SessionFactory factory = configuration.buildSessionFactory();
+        Session session = factory.openSession();
+
+        Transaction tx = session.beginTransaction();
+        BlogCategory cat = session.load(BlogCategory.class, CatRequest.getId());
+
+        cat.setName(CatRequest.getName());
+        if(CatRequest.getDescription() != null) {
+            cat.setDescription(CatRequest.getDescription());
+        }
+        session.update(cat);
+        tx.commit();
+        session.close();
+
+        return new BlogCategoryResponse(cat);
+
+
     }
 
     public BlogCategoryResponse createCategory(BlogCategoryRequest blog)
