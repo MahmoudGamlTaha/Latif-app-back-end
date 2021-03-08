@@ -1,17 +1,25 @@
 package com.commerce.backend.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Table(name = "roles")
-public class Roles {
+public class Role {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seq-gen")
+    @SequenceGenerator(name="seq-gen", sequenceName= "role-seq", allocationSize = 1)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "name")

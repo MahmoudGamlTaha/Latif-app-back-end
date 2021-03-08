@@ -22,10 +22,12 @@ spring:
   jackson:
     date-format: MMMM dd yyyy / HH:mm
   jpa:
+    show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        show-sql: true
   mail:
     host: smtp.gmail.com
     host_address: host_address

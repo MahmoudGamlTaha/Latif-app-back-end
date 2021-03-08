@@ -2,13 +2,10 @@ package com.commerce.backend.service;
 
 import com.commerce.backend.converter.blog.BlogCategoryResponseConverter;
 import com.commerce.backend.dao.BlogCategoryRepository;
-import com.commerce.backend.model.entity.Blog;
+import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.entity.BlogCategory;
-import com.commerce.backend.model.event.updateCategoryRequest;
-import com.commerce.backend.model.request.blog.BlogCategoryRequest;
-import com.commerce.backend.model.request.blog.UpdateBlogRequest;
+import com.commerce.backend.model.request.blog.updateCategoryRequest;
 import com.commerce.backend.model.response.blog.BlogCategoryResponse;
-import com.commerce.backend.model.response.blog.BlogResponse;
 import com.commerce.backend.service.cache.BlogCategoryCacheService;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -17,7 +14,9 @@ import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -66,9 +65,16 @@ public class BlogCategoryServiceImpl {
         Session session = factory.openSession();
 
         Transaction tx = session.beginTransaction();
+        if(CatRequest.getId() == null){
+            throw new ResourceNotFoundException("Not Found");
+        }
         BlogCategory cat = session.load(BlogCategory.class, CatRequest.getId());
-
-        cat.setName(CatRequest.getName());
+        if(Objects.isNull(cat)){
+            throw new ResourceNotFoundException("Not Found");
+        }
+        if(CatRequest.getName() != null) {
+            cat.setName(CatRequest.getName());
+        }
         if(CatRequest.getDescription() != null) {
             cat.setDescription(CatRequest.getDescription());
         }
@@ -81,7 +87,7 @@ public class BlogCategoryServiceImpl {
 
     }
 
-    public BlogCategoryResponse createCategory(BlogCategoryRequest blog)
+    public BlogCategoryResponse createCategory(@Valid updateCategoryRequest blog)
     {
         return cacheService.createCategory(blog);
     }
