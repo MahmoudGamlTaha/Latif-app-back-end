@@ -7,6 +7,8 @@ import com.commerce.backend.model.request.role.RoleRequest;
 import com.commerce.backend.model.request.role.RoleRequestUpdate;
 import com.commerce.backend.model.response.role.RoleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -15,6 +17,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@CacheConfig(cacheNames = "role")
 public class RoleCacheServiceImpl implements RoleCacheService{
 
     private final RoleRepository repo;
@@ -25,12 +28,14 @@ public class RoleCacheServiceImpl implements RoleCacheService{
     }
 
     @Override
+    @Cacheable(key = "#root.methodName")
     public List<Role> getRolesList()
     {
         return repo.findAll();
     }
 
     @Override
+    @Cacheable(key = "#id", unless = "{#root.caches[0].get(#id) == null, #result.equals(null)}")
     public RoleResponse getRoleById(Long id) {
         Role Role = repo.findById(id).orElse(null);
         if(Objects.isNull(Role))

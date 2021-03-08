@@ -8,7 +8,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 @Data
-public class updateCategoryRequest {
+public class UpdateCategoryRequest {
 
     @NotNull
     @Positive
