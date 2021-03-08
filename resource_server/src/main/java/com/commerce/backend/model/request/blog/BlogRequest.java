@@ -19,16 +19,6 @@ public class BlogRequest {
 
     @NotBlank
     @Size(min = 40)
-    //@Pattern(regexp = "(?m)^(?=.*(?:\\r?\\n(?!\\r?\\n).*)*?\\bNew-York\\b)(?=.*(?:\\r?\\n(?!\\r?\\n).*)*?\\bBerlin\\b).*(?:\\r?\\n(?!\\r?\\n).*)*")
     String description;
 
-    @NotBlank
-    @Size(min = 3, max = 240)
-    //@Pattern(regexp = "/([a-z\\-_0-9\\/\\:\\.]*\\.(jpg|jpeg|png|gif))/i")
-    private String image;
-
-    @NotBlank
-    @Size(min = 3, max = 240)
-    //@Pattern(regexp = "[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)")
-    String path;
 }

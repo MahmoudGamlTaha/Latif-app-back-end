@@ -1,7 +1,7 @@
 package com.commerce.backend.api;
 
-import com.commerce.backend.model.event.updateCategoryRequest;
 import com.commerce.backend.model.request.blog.BlogCategoryRequest;
+import com.commerce.backend.model.request.blog.UpdateCategoryRequest;
 import com.commerce.backend.model.response.blog.BlogCategoryResponse;
 import com.commerce.backend.service.BlogCategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class blogCategoriesController extends PublicApiController{
     }
 
     @PostMapping("/blogCategory/update")
-    public BlogCategoryResponse updateCategory(@RequestBody @Valid updateCategoryRequest catRequest)
+    public BlogCategoryResponse updateCategory(@ModelAttribute @Valid UpdateCategoryRequest catRequest)
     {
         return blogCategoryService.update(catRequest);
     }

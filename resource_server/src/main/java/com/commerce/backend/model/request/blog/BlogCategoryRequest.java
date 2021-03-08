@@ -14,7 +14,6 @@ public class BlogCategoryRequest {
     String name;
 
     @NotBlank
-    @Size(min = 40)
-    //@Pattern(regexp = "(?m)^(?=.*(?:\\r?\\n(?!\\r?\\n).*)*?\\bNew-York\\b)(?=.*(?:\\r?\\n(?!\\r?\\n).*)*?\\bBerlin\\b).*(?:\\r?\\n(?!\\r?\\n).*)*")
+    @Size(max = 40)
     String description;
 }
