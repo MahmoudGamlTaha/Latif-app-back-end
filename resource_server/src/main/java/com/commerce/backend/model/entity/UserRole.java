@@ -17,7 +17,8 @@ import java.util.Date;
 public class UserRole {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq-gen")
+    @SequenceGenerator(name = "seq-gen", sequenceName = "user_roles_id_seq", allocationSize = 1)
     private Long id;
 
     @Column(name = "role_id")

@@ -1,41 +1,28 @@
 package com.commerce.backend.service;
 
-import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.dao.UserRoleRepository;
-import com.commerce.backend.error.exception.ResourceNotFoundException;
-import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.entity.UserRole;
 import com.commerce.backend.model.request.role.UserRoleRequest;
+import com.commerce.backend.model.request.role.UserRoleRequestUpdate;
 import com.commerce.backend.model.response.role.RoleResponse;
+import com.commerce.backend.service.cache.UserRoleCacheServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class UserRoleServiceImpl implements UserRoleService{
 
-    private final UserRoleRepository repo;
-    private final UserRepository userRepo;
-    private final RoleServiceImpl roleService;
+    private final UserRoleCacheServiceImpl cacheService;
 
     @Autowired
-    public UserRoleServiceImpl(UserRoleRepository repo, UserRepository userRepo, RoleServiceImpl roleService) {
-        this.repo = repo;
-        this.userRepo = userRepo;
-        this.roleService = roleService;
+    public UserRoleServiceImpl(UserRoleCacheServiceImpl cacheService) {
+        this.cacheService = cacheService;
     }
 
     @Override
     public UserRole create(UserRoleRequest userRole) throws Exception {
         try {
-            return UserRole.builder()
-                    .userId(userRole.getUserId())
-                    .roleId(userRole.getRoleId())
-                    .build();
+            return cacheService.create(userRole);
         }catch (Exception e)
         {
             throw new Exception(e);
@@ -43,20 +30,9 @@ public class UserRoleServiceImpl implements UserRoleService{
     }
 
     @Override
-    public UserRole update(UserRole userRole) throws Exception {
+    public UserRole update(UserRoleRequestUpdate userRole) throws Exception {
         try {
-            UserRole ur = repo.findById(userRole.getId()).orElse(null);
-            assert ur != null;
-            if(userRole.getRoleId() != null)
-            {
-                ur.setRoleId(userRole.getRoleId());
-            }
-
-            if(userRole.getUserId() != null)
-            {
-                ur.setUserId(userRole.getUserId());
-            }
-            return repo.save(ur);
+            return cacheService.update(userRole);
         }catch (Exception e)
         {
             throw new Exception(e);
@@ -64,18 +40,14 @@ public class UserRoleServiceImpl implements UserRoleService{
     }
 
     @Override
-    public RoleResponse getUserRoleByUserId(Long id)
-    {
-        Long roleId = repo.getUserRoleByUserId(id).getRoleId();
-        return roleService.getRoleById(roleId);
+    public RoleResponse getUserRoleByUserId(Long id) throws Exception {
+        return cacheService.getUserRoleByUserId(id);
     }
 
     @Override
     public String delete(Long id) throws Exception {
         try {
-            assert id != null;
-            repo.deleteById(id);
-            return "removed";
+            return cacheService.delete(id);
         }catch (Exception e)
         {
             throw new Exception(e);

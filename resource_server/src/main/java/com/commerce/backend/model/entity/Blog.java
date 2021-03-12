@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -39,13 +40,13 @@ public class Blog {
 
     @Column(name = "path")
     private String path;
-
+    @JsonIgnore
     @Column(name = "description", length = 250)
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    //@ManyToOne
+    @Column(name = "user_id")
+    private Long user;
 
     @Column(name = "date")
     private Date date;
