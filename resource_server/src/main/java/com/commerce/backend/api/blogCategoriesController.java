@@ -48,6 +48,7 @@ public class blogCategoriesController extends PublicApiController{
     }
 
     @PostMapping("/blogCategory/update")
+
     public BlogCategoryResponse updateCategory(@ModelAttribute @Valid UpdateCategoryRequest catRequest)
     {
         return blogCategoryService.update(catRequest);

@@ -2,7 +2,11 @@ logging:
   level:
     org:
       hibernate:
-        SQL: INFO
+        SQL: DEBUG
+        Type:
+         Descriptor:
+          sql:
+           BasicBinder: TRACE
 server:
   error:
     whitelabel:
@@ -17,7 +21,7 @@ spring:
       minimum-idle: 2
       pool-name: data-source
     url: jdbc:postgresql://localhost:5432/Latif_APP
-    password: 1234
+    password: 4715192
     username: postgres
   jackson:
     date-format: MMMM dd yyyy / HH:mm
@@ -28,6 +32,8 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
         show-sql: true
+      #  naming:
+     #   physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl #org.hibernate.cfg.ImprovedNamingStrategy
   mail:
     host: smtp.gmail.com
     host_address: host_address

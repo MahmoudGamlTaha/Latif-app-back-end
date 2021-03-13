@@ -30,7 +30,7 @@ public interface UserAdsService {
 
     List<UserAdsVO> getNearByAdsByCategory(AdsType adsType, Long Category);
     
-    List<UserAdsVO> getFavoriteAds(Long userId ,String token);
+  
     
     List<UserAdsVO> getInterested(Long userId, String token);
   

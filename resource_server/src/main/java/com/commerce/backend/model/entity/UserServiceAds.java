@@ -3,6 +3,7 @@ package com.commerce.backend.model.entity;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -21,7 +22,7 @@ public class UserServiceAds extends UserAds {
 	@JoinColumn(name ="category_type")
 	ServiceCategory serviceCategoryType;
 	
-	@ManyToOne
+	@ManyToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id")
 	ServiceCategory serviceCategory;
 	

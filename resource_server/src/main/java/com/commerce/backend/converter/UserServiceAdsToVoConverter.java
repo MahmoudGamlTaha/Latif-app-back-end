@@ -22,16 +22,16 @@ import com.commerce.backend.model.entity.UserMedicalAds;
 import com.commerce.backend.model.entity.UserPetAds;
 import com.commerce.backend.model.entity.UserServiceAds;
 import com.commerce.backend.model.request.userAds.UserAdsGeneralAdsRequest;
-
-import java.util.function.Function;
-
+import com.google.common.base.Function;
+@Deprecated
 @Component
-public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
+public class UserServiceAdsToVoConverter implements Function<Class<? extends UserServiceAds>, UserAdsVO> {
 
+	
 	@Override
-	 public UserAdsVO apply( UserAds source) {
+	 public UserAdsVO apply(Class<? extends UserServiceAds> source) {
 		UserAdsVO userAdsVo = null;
-      
+      try {
 		if(UserAds.class.cast(source).getType() == AdsType.ACCESORIESS) {
 			userAdsVo = new UserAccVO();
 		}
@@ -46,25 +46,23 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		}
 		this.copyUserAdsEntityToVo(UserAds.class.cast(source), userAdsVo);
 		return userAdsVo;
+      }catch(Exception ex) {
+    	  ex.printStackTrace();
+    	  return null;
+      }
 	}
 	
 	@Deprecated
 	public UserAds transfromVOToEntity(UserAdsVO userAdsVo) {
 		UserAds userAds = null;
 		if(userAdsVo.getType() == AdsType.ACCESORIESS) {
-			
 		}
 		else if(userAdsVo.getType() == AdsType.PET_CARE){
-			
 		}
 		else if(userAdsVo.getType() == AdsType.PETS) {
-			
 		}
-		else if(userAdsVo.getType() == AdsType.SERVICE) {
-			
+		else if(userAdsVo.getType() == AdsType.SERVICE) {	
 		}
-		
-		
 		return userAds;
 	}
 	
@@ -88,7 +86,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 	}
 	
 	private UserAds copyUserAdsObject(UserAdsGeneralAdsRequest source, UserAds destination) {
-		//assert(source.getType() == destination.getType());
+		assert(source.getType() == destination.getType());
 		destination.setActive(source.getUserAds().isActive());
 		destination.setCode(source.getUserAds().getCode());
 		destination.setDescription(source.getUserAds().getDescription());
@@ -97,10 +95,9 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		destination.setName(source.getUserAds().getName());
 		destination.setShortDescription(source.getUserAds().getShort_description());
 		destination.setPrice(source.getUserAds().getPrice());
-		destination.setType(source.getType());
 		User user = new User();
 		user.setId(source.getUserAds().getCreatedBy());
-	//	destination.setCreatedBy(user);
+		//destination.setCreatedBy(user);
 		destination.setCreatedAt(new Date());
 		destination.setUpdatedAt(new Date());
 		//--------------------------------------------------------
@@ -158,15 +155,11 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		destination.setShort_description(source.getShortDescription());
 		destination.setPrice(source.getPrice());
 		User user = new User();
-    	user.setId(source.getCreatedBy().getId());
-    	user.setFirstName(source.getCreatedBy().getFirstName());
-    	user.setLastName(source.getCreatedBy().getLastName());
-    	user.setAvatar(source.getCreatedBy().getAvatar());
-    	user.setPhone(source.getCreatedBy().getPhone());
+	//	user.setId(source.getCreatedBy().getId());
 		destination.setCreatedBy(user);
 		destination.setCreated_at(new Date());
 		destination.setUpdated_at(new Date());
-		destination.setType(source.getType());
+		
 		if(source.getType() == AdsType.PETS) {
 			
 			((UserPetAdsVO)destination).setBarkingProblem(((UserPetAds)source).getBarkingProblem());

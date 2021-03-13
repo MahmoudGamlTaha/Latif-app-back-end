@@ -13,11 +13,11 @@ public class UpdateCategoryRequest {
     @NotNull
     @Positive
     Long id;
-
+  
     @Size(min = 3, max = 250)
     @Pattern(regexp = "[0-9a-zA-Z #,_]+")
-
+  
     String name;
-
+    
     String description;
 }

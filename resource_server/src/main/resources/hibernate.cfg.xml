@@ -14,7 +14,7 @@
    		<property name="connection.url">jdbc:postgresql://localhost/Latif_APP</property> <!-- BD Mane -->
    		<property name="connection.driver_class">org.postgresql.Driver</property> <!-- DB Driver -->
    		<property name="connection.username">postgres</property> <!-- DB User -->
-   		<property name="connection.password">1234</property> <!-- DB Password -->
+   		<property name="connection.password">4715192</property> <!-- DB Password -->
    		
    		<property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property> <!-- DB Dialect -->
    		<property name="hbm2ddl.auto">update</property> <!-- create / create-drop / update -->
@@ -34,6 +34,10 @@
 		<mapping class="com.commerce.backend.model.entity.ProductCategory"/>
 		<mapping class="com.commerce.backend.model.entity.Order"/>
 		<mapping class="com.commerce.backend.model.entity.OrderDetail"/>
+		<mapping class="com.commerce.backend.model.entity.UserAds"/>
+		<mapping class="com.commerce.backend.model.entity.UserPetAds"/>
+		<mapping class="com.commerce.backend.model.entity.UserAccAds"/>
+		<mapping class="com.commerce.backend.model.entity.UserServiceAds"/>
 
 
 	</session-factory>
