@@ -3,14 +3,11 @@ package com.commerce.backend.service;
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.model.dto.UserAdsVO;
 import com.commerce.backend.model.request.userAds.UserAdsGeneralAdsRequest;
-import com.commerce.backend.model.request.userAds.UserAdsRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
-import com.commerce.backend.model.response.product.ProductResponse;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
 
 public interface UserAdsService {
     ProductDetailsResponse findByUrl(String url);
