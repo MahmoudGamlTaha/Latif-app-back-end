@@ -17,7 +17,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "blogs")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
 public class Blog {
 
     @Id

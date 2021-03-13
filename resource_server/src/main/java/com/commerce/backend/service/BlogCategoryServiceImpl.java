@@ -2,13 +2,10 @@ package com.commerce.backend.service;
 
 import com.commerce.backend.converter.blog.BlogCategoryResponseConverter;
 import com.commerce.backend.dao.BlogCategoryRepository;
-import com.commerce.backend.model.entity.Blog;
 import com.commerce.backend.model.entity.BlogCategory;
-import com.commerce.backend.model.event.updateCategoryRequest;
+import com.commerce.backend.model.request.blog.UpdateCategoryRequest;
 import com.commerce.backend.model.request.blog.BlogCategoryRequest;
-import com.commerce.backend.model.request.blog.UpdateBlogRequest;
 import com.commerce.backend.model.response.blog.BlogCategoryResponse;
-import com.commerce.backend.model.response.blog.BlogResponse;
 import com.commerce.backend.service.cache.BlogCategoryCacheService;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -58,7 +55,7 @@ public class BlogCategoryServiceImpl {
                 .collect(Collectors.toList());
     }
 
-    public BlogCategoryResponse update(updateCategoryRequest CatRequest)
+    public BlogCategoryResponse update(UpdateCategoryRequest CatRequest)
     {
         Configuration configuration = new Configuration();
         configuration.configure("hibernate.cfg.xml");

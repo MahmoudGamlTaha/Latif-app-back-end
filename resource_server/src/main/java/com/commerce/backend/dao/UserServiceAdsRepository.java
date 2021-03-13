@@ -1,13 +1,11 @@
 package com.commerce.backend.dao;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.commerce.backend.model.entity.UserAds;
-import com.commerce.backend.model.entity.UserPetAds;
 import com.commerce.backend.model.entity.UserServiceAds;
 
 @Repository
-public interface UserServiceAdsRepository extends JpaRepository<UserServiceAds, Long> {
-
+@Transactional
+public interface UserServiceAdsRepository extends UserAdsRepository<UserServiceAds>, UserServiceAdsRepoCustom {
+   
 }

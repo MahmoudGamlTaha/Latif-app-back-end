@@ -1,13 +1,12 @@
-package com.commerce.backend.model.event;
+package com.commerce.backend.model.request.blog;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
-public class updateCategoryRequest {
+public class UpdateCategoryRequest {
 
     Long id;
 

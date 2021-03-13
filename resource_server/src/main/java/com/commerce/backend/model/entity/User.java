@@ -57,7 +57,10 @@ public class User {
 
     @Column(name = "mobile")
     private String phone;
-
+    
+    @Column(name = "avatar")
+    private String avatar;
+    
     @Column(name = "country")
     private String country;
 
@@ -67,4 +70,6 @@ public class User {
     @Column(name = "created_at", insertable = false)
     @Type(type = "timestamp")
     private Date registrationDate;
+    
+    
 }

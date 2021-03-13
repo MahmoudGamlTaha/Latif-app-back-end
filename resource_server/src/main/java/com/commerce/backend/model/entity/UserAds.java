@@ -15,8 +15,10 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PostLoad;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.commerce.backend.constants.AdsType;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -30,7 +32,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Entity
-@Table(name = "user_ads")
+@Table(name = "user_ads", schema="public")
 @DiscriminatorColumn(name ="type", discriminatorType = DiscriminatorType.STRING)
 public class UserAds {
 	@Id
@@ -42,13 +44,12 @@ public class UserAds {
 	@Column(name = "code", length = 250, unique = true)
 	private String code;
 	
+	//@Transient
 	@Column(name = "type", insertable = false, updatable = false, nullable = false)
-	@Enumerated(EnumType.STRING)
 	private AdsType type;        
 	
 	@ManyToOne
 	@JoinColumn(name = "created_by")
-	@JsonManagedReference
 	private User createdBy;
 	
 	@Column(name = "active")
@@ -64,16 +65,16 @@ public class UserAds {
 	private String latitude;
 	
 	@Column(name = "created_at")
-	private Date created_at;
+	private Date createdAt;
 	
 	@Column(name = "updated_at")
-	private Date updated_at;
+	private Date updatedAt;
 	
 	@Column(name = "description")
 	private String description;
 	
 	@Column(name = "short_description")
-	private String short_description;
+	private String shortDescription;
 	
 	@Column(name = "price")
 	private Float price;
