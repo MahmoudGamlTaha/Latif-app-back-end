@@ -6,7 +6,9 @@ target/
 *.DS_Store
 /.DS_Store
 .DS_Store
-
+/upload
+*.jpg
+*.png
 # compiled output
 /frontend/dist
 /frontend/tmp
