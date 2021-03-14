@@ -2,6 +2,7 @@ package com.commerce.backend.api;
 
 import com.commerce.backend.model.request.blog.BlogCategoryRequest;
 import com.commerce.backend.model.request.blog.UpdateCategoryRequest;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.blog.BlogCategoryResponse;
 import com.commerce.backend.service.BlogCategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +55,9 @@ public class blogCategoriesController extends PublicApiController{
     }
 
     @PostMapping("/blogCategory/delete")
-    public ResponseEntity<String> deleteCategory(Long id)
+    public ResponseEntity<BasicResponse> deleteCategory(Long id)
     {
-        String category = this.blogCategoryService.deleteById(id);
+        BasicResponse category = this.blogCategoryService.deleteById(id);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 

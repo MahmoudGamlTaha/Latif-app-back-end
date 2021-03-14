@@ -4,6 +4,7 @@ import com.commerce.backend.dao.UserRoleRepository;
 import com.commerce.backend.model.entity.UserRole;
 import com.commerce.backend.model.request.role.UserRoleRequest;
 import com.commerce.backend.model.request.role.UserRoleRequestUpdate;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.role.RoleResponse;
 import com.commerce.backend.service.cache.UserRoleCacheServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class UserRoleServiceImpl implements UserRoleService{
     }
 
     @Override
-    public String delete(Long id) throws Exception {
+    public BasicResponse delete(Long id) throws Exception {
         try {
             return cacheService.delete(id);
         }catch (Exception e)

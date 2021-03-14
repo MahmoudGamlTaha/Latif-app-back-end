@@ -4,6 +4,7 @@ import com.commerce.backend.converter.role.RoleResponseConverter;
 import com.commerce.backend.model.entity.Role;
 import com.commerce.backend.model.request.role.RoleRequest;
 import com.commerce.backend.model.request.role.RoleRequestUpdate;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.role.RoleResponse;
 import com.commerce.backend.service.cache.RoleCacheServiceImpl;
 import org.springframework.stereotype.Service;
@@ -51,7 +52,7 @@ public class RoleServiceImpl implements RoleService{
     }
 
     @Override
-    public String delete(Long id) {
+    public BasicResponse delete(Long id) {
         return cacheService.delete(id);
     }
 }

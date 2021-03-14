@@ -6,6 +6,7 @@ import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.entity.BlogCategory;
 import com.commerce.backend.model.request.blog.BlogCategoryRequest;
 import com.commerce.backend.model.request.blog.UpdateCategoryRequest;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.blog.BlogCategoryResponse;
 import com.commerce.backend.service.cache.BlogCategoryCacheService;
 import org.hibernate.Session;
@@ -92,14 +93,17 @@ public class BlogCategoryServiceImpl {
     {
         return cacheService.createCategory(blog);
     }
-    public String deleteById(Long id)
+    public BasicResponse deleteById(Long id)
     {
-        Optional<BlogCategory> category = this.repo.findById(id);
-        if(!category.isPresent())
-        {
-            return "Not Found";
+        BasicResponse response = new BasicResponse();
+        try {
+            repo.deleteById(id);
+            response.setSuccess(true);
+            response.setMsg("Removed");
+        }catch (Exception e){
+            response.setSuccess(false);
+            response.setMsg("Error");
         }
-        this.repo.deleteById(id);
-        return "Category Removed";
+        return response;
     }
 }

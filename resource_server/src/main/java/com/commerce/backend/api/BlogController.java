@@ -2,6 +2,7 @@ package com.commerce.backend.api;
 
 import com.commerce.backend.model.request.blog.BlogRequest;
 import com.commerce.backend.model.request.blog.UpdateBlogRequest;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.blog.BlogResponse;
 import com.commerce.backend.service.BlogService;
 import com.commerce.backend.service.BlogServiceImpl;
@@ -58,7 +59,7 @@ public class BlogController extends PublicApiController{
     }
 
     @PostMapping("/blogs/delete")
-    public String deleteBlog(Long id)
+    public BasicResponse deleteBlog(Long id)
     {
         return blogServiceImpl.deleteBlog(id);
     }

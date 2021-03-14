@@ -4,12 +4,14 @@ import com.commerce.backend.dao.UserRoleRepository;
 import com.commerce.backend.model.entity.UserRole;
 import com.commerce.backend.model.request.role.UserRoleRequest;
 import com.commerce.backend.model.request.role.UserRoleRequestUpdate;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.role.RoleResponse;
 import com.commerce.backend.service.RoleServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 
 @Service
 public class UserRoleCacheServiceImpl implements UserRoleCacheService{
@@ -72,14 +74,18 @@ public class UserRoleCacheServiceImpl implements UserRoleCacheService{
     }
 
     @Override
-    public String delete(Long id) throws Exception {
+    public BasicResponse delete(Long id) throws Exception {
+        BasicResponse response = new BasicResponse();
         try {
             assert id != null;
             repo.deleteById(id);
-            return "removed";
+            response.setSuccess(true);
+            response.setMsg("Removed");
         }catch (Exception e)
         {
-            throw new Exception(e);
+            response.setSuccess(false);
+            response.setMsg("Error");
         }
+        return response;
     }
 }

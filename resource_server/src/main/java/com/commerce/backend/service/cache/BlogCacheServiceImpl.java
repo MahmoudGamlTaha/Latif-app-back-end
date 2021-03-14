@@ -7,11 +7,8 @@ import com.commerce.backend.model.entity.Blog;
 import com.commerce.backend.model.entity.BlogCategory;
 import com.commerce.backend.model.request.blog.BlogRequest;
 import com.commerce.backend.model.request.blog.UpdateBlogRequest;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.blog.BlogResponse;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
@@ -27,7 +24,6 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static java.lang.System.currentTimeMillis;
 
@@ -53,7 +49,7 @@ public class BlogCacheServiceImpl implements BlogCacheService{
      * return All Blogs
      */
     @Override
-    @Cacheable(key = "#root.methodName")
+    //@Cacheable(key = "#root.methodName")
     public List<Blog> findAll()
     {
         return blogRepository.findAll();
@@ -152,9 +148,16 @@ public class BlogCacheServiceImpl implements BlogCacheService{
     }
 
     @Override
-    public String deleteBlog(Long id) {
-        Optional<Blog> Blog = this.blogRepository.findById(id);
-        this.blogRepository.deleteById(id);
-        return "Blog Removed";
+    public BasicResponse deleteBlog(Long id) {
+        BasicResponse response = new BasicResponse();
+        try {
+            blogRepository.deleteById(id);
+            response.setSuccess(true);
+            response.setMsg("Removed");
+        }catch (Exception e){
+            response.setSuccess(false);
+            response.setMsg("Error: "+ e);
+        }
+        return response;
     }
 }

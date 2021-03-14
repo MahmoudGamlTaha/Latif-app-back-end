@@ -3,6 +3,7 @@ package com.commerce.backend.api;
 import com.commerce.backend.model.entity.UserRole;
 import com.commerce.backend.model.request.role.UserRoleRequest;
 import com.commerce.backend.model.request.role.UserRoleRequestUpdate;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.role.RoleResponse;
 import com.commerce.backend.service.UserRoleServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class UserRoleController {
     }
 
     @DeleteMapping("/userRole/delete")
-    public String deleteUserRole(Long id) throws Exception {
+    public BasicResponse deleteUserRole(Long id) throws Exception {
         return service.delete(id);
     }
 }
