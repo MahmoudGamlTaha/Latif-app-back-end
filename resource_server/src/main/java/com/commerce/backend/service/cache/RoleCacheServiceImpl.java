@@ -5,6 +5,7 @@ import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.entity.Role;
 import com.commerce.backend.model.request.role.RoleRequest;
 import com.commerce.backend.model.request.role.RoleRequestUpdate;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.role.RoleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -79,14 +80,18 @@ public class RoleCacheServiceImpl implements RoleCacheService{
     }
 
     @Override
-    public String delete(Long id) {
-        if(id != null) {
+    public BasicResponse delete(Long id) {
+        BasicResponse response = new BasicResponse();
+        try{
             repo.deleteById(id);
-            return "removed";
-        }else
+            response.setSuccess(true);
+            response.setMsg("Removed");
+        }catch (Exception e)
         {
-            throw new ResourceNotFoundException("Not Found");
+            response.setSuccess(false);
+            response.setMsg("Error");
         }
+        return response;
 
     }
 }

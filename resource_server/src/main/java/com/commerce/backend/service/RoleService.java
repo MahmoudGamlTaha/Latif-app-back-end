@@ -3,6 +3,7 @@ package com.commerce.backend.service;
 import com.commerce.backend.model.entity.Role;
 import com.commerce.backend.model.request.role.RoleRequest;
 import com.commerce.backend.model.request.role.RoleRequestUpdate;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.role.RoleResponse;
 
 import java.util.List;
@@ -13,5 +14,5 @@ public interface RoleService {
     RoleResponse getRoleById(Long id);
     RoleResponse createRole(RoleRequest role) throws Exception;
     RoleResponse update(RoleRequestUpdate role) throws Exception;
-    String delete(Long id);
+    BasicResponse delete(Long id);
 }

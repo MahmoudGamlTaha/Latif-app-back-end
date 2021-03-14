@@ -43,9 +43,10 @@ public class Blog {
     @Column(name = "description", length = 250)
     private String description;
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(name = "user_id")
-    private User user;
+    //@Column(name = "user_id")
+    private User userId;
 
     @Column(name = "date")
     private Date date;

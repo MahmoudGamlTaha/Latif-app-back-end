@@ -72,7 +72,8 @@ security:
       /configuration/security,
       /swagger-ui.html,
       /webjars/**,
-      /api/public/**
+      /api/public/**,
+      /userRole/**
 
 swagger:
   host:

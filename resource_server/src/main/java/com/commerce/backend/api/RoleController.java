@@ -2,6 +2,7 @@ package com.commerce.backend.api;
 
 import com.commerce.backend.model.request.role.RoleRequest;
 import com.commerce.backend.model.request.role.RoleRequestUpdate;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.role.RoleResponse;
 import com.commerce.backend.service.RoleServiceImpl;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,7 @@ public class RoleController extends PublicApiController{
     }
 
     @PostMapping("/roles/delete")
-    public String delete(Long id)
+    public BasicResponse delete(Long id)
     {
         return service.delete(id);
     }

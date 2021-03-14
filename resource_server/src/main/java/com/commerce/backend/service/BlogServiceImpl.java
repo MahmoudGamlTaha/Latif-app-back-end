@@ -6,6 +6,7 @@ import com.commerce.backend.dao.BlogRepository;
 import com.commerce.backend.model.entity.Blog;
 import com.commerce.backend.model.request.blog.BlogRequest;
 import com.commerce.backend.model.request.blog.UpdateBlogRequest;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.blog.BlogResponse;
 import com.commerce.backend.service.cache.BlogCacheServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,7 +115,7 @@ public class BlogServiceImpl implements BlogService{
      * @return
      */
     @Override
-    public String deleteBlog(Long id)
+    public BasicResponse deleteBlog(Long id)
     {
         return blogCacheService.deleteBlog(id);
     }
