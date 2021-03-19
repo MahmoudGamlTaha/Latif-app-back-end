@@ -16,9 +16,9 @@ spring:
       maximum-pool-size: 5
       minimum-idle: 2
       pool-name: data-source
-    url: jdbc:postgresql://localhost:5432/Latif_APP
-    password: 4715192
-    username: postgres
+    url: jdbc:postgres://uojbpoxcctszcu:b95e84421afeb4f8f04099767062eaee1f9c8641fe0aa8889f5a4ea2eda5a119@ec2-52-21-252-142.compute-1.amazonaws.com:5432/dch9jnm7qotids
+    password: b95e84421afeb4f8f04099767062eaee1f9c8641fe0aa8889f5a4ea2eda5a119
+    username: uojbpoxcctszcu
   jackson:
     date-format: MMMM dd yyyy / HH:mm
   jpa:
