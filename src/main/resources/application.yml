@@ -77,7 +77,7 @@ security:
 
 swagger:
   host:
-    address: https://latifapp.herokuapp.com/
+    address: latifapp.herokuapp.com:8080
     path: /
   api:
     name: Latif APP Documentation API
