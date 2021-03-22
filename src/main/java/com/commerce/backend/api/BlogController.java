@@ -48,7 +48,7 @@ public class BlogController extends PublicApiController{
     @PostMapping("/blogs/create")
     @Timed
     public BlogResponse createBlog(@ModelAttribute @Valid BlogRequest blog,
-                                   @RequestParam(value = "file", required = false) MultipartFile file) {
+                                   @RequestParam(value = "image", required = false) MultipartFile file) {
         return blogServiceImpl.saveBlog(blog, file);
     }
 
