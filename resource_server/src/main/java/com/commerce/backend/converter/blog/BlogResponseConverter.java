@@ -12,15 +12,19 @@ public class BlogResponseConverter implements Function<Blog, BlogResponse> {
 
     @Override
     public BlogResponse apply(Blog blog) {
-        BlogResponse blogResponse = new BlogResponse();
-        blogResponse.setId(blog.getId());
-        blogResponse.setTitle(blog.getTitle());
-        blogResponse.setCategory(blog.getCategory().getName());
-        blogResponse.setDescription(blog.getDescription());
-        blogResponse.setImage(blog.getImage());
-        blogResponse.setPath(blog.getPath());
-        blogResponse.setUser(new UserResponseConverter().apply(blog.getUserId()));
-        blogResponse.setCreatedDate(blog.getCreated_at());
+  
+        BlogResponse blogResponse = null;
+        if(blog != null) {
+		    blogResponse = new BlogResponse();
+		    blogResponse.setId(blog.getId());
+		    blogResponse.setTitle(blog.getTitle());
+		    blogResponse.setCategory(blog.getCategory().getName());
+		    blogResponse.setDescription(blog.getDescription());
+		    blogResponse.setImage(blog.getImage());
+		    blogResponse.setPath(blog.getPath());
+		    blogResponse.setUser(new UserResponseConverter().apply(blog.getUserId()));
+		    blogResponse.setCreatedDate(blog.getCreated_at());
+        }
         return blogResponse;
     }
 }
