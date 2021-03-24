@@ -20,7 +20,6 @@ public class BlogController extends PublicApiController{
 
     private final BlogService blogServiceImpl;
 
-
     @Autowired
     public BlogController(BlogServiceImpl blogServiceImpl)
     {

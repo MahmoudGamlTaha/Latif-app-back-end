@@ -2,30 +2,24 @@ package com.commerce.backend.api;
 
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.error.exception.InvalidArgumentException;
+import com.commerce.backend.model.dto.UserAccVO;
 import com.commerce.backend.model.dto.UserAdsVO;
 import com.commerce.backend.model.dto.UserPetAdsVO;
-import com.commerce.backend.model.request.userAds.UserAdsGeneralAdsRequest;
-import com.commerce.backend.model.request.userAds.UserPetsAdsRequest;
+import com.commerce.backend.model.request.userAds.*;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import com.commerce.backend.service.UserAdsService;
 
 
+import com.commerce.backend.service.UserAdsServiceImpl;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -34,8 +28,8 @@ import java.util.Objects;
 public class UserAdsController extends PublicApiController {
 
     private final UserAdsService userAdsService;
-     
-    
+
+
     @Autowired
     public UserAdsController(UserAdsService userAdsService) {
         this.userAdsService = userAdsService;
@@ -114,11 +108,12 @@ public class UserAdsController extends PublicApiController {
         List<UserAdsVO> products = userAdsService.searchItemDisplay(keyword, page, size);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
-    
+
     @PostMapping(value = "/ads/create")
-    public ResponseEntity<BasicResponse> createUserAds(@RequestBody UserAdsGeneralAdsRequest userAdsRequest){
+    public ResponseEntity<BasicResponse> createUserAds(@RequestBody @Valid DynamicAdsRequest<String, String> userAdsRequest,
+                                                       @RequestParam(value = "file", required = false) MultipartFile file){
     	
-    	BasicResponse response = this.userAdsService.createUserAds(userAdsRequest);
+    	BasicResponse response = this.userAdsService.createUserAds(userAdsRequest, file);
     	return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);
     }
     
@@ -132,27 +127,27 @@ public class UserAdsController extends PublicApiController {
     	
     	return null;
     }
-   
-    @PostMapping(value = "/ads/pet/create")
-    public ResponseEntity<UserAdsVO> createPetAds(@RequestBody UserPetsAdsRequest userPetsAdsRequest){
-    	
-    	return null;
+
+    @GetMapping(value = "/ads/pet/create")
+    public JSONObject petResponse(@RequestBody(required = false) @Valid PetTypeRequest petType) throws Exception {
+        return userAdsService.getPetsResponse(petType);
     }
-    @GetMapping(value = "/ads/form")
+
+    @GetMapping(value = "/ads/form/")
     public ResponseEntity<String> getCreateAdsForm(AdsType form){
       if(form == AdsType.PETS) {
     	  return new ResponseEntity<String>(new UserPetAdsVO().toString(), HttpStatus.OK);
       }
-      if(form == AdsType.ACCESORIESS) {
-    	  
+      if(form == AdsType.ACCESSORIES) {
+          return new ResponseEntity<String>(new UserAccVO().toString(), HttpStatus.OK);
       }
       if(form == AdsType.SERVICE) {
-    	  
+
       }
       if(form == AdsType.PET_CARE) {
-    	  
+
       }
-     
+
     	return null;
     }
     
