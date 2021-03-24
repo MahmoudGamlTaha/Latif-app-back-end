@@ -1,5 +1,6 @@
 package com.commerce.backend.converter.blog;
 
+import com.commerce.backend.converter.user.UserResponseConverter;
 import com.commerce.backend.model.entity.Blog;
 import com.commerce.backend.model.response.blog.BlogResponse;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,8 @@ public class BlogResponseConverter implements Function<Blog, BlogResponse> {
         blogResponse.setDescription(blog.getDescription());
         blogResponse.setImage(blog.getImage());
         blogResponse.setPath(blog.getPath());
+        blogResponse.setUser(new UserResponseConverter().apply(blog.getUserId()));
+        blogResponse.setCreatedDate(blog.getCreated_at());
         return blogResponse;
     }
 }
