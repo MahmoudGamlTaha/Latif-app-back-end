@@ -110,8 +110,8 @@ public class UserAdsController extends PublicApiController {
     }
 
     @PostMapping(value = "/ads/create")
-    public ResponseEntity<BasicResponse> createUserAds(@RequestBody @Valid DynamicAdsRequest<String, String> userAdsRequest,
-                                                       @RequestParam(value = "file", required = false) MultipartFile file){
+    public ResponseEntity<BasicResponse> createUserAds( DynamicAdsRequest<String, String> userAdsRequest,
+                                                       @RequestParam(value = "images", required = false) List<MultipartFile> file){
     	
     	BasicResponse response = this.userAdsService.createUserAds(userAdsRequest, file);
     	return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);
@@ -128,9 +128,9 @@ public class UserAdsController extends PublicApiController {
     	return null;
     }
 
-    @GetMapping(value = "/ads/pet/create")
-    public JSONObject petResponse(@RequestBody(required = false) @Valid PetTypeRequest petType) throws Exception {
-        return userAdsService.getPetsResponse(petType);
+    @GetMapping(value = "/ads/adType/create")
+    public JSONObject petResponse(@RequestBody(required = false) adTypeRequest adType) throws Exception {
+        return userAdsService.getPetsResponse(adType);
     }
 
     @GetMapping(value = "/ads/form/")

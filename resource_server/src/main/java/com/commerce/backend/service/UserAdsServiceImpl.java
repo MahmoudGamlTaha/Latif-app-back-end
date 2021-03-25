@@ -3,22 +3,13 @@ package com.commerce.backend.service;
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.converter.UserAdsConverter;
 import com.commerce.backend.converter.UserAdsToVoConverter;
-import com.commerce.backend.dao.UserAdsRepository;
-import com.commerce.backend.dao.UserItemsAdsRepository;
-import com.commerce.backend.dao.UserMedicalAdsRepository;
-import com.commerce.backend.dao.UserPetsAdsRepository;
-import com.commerce.backend.dao.UserServiceAdsRepository;
+import com.commerce.backend.dao.*;
 import com.commerce.backend.model.dto.UserAdsVO;
 import com.commerce.backend.model.dto.UserPetAdsVO;
-import com.commerce.backend.model.entity.UserAccAds;
-import com.commerce.backend.model.entity.UserAds;
-import com.commerce.backend.model.entity.UserMedicalAds;
-import com.commerce.backend.model.entity.UserPetAds;
-import com.commerce.backend.model.entity.UserServiceAds;
+import com.commerce.backend.model.entity.*;
 import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
-import com.commerce.backend.model.request.userAds.PetTypeRequest;
-import com.commerce.backend.model.request.userAds.UserAdsGeneralAdsRequest;
 import com.commerce.backend.model.request.userAds.UserPetsAdsRequest;
+import com.commerce.backend.model.request.userAds.adTypeRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 
@@ -42,11 +33,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 
 import static java.lang.System.currentTimeMillis;
 
@@ -59,6 +48,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	private UserMedicalAdsRepository userMedicalAdsRepository;
 	private UserAdsToVoConverter userAdsToVoConverter;
 	private UserAdsConverter userAdsConverter;
+	private UserAdsImageRepository userAdsImageRepository;
 	private final Path rootLocation = Paths.get("upload");
 	@Value("${swagger.host.path}")
 	private String path;
@@ -67,7 +57,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	public UserAdsServiceImpl(UserAdsRepository userAdsRepository, UserPetsAdsRepository userPetsAdsRepository,
 							  UserServiceAdsRepository userServiceAdsRepository,
 							  UserItemsAdsRepository userItemsAdsRepository, UserMedicalAdsRepository userMedicalAdsRepository,
-							  UserAdsToVoConverter userAdsToVoConverter, UserAdsConverter userAdsConverter) {
+							  UserAdsToVoConverter userAdsToVoConverter, UserAdsConverter userAdsConverter, UserAdsImageRepository userAdsImageRepository) {
 	
 		this.userAdsRepository = userAdsRepository;
 		this.userPetsAdsRepository = userPetsAdsRepository;
@@ -76,6 +66,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		this.userMedicalAdsRepository = userMedicalAdsRepository;
 		this.userAdsToVoConverter = userAdsToVoConverter;
 		this.userAdsConverter = userAdsConverter;
+		this.userAdsImageRepository = userAdsImageRepository;
 	}
 
 	public UserAdsServiceImpl() {
@@ -185,9 +176,10 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public BasicResponse createUserAds(DynamicAdsRequest<String, String> ads, MultipartFile file) {
+	public BasicResponse createUserAds(DynamicAdsRequest<String, String> ads, List<MultipartFile> file) {
 		UserAds entity = this.userAdsConverter.convertRequestToEntity(ads);
 		if(ads.getType() == AdsType.ACCESSORIES) {
+
 			this.userItemsAdsRepository.save((UserAccAds)entity);
 		}
 		else if(ads.getType() == AdsType.PET_CARE) {
@@ -195,14 +187,25 @@ public class UserAdsServiceImpl implements UserAdsService {
 		}
 		else if(ads.getType() == AdsType.PETS) {
 			if(file != null) {
-				String filename = currentTimeMillis() + "-" + StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+				String filename = currentTimeMillis() + "-" + StringUtils.cleanPath(Objects.requireNonNull(file.get(0).getOriginalFilename()));
 				filename = filename.toLowerCase().replaceAll(" ", "-");
 				try {
-					Files.copy(file.getInputStream(), rootLocation.resolve(filename));
+					Files.copy(file.get(0).getInputStream(), rootLocation.resolve(filename));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				((UserPetAds) entity).setImage("upload/pets" + filename);
+				if(file.size() > 1)
+				{
+					UserAdsImage userAdsImage = new UserAdsImage();
+					for (int i = 1; i < file.size(); i++)
+					{
+						userAdsImage.setImage("upload/pets" + filename);
+						userAdsImage.setUserAdsImage((UserPetAds) entity);
+						userAdsImageRepository.save(userAdsImage);
+					}
+
+				}
 			}
 			this.userPetsAdsRepository.save((UserPetAds)entity);
 		}
@@ -226,18 +229,20 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public JSONObject getPetsResponse(PetTypeRequest petType) throws Exception {
+	public JSONObject getPetsResponse(adTypeRequest adsType) throws Exception {
+
 		InputStream is;
-		is = new ClassPathResource("jsonFiles/basicPetResponse.json").getInputStream();
-		if(petType != null)
+		is = new ClassPathResource("jsonFiles/basicResponse.json").getInputStream();
+		if(adsType != null)
 		{
-			String petName = petType.getPetType().toLowerCase();
-			is = new ClassPathResource("jsonFiles/"+petName+"Rs.json").getInputStream();
+			String adType = adsType.getAdsType().getType().toLowerCase();
+			is = new ClassPathResource("jsonFiles/"+adType+"Rs.json").getInputStream();
 		}
+
 		try {
 			JSONParser jsonParser = new JSONParser();
 			JSONObject jsonObject = (JSONObject)jsonParser.parse(
-					new InputStreamReader(is, "UTF-8"));
+					new InputStreamReader(is, StandardCharsets.UTF_8));
 			is.close();
 			return jsonObject;
 		} catch (IOException e) {

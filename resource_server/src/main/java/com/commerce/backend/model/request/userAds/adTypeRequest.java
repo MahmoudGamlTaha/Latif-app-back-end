@@ -10,11 +10,10 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-public class PetTypeRequest {
+public class adTypeRequest {
 
     @NotBlank
     @Size(min = 3, max = 80)
     @Pattern(regexp = "[0-9a-zA-Z #,-,_]+")
-    //private AdsType petType;
-    private String petType;
+    private AdsType adsType;
 }

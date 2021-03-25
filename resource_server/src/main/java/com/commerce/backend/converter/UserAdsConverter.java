@@ -52,7 +52,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         entity.setDescription((String) hashedData.get("description"));
         entity.setShort_description((String) hashedData.get("short_description"));
         entity.setActive(hashedData.get("active").toString().equalsIgnoreCase(String.valueOf(true)));
-        entity.setType(AdsType.valueOf((String)hashedData.get("type")));
+        entity.setType(request.getType());
         entity.setPrice(Float.parseFloat(String.valueOf(hashedData.get("price"))));
         entity.setLongitude((String) hashedData.get("longitude"));
         entity.setLatitude((String) hashedData.get("latitude"));
@@ -82,6 +82,23 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             ((UserPetAds)entity).setPlayWithKids(hashedData.get("playWithKids").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setPassport(hashedData.get("passport").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setVaccinationCertificate(hashedData.get("vaccinationCertificate").toString().equalsIgnoreCase(String.valueOf(true)));
+        }
+        if(request.getType() == AdsType.ACCESSORIES) {
+            assert entity instanceof UserAccAds;
+            ((UserAccAds)entity).setUsed((Boolean) hashedData.get("used"));
+			ItemCategory category = new ItemCategory();
+			category.setId(Long.parseLong(String.valueOf(hashedData.get("category_id"))));
+			((UserAccAds)entity).setItemCategoryId(category);
+        }
+        else if(request.getType() == AdsType.PET_CARE) {
+            ((UserMedicalAds)entity).setAllowServiceAtHome((Boolean) hashedData.get("allow_at_home"));
+        }
+        else if(request.getType() == AdsType.SERVICE) {
+			((UserServiceAds)entity).setAllowServiceAtHome((Boolean) hashedData.get("allow_at_home"));
+			ServiceCategory serviceCategory = new ServiceCategory();
+			serviceCategory.setId(Long.parseLong(String.valueOf(hashedData.get("category_id"))));
+            ((UserServiceAds)entity).setServiceCategory(serviceCategory);
+            ((UserServiceAds)entity).setServiceCategoryType(serviceCategory);
         }
         return entity;
     }
