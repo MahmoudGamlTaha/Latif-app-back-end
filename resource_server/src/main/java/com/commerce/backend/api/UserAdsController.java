@@ -38,7 +38,7 @@ public class UserAdsController extends PublicApiController {
 
     @GetMapping(value = "/ads")
     public ResponseEntity<BasicResponse> getAll(@RequestParam(value ="page", required = false) Integer page,
-    		                                                   @RequestParam(value = "type", required= false) AdsType type,
+    		                                                   @RequestParam(value = "type", required= true) AdsType type,
                                                                @RequestParam(value ="size", required= false) Integer pageSize,
                                                                @RequestParam(value = "sort", required = false) String sort,
                                                                @RequestParam(value = "itemType", required = false) Long itemType,
@@ -46,12 +46,12 @@ public class UserAdsController extends PublicApiController {
                                                                @RequestParam(value = "minPrice", required = false) Float minPrice,
                                                                @RequestParam(value = "maxPrice", required = false) Float maxPrice) {
         if (Objects.isNull(page) || page < 0) {
-          page = 1;
+        	   page = 1;
         }
         if (Objects.isNull(pageSize) || pageSize < 0) {
                pageSize = 20;
         }
-        BasicResponse response = userAdsService.getAll(type, page, pageSize, sort, category, minPrice, maxPrice);
+       BasicResponse response = userAdsService.getAll(type, page, pageSize, sort, category, minPrice, maxPrice);  
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

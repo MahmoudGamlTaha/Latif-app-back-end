@@ -43,10 +43,11 @@ public class UserPetAds extends UserAds {
 	private Boolean neutering;
 	
 	@Column(name = "vaccination_certificate")
-	private Boolean vaccinationCertificate;
+
+	private Boolean vaccinationCertifcate;
 	
 	@Column(name = "training")
-	@Enumerated(EnumType.ORDINAL)
+	@Enumerated(EnumType.STRING)
 	private TrainningType training;
 	
 	@Column(name = "food")

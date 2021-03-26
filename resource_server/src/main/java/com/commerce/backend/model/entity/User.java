@@ -54,7 +54,6 @@ public class User {
   @Column(name = "email_verified")
   private Integer emailVerified;
 
-
   @Column(name = "mobile")
   private String phone;
 
@@ -66,8 +65,9 @@ public class User {
 
   @Column(name = "address1")
   private String address;
-
+  
   @Column(name = "created_at", insertable = false)
-  @Type(type = "timestamp")
-  private Date registrationDate;
+   @Type(type = "timestamp")
+   private Date registrationDate;
+   
 }
