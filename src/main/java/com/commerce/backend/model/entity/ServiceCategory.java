@@ -3,8 +3,10 @@ package com.commerce.backend.model.entity;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+import com.commerce.backend.constants.CategoryType;
+
 @Entity
-@DiscriminatorValue("3")
+@DiscriminatorValue(CategoryType.Values.SERVICE)
 public class ServiceCategory extends ItemObjectCategory {
      
 }
