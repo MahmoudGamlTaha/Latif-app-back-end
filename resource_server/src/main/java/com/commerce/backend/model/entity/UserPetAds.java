@@ -11,7 +11,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.constants.FoodType;
@@ -44,6 +43,7 @@ public class UserPetAds extends UserAds {
 	private Boolean neutering;
 	
 	@Column(name = "vaccination_certificate")
+
 	private Boolean vaccinationCertifcate;
 	
 	@Column(name = "training")
@@ -51,7 +51,7 @@ public class UserPetAds extends UserAds {
 	private TrainningType training;
 	
 	@Column(name = "food")
-	@Enumerated(EnumType.STRING)
+	@Enumerated(EnumType.ORDINAL)
 	private FoodType food;
 	
 	@Column(name = "barking_problem")
@@ -68,11 +68,11 @@ public class UserPetAds extends UserAds {
 	
 	@Column(name = "diseases_disabilities_desc")
 	private String diseasesDisabilitiesDesc;
-	
+
 	@ManyToOne
 	@JoinColumn(name ="category_type")
 	private PetCategory petCategoryType;
-	
+
 	@ManyToOne
 	@JoinColumn(name ="category_id")
 	private PetCategory category;

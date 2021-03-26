@@ -20,8 +20,20 @@ public interface UserAdsRepository<T extends UserAds> extends JpaRepository<T, L
    
    
    @Query(value = "SELECT uad FROM UserAds uad WHERE uad.active = true AND type = :type ")
-	Page<T> findByAdsType(@Param("type") AdsType type, Pageable pagable);
-   @Where(clause = "active = true")
+	Page<UserAds> findByAdsType(@Param("type") AdsType type, Pageable pagable);
+   
+   @Query(value = "SELECT uad FROM UserAds uad WHERE uad.active = true AND type ='"+AdsType.Values.PETS+"'")
+	Page<UserPetAds> findPetAdsType( Pageable pagable);
+
+   @Query(value = "SELECT uad FROM UserAds uad WHERE uad.active = true AND type ='"+AdsType.Values.ACCESSORIES +"'")
+	Page<UserAccAds> findAccAdsType(Pageable pagable);
+   
+   @Query(value = "SELECT uad FROM UserAds uad WHERE uad.active = true AND type ='"+AdsType.Values.PET_CARE+"'")
+	Page<UserServiceAds> findPetCareAds(Pageable pagable);
+	
+  Page<T> findByAdsType(@Param("type") AdsType type, Pageable pagable);
+  
+  @Where(clause = "active = true")
  	Page<UserServiceAds> findAllByOrderByName(Pageable page);
    
 }

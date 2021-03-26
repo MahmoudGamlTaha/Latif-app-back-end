@@ -24,9 +24,9 @@ public class UserPetsAdsRequest extends UserAdsRequest {
 	
 	private Boolean neutering;
 	
-	private Boolean vaccinationCertifcate;
+	private Boolean vaccinationCertificate;
 	
-	private TrainningType trainning;
+	private Boolean training;
 	
 	private Boolean barkingProblem;
 	
@@ -42,7 +42,7 @@ public class UserPetsAdsRequest extends UserAdsRequest {
 	
 	private Long categoryType;
 	
-	private FoodType food;
+	private Integer food;
 	
 	private Set<MultipartFile> petsImages;
 }

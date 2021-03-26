@@ -21,7 +21,10 @@ public class UserAdsImage {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    @Column(name = "id")
 	private long id;
-   
+
+   @Column(name = "image")
+   private String image;
+
    @ManyToOne
    @JoinColumn(name = "user_ads_id")
    private UserPetAds userAdsImage;

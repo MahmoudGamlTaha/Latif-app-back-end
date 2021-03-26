@@ -43,7 +43,7 @@ public class Blog {
     @Column(name = "description", length = 250)
     private String description;
 
-    @ManyToOne(optional = true)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     //@Column(name = "user_id")
     private User userId;
