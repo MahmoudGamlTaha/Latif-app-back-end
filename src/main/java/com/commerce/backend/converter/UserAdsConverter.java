@@ -50,14 +50,14 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         entity.setName((String) hashedData.get("name"));
         entity.setCode((String) hashedData.get("code"));
         entity.setDescription((String) hashedData.get("description"));
-        entity.setShort_description((String) hashedData.get("short_description"));
+        entity.setShortDescription(((String) hashedData.get("short_description")));
         entity.setActive(hashedData.get("active").toString().equalsIgnoreCase(String.valueOf(true)));
         entity.setType(request.getType());
         entity.setPrice(Float.parseFloat(String.valueOf(hashedData.get("price"))));
         entity.setLongitude((String) hashedData.get("longitude"));
         entity.setLatitude((String) hashedData.get("latitude"));
-        entity.setCreated_at(new Date());
-        entity.setUpdated_at(new Date());
+        entity.setCreatedAt((new Date()));
+        entity.setUpdatedAt((new Date()));
         User user = new User();
         user.setId(Long.parseLong(String.valueOf(hashedData.get("created_by"))));
         entity.setCreatedBy(user);
@@ -81,7 +81,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             ((UserPetAds)entity).setTraining(TrainningType.valueOf((String) hashedData.get("training")));
             ((UserPetAds)entity).setPlayWithKids(hashedData.get("playWithKids").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setPassport(hashedData.get("passport").toString().equalsIgnoreCase(String.valueOf(true)));
-            ((UserPetAds)entity).setVaccinationCertificate(hashedData.get("vaccinationCertificate").toString().equalsIgnoreCase(String.valueOf(true)));
+            ((UserPetAds)entity).setVaccinationCertifcate(hashedData.get("vaccinationCertificate").toString().equalsIgnoreCase(String.valueOf(true)));
         }
         if(request.getType() == AdsType.ACCESSORIES) {
             assert entity instanceof UserAccAds;

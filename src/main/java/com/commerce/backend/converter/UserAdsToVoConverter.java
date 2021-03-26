@@ -34,7 +34,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 	 public UserAdsVO apply( UserAds source) {
 		UserAdsVO userAdsVo = null;
       
-		if(UserAds.class.cast(source).getType() == AdsType.ACCESORIESS) {
+		if(UserAds.class.cast(source).getType() == AdsType.ACCESSORIES) {
 			userAdsVo = new UserAccVO();
 		}
 		else if(UserAds.class.cast(source).getType() == AdsType.PET_CARE){
@@ -134,7 +134,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			//((UserPetAds)destination).setTraining(UserPetsAdsRequest.getTraining());
 			((UserPetAds)destination).setPlayWithKids(UserPetsAdsRequest.getPlayWithKids());
 			((UserPetAds)destination).setPassport(UserPetsAdsRequest.getPassport());
-		    ((UserPetAds)destination).setVaccinationCertificate(UserPetsAdsRequest.getVaccinationCertificate());;
+		    ((UserPetAds)destination).setVaccinationCertifcate((UserPetsAdsRequest.getVaccinationCertificate()));;
 			//((UserPetAds)destination).setImage(UserPetsAdsRequest.getImage().getName());
 
 
@@ -191,7 +191,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			//((UserPetAdsVO)destination).setTraining(((UserPetAds)source).getTraining());
 			((UserPetAdsVO)destination).setPlayWithKids(((UserPetAds)source).getPlayWithKids());
 			((UserPetAdsVO)destination).setPassport(((UserPetAds)source).getPassport());
-		    ((UserPetAdsVO)destination).setVaccinationCertificate(((UserPetAds)source).getVaccinationCertificate());;
+		    ((UserPetAdsVO)destination).setVaccinationCertificate(((UserPetAds)source).getVaccinationCertifcate());;
 			((UserPetAdsVO)destination).setImage(((UserPetAds)source).getImage());
 		}
 		return destination;

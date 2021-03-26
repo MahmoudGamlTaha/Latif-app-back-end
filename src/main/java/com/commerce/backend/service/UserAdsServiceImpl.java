@@ -56,13 +56,13 @@ public class UserAdsServiceImpl implements UserAdsService {
 	private final Path rootLocation = Paths.get("upload");
 	@Value("${swagger.host.path}")
 	private String path;
-
+	private static final Logger loggerS = LoggerFactory.getLogger(UserAdsServiceImpl.class);
 	@Autowired
 	public UserAdsServiceImpl(UserAdsRepository userAdsRepository, UserPetsAdsRepository userPetsAdsRepository,
 							  UserServiceAdsRepository userServiceAdsRepository,
 							  UserItemsAdsRepository userItemsAdsRepository, UserMedicalAdsRepository userMedicalAdsRepository,
 							  UserAdsToVoConverter userAdsToVoConverter, UserAdsConverter userAdsConverter, UserAdsImageRepository userAdsImageRepository) {
-	private static final Logger loggerS = LoggerFactory.getLogger(UserAdsServiceImpl.class);
+	
 
 	
 		

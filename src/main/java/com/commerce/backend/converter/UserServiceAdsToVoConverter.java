@@ -32,7 +32,7 @@ public class UserServiceAdsToVoConverter implements Function<Class<? extends Use
 	 public UserAdsVO apply(Class<? extends UserServiceAds> source) {
 		UserAdsVO userAdsVo = null;
       try {
-		if(UserAds.class.cast(source).getType() == AdsType.ACCESORIESS) {
+		if(UserAds.class.cast(source).getType() == AdsType.ACCESSORIES) {
 			userAdsVo = new UserAccVO();
 		}
 		else if(UserAds.class.cast(source).getType() == AdsType.PET_CARE){
@@ -55,7 +55,7 @@ public class UserServiceAdsToVoConverter implements Function<Class<? extends Use
 	@Deprecated
 	public UserAds transfromVOToEntity(UserAdsVO userAdsVo) {
 		UserAds userAds = null;
-		if(userAdsVo.getType() == AdsType.ACCESORIESS) {
+		if(userAdsVo.getType() == AdsType.ACCESSORIES) {
 		}
 		else if(userAdsVo.getType() == AdsType.PET_CARE){
 		}
@@ -69,7 +69,7 @@ public class UserServiceAdsToVoConverter implements Function<Class<? extends Use
 	
 	public UserAds transformRequestToEntity(UserAdsGeneralAdsRequest userAdsRequest) {
 		UserAds userAds = null;
-		if(userAdsRequest.getType() == AdsType.ACCESORIESS) {
+		if(userAdsRequest.getType() == AdsType.ACCESSORIES) {
 			userAds = new UserAccAds();
 		}
 		else if(userAdsRequest.getType() == AdsType.PET_CARE){
@@ -101,24 +101,24 @@ public class UserServiceAdsToVoConverter implements Function<Class<? extends Use
 		destination.setCreatedAt(new Date());
 		destination.setUpdatedAt(new Date());
 		//--------------------------------------------------------
-		if(source.getType() == AdsType.ACCESORIESS) {
-			((UserAccAds)destination).setUsed(source.getUserAccRequest().getUsed());
+		if(source.getType() == AdsType.ACCESSORIES) {
+		//	((UserAccAds)destination).setUsed(source.getUserAccRequest().getUsed());
 			ItemObjectCategory category = new ItemCategory();
-			category.setId(source.getUserAccRequest().getCategory_id());
+			//category.setId(source.getUserAccRequest().getCategory_id());
 			((UserAccAds)destination).setItemCategoryId((ItemCategory)category);
 		     category = new ItemCategory();
-		     category.setId(source.getUserAccRequest().getCategory_type_id());
+		     //category.setId(source.getUserAccRequest().getCategory_type_id());
 			((UserAccAds)destination).setItemCategoryType((ItemCategory)category);
 		}
 		if(source.getType() == AdsType.PETS) {
-			((UserPetAds)destination).setBarkingProblem(source.getUserPetsAdsRequest().getBarkingProblem());
+		//	((UserPetAds)destination).setBarkingProblem(source.getUserPetsAdsRequest().getBarkingProblem());
 			PetCategory category = new PetCategory();
-			category.setId(source.getUserPetsAdsRequest().getCategory());
+			//category.setId(source.getUserPetsAdsRequest().getCategory());
 			((UserPetAds)destination).setCategory(category);
 	         category = new PetCategory();
-	         category.setId(source.getUserPetsAdsRequest().getCategoryType());
+	        // category.setId(source.getUserPetsAdsRequest().getCategoryType());
 			((UserPetAds)destination).setPetCategoryType(category);
-			((UserPetAds)destination).setBreed(source.getUserPetsAdsRequest().getBreed());
+			/*((UserPetAds)destination).setBreed(source.getUserPetsAdsRequest().getBreed());
 			((UserPetAds)destination).setBarkingProblem(source.getUserPetsAdsRequest().getBarkingProblem());
 			((UserPetAds)destination).setFood(source.getUserPetsAdsRequest().getFood());
 			((UserPetAds)destination).setDiseasesDisabilities(source.getUserPetsAdsRequest().getDiseasesDisabilities());;
@@ -129,17 +129,17 @@ public class UserServiceAdsToVoConverter implements Function<Class<? extends Use
 			((UserPetAds)destination).setPassport(source.getUserPetsAdsRequest().getPassport());
 			((UserPetAds)destination).setVaccinationCertifcate(source.getUserPetsAdsRequest().getVaccinationCertifcate());;
 			((UserPetAds)destination).setImage(source.getUserPetsAdsRequest().getImage().getName());
-			
+			*/
 		}
 		else if(source.getType() == AdsType.PET_CARE) {
-			((UserMedicalAds)destination).setAllowServiceAtHome(source.getUserServiceAdsRequest().getAvaliable_at_home());
+		//	((UserMedicalAds)destination).setAllowServiceAtHome(source.getUserServiceAdsRequest().getAvaliable_at_home());
 		}
 		else if(source.getType() == AdsType.SERVICE) {
-			((UserServiceAds)destination).setAllowServiceAtHome(source.getUserServiceAdsRequest().getAvaliable_at_home());
+			//((UserServiceAds)destination).setAllowServiceAtHome(source.getUserServiceAdsRequest().getAvaliable_at_home());
 			  ServiceCategory serviceCategory = new ServiceCategory();
-			  serviceCategory.setId((source.getUserServiceAdsRequest().getCategory_id()));
+			//  serviceCategory.setId((source.getUserServiceAdsRequest().getCategory_id()));
 		//	((UserServiceAds)destination).setServiceCategory(serviceCategory);
-			source.getUserServiceAdsRequest().setCategory_type_id(source.getUserServiceAdsRequest().getCategory_type_id());
+			//source.getUserServiceAdsRequest().setCategory_type_id(source.getUserServiceAdsRequest().getCategory_type_id());
 		}
 		return destination;
 	}
@@ -167,14 +167,14 @@ public class UserServiceAdsToVoConverter implements Function<Class<? extends Use
 			((UserPetAdsVO)destination).setCategory(itemObjectCategoryVO);
 			((UserPetAdsVO)destination).setBreed(((UserPetAds)source).getBreed());
 			((UserPetAdsVO)destination).setBarkingProblem(((UserPetAds)source).getBarkingProblem());
-			((UserPetAdsVO)destination).setFood(((UserPetAds)source).getFood());
+			//((UserPetAdsVO)destination).setFood(((UserPetAds)source).getFood());
 			((UserPetAdsVO)destination).setDiseasesDisabilities(((UserPetAds)source).getDiseasesDisabilities());;
 			((UserPetAdsVO)destination).setDiseasesDisabilitiesDesc(((UserPetAds)source).getDiseasesDisabilitiesDesc());
 			((UserPetAdsVO)destination).setNeutering(((UserPetAds)source).getNeutering());
-			((UserPetAdsVO)destination).setTrainning(((UserPetAds)source).getTraining());
+		//	((UserPetAdsVO)destination).setTrainning(((UserPetAds)source).getTraining());
 			((UserPetAdsVO)destination).setPlayWithKids(((UserPetAds)source).getPlayWithKids());
 			((UserPetAdsVO)destination).setPassport(((UserPetAds)source).getPassport());
-			((UserPetAdsVO)destination).setVaccinationCertifcate(((UserPetAds)source).getVaccinationCertifcate());;
+			//((UserPetAdsVO)destination).setVaccinationCertifcate(((UserPetAds)source).getVaccinationCertifcate());;
 			((UserPetAdsVO)destination).setImage(((UserPetAds)source).getImage());
 		}
 		return destination;
