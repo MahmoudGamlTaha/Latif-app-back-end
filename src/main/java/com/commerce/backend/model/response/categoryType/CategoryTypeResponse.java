@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class CategoryTypeResponse {
  private Long id;
- private boolean active;
+ private Boolean active;
  private String name;
  private String nameAr;
  private Date createdDate;
