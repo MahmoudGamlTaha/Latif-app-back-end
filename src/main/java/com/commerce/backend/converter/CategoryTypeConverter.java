@@ -15,7 +15,7 @@ public class CategoryTypeConverter implements Function<CategoryType, CategoryTyp
 		CategoryTypeResponse categoryTypeVO = new CategoryTypeResponse();
 		if(categoryType != null) {
 			categoryTypeVO.setId(categoryType.getId());
-			categoryTypeVO.setActive(categoryType.isActive());
+			categoryTypeVO.setActive(categoryType.getActive());
 			categoryTypeVO.setName(categoryType.getName());
 			categoryTypeVO.setNameAr(categoryType.getNameAr());
 			categoryTypeVO.setCreatedDate(categoryType.getCreated_at());
