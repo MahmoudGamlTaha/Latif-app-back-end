@@ -10,6 +10,8 @@ public enum AdsType {
 	PET_CARE(Values.PET_CARE),
 	ACCESSORIES(Values.ACCESSORIES),
 	Dogs(Values.DOGS),
+	DELIVERY(Values.DELIVERY),
+	VETERINARY(Values.VETERINARY),
 	ALL(Values.ALL);
 
 	
@@ -25,6 +27,7 @@ public enum AdsType {
 		 public static final String	PET_CARE = "PET_CARE";
 		 public static final String ACCESSORIES = "ACCESSORIES";
 		 public static final String ALL = "ALL";
-		 public static final String DOGS = "Dogs";
+		 public static final String DOGS = "DOGS";
+	
 	 }
 }

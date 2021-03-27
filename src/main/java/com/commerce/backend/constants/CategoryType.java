@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum CategoryType {
-  PET(1),
+  PETS(1),
   ACCESSORIES(2),
   SERVICE(3),
   PET_CARE(4),

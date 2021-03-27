@@ -53,7 +53,7 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 	@Override
 	public ItemObjectCategory createItemObjectCategory(CategoryRequest request) {
 	    ItemObjectCategory category = null;
-		if(request.getType() == CategoryType.PET.getType()) {
+		if(request.getType() == CategoryType.PETS.getType()) {
 			category = new PetCategory();
 			category.setName(request.getName());
 			category.setIcon(request.getIcon());

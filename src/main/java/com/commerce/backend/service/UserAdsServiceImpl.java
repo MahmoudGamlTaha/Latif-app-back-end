@@ -238,10 +238,13 @@ public class UserAdsServiceImpl implements UserAdsService {
 	public JSONObject getPetsResponse(adTypeRequest adsType) throws Exception {
 
 		InputStream is;
+		System.out.println("ads"+adsType);
 		is = new ClassPathResource("jsonFiles/basicResponse.json").getInputStream();
 		if(adsType != null)
 		{
+			
 			String adType = adsType.getAdsType().getType().toLowerCase();
+			
 			is = new ClassPathResource("jsonFiles/"+adType+"Rs.json").getInputStream();
 		}
 
@@ -252,7 +255,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 			is.close();
 			return jsonObject;
 		} catch (IOException e) {
-			throw new Exception("Error: "+e);
+			throw new Exception("Error: "+e.getMessage());
 		}
 
 	}

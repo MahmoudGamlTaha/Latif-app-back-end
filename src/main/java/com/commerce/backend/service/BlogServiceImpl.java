@@ -45,7 +45,6 @@ public class BlogServiceImpl implements BlogService{
     public List<BlogResponse> getBlogs()
     {
         List<Blog> getBlogs = blogCacheService.findAll();
-
         return getBlogs.
                 stream()
                 .map(blogResponseConverter)

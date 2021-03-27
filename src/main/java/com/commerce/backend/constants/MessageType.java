@@ -2,7 +2,8 @@ package com.commerce.backend.constants;
 
 public enum MessageType {
 	Success("SUCCESS"),
-	Fail("Fail");
+	Fail("Fail"),
+	Data("data");
 	private String message;
 	
 	public String getMessage() {

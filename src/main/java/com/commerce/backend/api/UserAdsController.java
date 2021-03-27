@@ -1,6 +1,7 @@
 package com.commerce.backend.api;
 
 import com.commerce.backend.constants.AdsType;
+import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.error.exception.InvalidArgumentException;
 import com.commerce.backend.model.dto.UserAccVO;
 import com.commerce.backend.model.dto.UserAdsVO;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -128,34 +130,31 @@ public class UserAdsController extends PublicApiController {
     	return null;
     }
 
-    @GetMapping(value = "/ads/adType/create")
-    public JSONObject petResponse(@RequestBody(required = false) adTypeRequest adType) throws Exception {
-        return userAdsService.getPetsResponse(adType);
+    @GetMapping(value = "/ads/get-create-form")
+    public ResponseEntity<JSONObject> getCreateForm(@RequestBody(required = false) adTypeRequest adType) throws Exception {
+        return new ResponseEntity<JSONObject>(userAdsService.getPetsResponse(adType), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/ads/form/")
-    public ResponseEntity<String> getCreateAdsForm(AdsType form){
-      if(form == AdsType.PETS) {
-    	  return new ResponseEntity<String>(new UserPetAdsVO().toString(), HttpStatus.OK);
-      }
-      if(form == AdsType.ACCESSORIES) {
-          return new ResponseEntity<String>(new UserAccVO().toString(), HttpStatus.OK);
-      }
-      if(form == AdsType.SERVICE) {
-
-      }
-      if(form == AdsType.PET_CARE) {
-
-      }
-
-    	return null;
-    }
     
-    @GetMapping(value = "/ads/type")
+    /*@GetMapping(value = "/ads/type")
     @ResponseBody
-     public ResponseEntity<List<AdsType>> getAdsType(){
+     public ResponseEntity<BasicResponse> getAdsType(){
     	getLogger().info("array {}", (Object)Arrays.asList( AdsType.class.getEnumConstants()));
-    
-        return new ResponseEntity<>(Arrays.asList( AdsType.class.getEnumConstants()), HttpStatus.OK) ;	
-    }
+         BasicResponse response = new BasicResponse();
+         HashMap<String, Object> hashData = new HashMap<String, Object>();
+         try {
+        
+         response.setMsg(MessageType.Success.getMessage());
+         hashData.put("data", Arrays.asList( AdsType.class.getEnumConstants()));
+         response.setSuccess(true);
+         response.setResponse(hashData);
+         }catch(Exception ex) {
+            response.setSuccess(false); 
+            hashData.put("data",MessageType.Fail.getMessage());
+            response.setResponse(hashData);
+            response.setMsg(ex.getMessage());
+            
+         }
+        return new ResponseEntity<>(response, HttpStatus.OK) ;	
+    }*/
 }

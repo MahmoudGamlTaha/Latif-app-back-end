@@ -1,6 +1,7 @@
 package com.commerce.backend.api;
 
 import com.commerce.backend.model.request.category.CategoryRequest;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 import com.commerce.backend.service.ItemObjectCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,10 @@ public class CategoryController extends PublicApiController {
         this.itemObjectCategoryService = productCategoryService;
     }
 
+    @GetMapping(value = "/cat-by-type")
+    public ResponseEntity<BasicResponse> getCategoryByType(){
+    	return null;
+    }
     @GetMapping(value = "/pet-category")
     public ResponseEntity<List<ItemObjectCategoryResponse>> getPetCategories() {
         List<ItemObjectCategoryResponse> productCategories = itemObjectCategoryService.findPetsCategories();
