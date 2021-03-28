@@ -12,13 +12,13 @@ public class BlogRequest {
 
     @NotBlank
     @Size(min = 3, max = 250)
-  //  @Pattern(regexp = "[0-9a-zA-Z #,_]+")
+ //   @Pattern(regexp = "[0-9a-zA-Z #,_]+")
     String title;
 
     Long category;
 
     @NotBlank
-    @Size(min = 10, max = 250)
+    @Size(min = 10)
     String description;
 
 }

@@ -12,16 +12,19 @@ import lombok.Data;
 public class ItemObjectCategoryVO {
 	private long id;
     private String name;
+    private String nameAr;
     private String icon;
     private Integer type;
+    private Boolean isExternalLink;
     private ItemObjectCategoryVO parent;
     public ItemObjectCategoryVO(ItemObjectCategory entity) {
     	this.id = entity.getId();
     	this.icon = entity.getIcon();
     	this.name = entity.getName();
     	this.type = entity.getType();
-    	if(entity.getParent_id() != null) //break loop 
-    	this.parent = new ItemObjectCategoryVO(entity.getParent_id()); 	
+    	this.nameAr = entity.getNameAr();
+   // 	this.isExternalLink = entity.getIsExternalLink();
+   
     }
     
     

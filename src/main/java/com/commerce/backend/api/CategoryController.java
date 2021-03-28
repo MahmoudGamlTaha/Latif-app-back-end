@@ -1,6 +1,7 @@
 package com.commerce.backend.api;
 
 import com.commerce.backend.model.request.category.CategoryRequest;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 import com.commerce.backend.service.ItemObjectCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -21,10 +24,16 @@ public class CategoryController extends PublicApiController {
     private final ItemObjectCategoryService itemObjectCategoryService;
 
     @Autowired
-    public CategoryController(ItemObjectCategoryService productCategoryService) {
-        this.itemObjectCategoryService = productCategoryService;
+    public CategoryController(ItemObjectCategoryService itemObjectCategoryService) {
+        this.itemObjectCategoryService = itemObjectCategoryService;
     }
 
+    @GetMapping(value = "/cat-by-type")
+    @ResponseBody
+    public ResponseEntity<BasicResponse> getCategoryByAdsType(@RequestParam Integer id){
+    	BasicResponse response = this.itemObjectCategoryService.findAllByTypeId(id);
+    	return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);
+    }
     @GetMapping(value = "/pet-category")
     public ResponseEntity<List<ItemObjectCategoryResponse>> getPetCategories() {
         List<ItemObjectCategoryResponse> productCategories = itemObjectCategoryService.findPetsCategories();

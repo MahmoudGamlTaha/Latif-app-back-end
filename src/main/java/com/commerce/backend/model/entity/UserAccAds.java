@@ -11,7 +11,7 @@ import com.commerce.backend.constants.AdsType;
 import lombok.Getter;
 import lombok.Setter;
 
-@DiscriminatorValue(AdsType.Values.ACCESORIESS)
+@DiscriminatorValue(AdsType.Values.ACCESSORIES)
 @Entity
 @Getter
 @Setter

@@ -5,6 +5,8 @@ import com.commerce.backend.model.request.role.RoleRequestUpdate;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.role.RoleResponse;
 import com.commerce.backend.service.RoleServiceImpl;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -14,7 +16,8 @@ import java.util.List;
 public class RoleController extends PublicApiController{
 
     private final RoleServiceImpl service;
-
+    
+    @Autowired
     public RoleController(RoleServiceImpl service) {
         this.service = service;
     }

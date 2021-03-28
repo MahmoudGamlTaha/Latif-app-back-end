@@ -8,6 +8,7 @@ import com.commerce.backend.model.entity.ItemCategory;
 import com.commerce.backend.model.entity.ItemObjectCategory;
 import com.commerce.backend.model.entity.PetCategory;
 import com.commerce.backend.model.request.category.CategoryRequest;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 import com.commerce.backend.service.cache.ItemObjectCategoryCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +21,13 @@ import java.util.stream.Collectors;
 public class ItemObjectCategoryServiceImpl implements ItemObjectCategoryService {
 
     private final ItemObjectCategoryCacheService itemObjectCategoryCacheService;
-    private final ItemObjectCategoryResponseConverter productCategoryResponseConverter;
+    private final ItemObjectCategoryResponseConverter itemObjectCategoryResponseConverter;
 
     @Autowired
     public ItemObjectCategoryServiceImpl(ItemObjectCategoryCacheService itemObjectCategoryCacheService,
-                                      ItemObjectCategoryResponseConverter productCategoryResponseConverter) {
+                                      ItemObjectCategoryResponseConverter itemObjectCategoryResponseConverter) {
         this.itemObjectCategoryCacheService = itemObjectCategoryCacheService;
-        this.productCategoryResponseConverter = productCategoryResponseConverter;
+        this.itemObjectCategoryResponseConverter = itemObjectCategoryResponseConverter;
     }
 
 
@@ -38,7 +39,7 @@ public class ItemObjectCategoryServiceImpl implements ItemObjectCategoryService 
         }
         return productCategories
                 .stream()
-                .map(productCategoryResponseConverter)
+                .map(itemObjectCategoryResponseConverter)
                 .collect(Collectors.toList());
     }
 
@@ -49,7 +50,7 @@ public class ItemObjectCategoryServiceImpl implements ItemObjectCategoryService 
 		
 		return petCategories
 				.stream()
-				.map(productCategoryResponseConverter)
+				.map(itemObjectCategoryResponseConverter)
 				.collect(Collectors.toList());
 	}
 
@@ -60,7 +61,7 @@ public class ItemObjectCategoryServiceImpl implements ItemObjectCategoryService 
 		
 		return itemCategories
 				.stream()
-				.map(productCategoryResponseConverter)
+				.map(itemObjectCategoryResponseConverter)
 				.collect(Collectors.toList());
 	}
 
@@ -82,6 +83,12 @@ public class ItemObjectCategoryServiceImpl implements ItemObjectCategoryService 
 		ItemObjectCategoryVO itemObjectCategoryVO = new ItemObjectCategoryVO(itemObjectCategory);
 		itemObjectResponse.setCategory(itemObjectCategoryVO);
 		return itemObjectResponse;
+	}
+
+
+	@Override
+	public BasicResponse findAllByTypeId(Integer id) {
+		return itemObjectCategoryCacheService.findAllByTypeId(id);
 	}
 	
 }
