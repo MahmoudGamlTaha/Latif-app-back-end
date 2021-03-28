@@ -12,13 +12,18 @@ import java.util.function.Function;
 public class ItemObjectCategoryResponseConverter implements Function<ItemObjectCategory, ItemObjectCategoryResponse> {
     @Override
     public ItemObjectCategoryResponse apply(ItemObjectCategory itemCategory) {
+    	
         ItemObjectCategoryResponse itemCategoryResponse = new ItemObjectCategoryResponse();
+        if(itemCategory != null) {
         itemCategoryResponse.setCategory(ItemObjectCategoryVO
         		.builder()
         		.id(itemCategory.getId())
         		.name(itemCategory.getName())
         		.type(itemCategory.getType())
+        		.nameAr(itemCategory.getNameAr())
+        		.isExternalLink(itemCategory.getIsExternalLink())
         		.build());
+        }
         return itemCategoryResponse;
     }
 }

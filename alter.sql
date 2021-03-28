@@ -1,3 +1,5 @@
+ALTER TABLE public.item_category ADD active bool NULL DEFAULT true;
+____________________________________________________________________________
 insert into category_type (id, name, name_ar) values(1,'PETS', 'حيوانات أليفة');
 insert into category_type (id, name, name_ar) values(3,'ACCESSORIES', 'خدمات');
 insert into category_type (id, name, name_ar) values(3,'SERVICE', 'خدمات');

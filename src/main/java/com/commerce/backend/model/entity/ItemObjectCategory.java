@@ -31,6 +31,9 @@ public class ItemObjectCategory {
     @Column(name = "name", length = 250)
     private String name;
     
+    @Column(name = "name_ar", length = 250)
+    private String nameAr;
+    
     @OneToOne
     @JoinColumn(name = "parent_id")
     private ItemObjectCategory parent_id;
@@ -38,11 +41,17 @@ public class ItemObjectCategory {
     @Column(name = "icon")
     private String icon;
     
-    @OneToMany(mappedBy="child", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="child", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ItemObjectCategory> child = new HashSet<ItemObjectCategory>();
     
     @Column(name = "type", insertable = false, updatable = false)
     private Integer type;
+    
+    @Column(name = "active")
+    private Boolean active;
+    
+    @Column(name = "is_external_link")
+    private Boolean isExternalLink;
     
     public void addChild(ItemObjectCategory itemObjectCategory) {
     	this.getChild().add(itemObjectCategory);
