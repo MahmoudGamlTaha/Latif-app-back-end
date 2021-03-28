@@ -1,5 +1,6 @@
 package com.commerce.backend.service;
 
+import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.converter.blog.BlogResponseConverter;
 import com.commerce.backend.dao.BlogCategoryRepository;
 import com.commerce.backend.dao.BlogRepository;
@@ -10,10 +11,12 @@ import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.blog.BlogResponse;
 import com.commerce.backend.service.cache.BlogCacheServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,13 +45,25 @@ public class BlogServiceImpl implements BlogService{
      * return All Blogs
      */
     @Override
-    public List<BlogResponse> getBlogs()
+    public BasicResponse getBlogs(Integer page)
     {
-        List<Blog> getBlogs = blogCacheService.findAll();
-        return getBlogs.
-                stream()
-                .map(blogResponseConverter)
-                .collect(Collectors.toList());
+    	BasicResponse response = new BasicResponse();
+    	HashMap<String, Object> hashMapResponse = new HashMap<String, Object>();
+      try {
+            Page<Blog> getBlogs = blogCacheService.findAll(page);
+        
+            List<BlogResponse> blogResponse =  getBlogs.
+                   stream()
+                   .map(blogResponseConverter)
+                   .collect(Collectors.toList());
+        	hashMapResponse.put(MessageType.Data.getMessage(), page);
+            response.setResponse(hashMapResponse);
+    	}catch(Exception ex) {
+    		response.setMsg(ex.getMessage());
+    		hashMapResponse.put(MessageType.Data.getMessage(), "error");
+    		response.setResponse(hashMapResponse);
+    	}
+      return response;
     }
 
 
@@ -60,9 +75,14 @@ public class BlogServiceImpl implements BlogService{
      * return Blog By Id
      */
     @Override
-    public BlogResponse getBlogById(Long id)
+    public BasicResponse getBlogById(Long id)
     {
-        return blogCacheService.findById(id);
+    	try {
+    		
+    	}catch(Exception ex) {
+    		
+    	}
+        return null;//blogCacheService.findById(id);
     }
 
 
@@ -82,12 +102,13 @@ public class BlogServiceImpl implements BlogService{
                     .map(blogResponseConverter)
                     .collect(Collectors.toList());
         }
-        List<Blog> getBlogs = blogCacheService.findAll();
+   /*     List<Blog> getBlogs = blogCacheService.findAll();
 
         return getBlogs.
                 stream()
                 .map(blogResponseConverter)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
+        return null;
     }
 
 

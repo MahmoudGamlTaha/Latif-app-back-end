@@ -1,5 +1,6 @@
 package com.commerce.backend.service.cache;
 
+import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.dao.BlogCategoryRepository;
 import com.commerce.backend.dao.BlogRepository;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
@@ -13,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,9 +54,10 @@ public class BlogCacheServiceImpl implements BlogCacheService{
      */
     @Override
     //@Cacheable(key = "#root.methodName")
-    public List<Blog> findAll()
+    public Page<Blog> findAll(Integer page)
     {
-        return blogRepository.findAll();
+    	 Pageable offset =  PageRequest.of(page, SystemConstant.MOBILE_PAGE_SIZE);
+        return blogRepository.findAll(offset);
     }
 
 
@@ -106,7 +111,7 @@ public class BlogCacheServiceImpl implements BlogCacheService{
                 .title(blog.getTitle())
                 .description(blog.getDescription())
                 .category(category)
-                .path(path+"blogs")
+                .path(path + "blogs")
                 .image("upload/"+filename)
                 .date(new Date())
                 .created_at(new Date())

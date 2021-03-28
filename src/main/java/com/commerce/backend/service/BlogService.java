@@ -11,8 +11,9 @@ import java.io.IOException;
 import java.util.List;
 
 public interface BlogService {
-    List<BlogResponse> getBlogs();
-    BlogResponse getBlogById(Long id);
+    BasicResponse getBlogs(Integer page);
+    BasicResponse getBlogById(Long id);
+    
     List<BlogResponse> search(String keyword);
     BlogResponse saveBlog(BlogRequest blog, MultipartFile file);
     BasicResponse deleteBlog(Long id);

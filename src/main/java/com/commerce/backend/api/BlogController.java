@@ -8,6 +8,8 @@ import com.commerce.backend.service.BlogService;
 import com.commerce.backend.service.BlogServiceImpl;
 import io.micrometer.core.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,15 +29,19 @@ public class BlogController extends PublicApiController{
     }
 
     @GetMapping("/blogs")
-    public List<BlogResponse> getBlogs()
+    public ResponseEntity<BasicResponse> getBlogs(@RequestParam(required = false) Integer page)
     {
-        return blogServiceImpl.getBlogs();
+    	if(page == null) {
+    		page = 0;
+    	}
+    	BasicResponse response = blogServiceImpl.getBlogs(page); 
+        return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);
     }
 
     @GetMapping("/blogs/id={id}")
     public BlogResponse getBlogById(@PathVariable Long id)
     {
-        return blogServiceImpl.getBlogById(id);
+        return null;//blogServiceImpl.getBlogById(id);
     }
 
     @GetMapping("/blogs/keyword={keyword}")
