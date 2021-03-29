@@ -1,7 +1,15 @@
+update category_type set code = 'PETS' where id = 1;
+update category_type set code = 'ACCESSORIES' where id = 2;
+update category_type set code = 'SERVICE' where id = 3;
+update category_type set code = 'PET_CARE' where id = 4;
+update category_type set code = 'DELIVERY' where id = 6;
+update category_type set code = 'VETERINARY' where id = 7;
+___________________________________________________________________
+ALTER TABLE public.category_type ADD code varchar(250) NULL;
 ALTER TABLE public.item_category ADD active bool NULL DEFAULT true;
 ____________________________________________________________________________
 insert into category_type (id, name, name_ar) values(1,'PETS', 'حيوانات أليفة');
-insert into category_type (id, name, name_ar) values(3,'ACCESSORIES', 'خدمات');
+insert into category_type (id, name, name_ar) values(2,'ACCESSORIES', 'خدمات');
 insert into category_type (id, name, name_ar) values(3,'SERVICE', 'خدمات');
 insert into category_type (id, name, name_ar) values(4,'PET CARE', 'عناية الحيوان');
 insert into category_type (id, name, name_ar) values(6,'DELIVERY', 'توصيل');
