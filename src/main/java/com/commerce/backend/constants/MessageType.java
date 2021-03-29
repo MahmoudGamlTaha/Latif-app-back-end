@@ -6,8 +6,7 @@ public enum MessageType {
 	Data("data"),
 	CurrentPage("currentPage"),
 	TotalItems("totalItems"),
-	TotalPages("totalPages")
-	;
+	TotalPages("totalPages");
 	private String message;
 	
 	public String getMessage() {

@@ -60,6 +60,7 @@ public class BlogServiceImpl implements BlogService{
         	hashMapResponse.put(MessageType.TotalItems.getMessage(), blogList.getTotalElements());
         	hashMapResponse.put(MessageType.TotalPages.getMessage(), blogList.getTotalPages());
         	
+
             response.setResponse(hashMapResponse);
     	}catch(Exception ex) {
     		response.setMsg(ex.getMessage());
