@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+
 import static java.lang.System.currentTimeMillis;
 
 @Service
@@ -59,7 +60,8 @@ public class BlogCacheServiceImpl implements BlogCacheService{
     //@Cacheable(key = "#root.methodName")
     public Page<Blog> findAll(Integer page)
     {
-    	Optional<String> sortBy ;
+//    	Optional<String> sortBy ;
+
     	 Pageable offset =  PageRequest.of(page, SystemConstant.MOBILE_PAGE_SIZE);
         return blogRepository.findAll(offset);
     }
