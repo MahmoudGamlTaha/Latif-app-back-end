@@ -50,13 +50,16 @@ public class BlogServiceImpl implements BlogService{
     	BasicResponse response = new BasicResponse();
     	HashMap<String, Object> hashMapResponse = new HashMap<String, Object>();
       try {
-            Page<Blog> getBlogs = blogCacheService.findAll(page);
+            Page<Blog> blogList = blogCacheService.findAll(page);
         
-            List<BlogResponse> blogResponse =  getBlogs.
-                   stream()
+            List<BlogResponse> blogResponse =  blogList.get()
                    .map(blogResponseConverter)
                    .collect(Collectors.toList());
-        	hashMapResponse.put(MessageType.Data.getMessage(), page);
+        	hashMapResponse.put(MessageType.Data.getMessage(), blogResponse);
+        	hashMapResponse.put(MessageType.CurrentPage.getMessage(), blogList.getNumber());
+        	hashMapResponse.put(MessageType.TotalItems.getMessage(), blogList.getTotalElements());
+        	hashMapResponse.put(MessageType.TotalPages.getMessage(), blogList.getTotalPages());
+        	
             response.setResponse(hashMapResponse);
     	}catch(Exception ex) {
     		response.setMsg(ex.getMessage());
