@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.method.annotation.MethodArgumentConversionNotSupportedException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.commerce.backend.model.response.BasicResponse;
@@ -23,6 +24,14 @@ public abstract class PublicApiController {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<BasicResponse> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
          BasicResponse response = new BasicResponse();
+         response.setMsg(ex.getMessage());
+         response.setSuccess(false);
+    	return new ResponseEntity<BasicResponse>(response, HttpStatus.NOT_ACCEPTABLE);
+    }
+    
+    @ExceptionHandler(MethodArgumentConversionNotSupportedException.class)
+    public ResponseEntity<BasicResponse> handleMethodArgumentConversionNotSupported(MethodArgumentConversionNotSupportedException ex){
+    	 BasicResponse response = new BasicResponse();
          response.setMsg(ex.getMessage());
          response.setSuccess(false);
     	return new ResponseEntity<BasicResponse>(response, HttpStatus.NOT_ACCEPTABLE);
