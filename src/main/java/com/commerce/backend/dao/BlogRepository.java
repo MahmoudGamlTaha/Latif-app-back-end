@@ -15,6 +15,4 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
 
     @Query("SELECT b FROM Blog b WHERE CONCAT(b.title, b.description) LIKE %?1%")
     List<Blog> findAll(String keyword);
-    
-    Page<Blog> findAll(Pageable page);
 }

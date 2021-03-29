@@ -20,6 +20,7 @@
   {"name": "category", "type": "String","label": "Name", "required": true},
   {"name": "petsImages", "type": "file","label": "Pets Images", "required": true},
   {"name": "longitude", "type": "map","label": "Longitude", "required": true},
-  {"name": "latitude", "type": "map","label": "Latitude", "required": true},
-  {"url": "/ads/pet/save"}
-]}
+  {"name": "latitude", "type": "map","label": "Latitude", "required": true}
+],
+ "url": "/api/public/ads/create?type=PETS"
+}

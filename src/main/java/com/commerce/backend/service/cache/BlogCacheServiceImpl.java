@@ -10,6 +10,7 @@ import com.commerce.backend.model.request.blog.BlogRequest;
 import com.commerce.backend.model.request.blog.UpdateBlogRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.blog.BlogResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
@@ -17,6 +18,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +30,8 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+
 
 import static java.lang.System.currentTimeMillis;
 
@@ -56,6 +60,8 @@ public class BlogCacheServiceImpl implements BlogCacheService{
     //@Cacheable(key = "#root.methodName")
     public Page<Blog> findAll(Integer page)
     {
+//    	Optional<String> sortBy ;
+
     	 Pageable offset =  PageRequest.of(page, SystemConstant.MOBILE_PAGE_SIZE);
         return blogRepository.findAll(offset);
     }

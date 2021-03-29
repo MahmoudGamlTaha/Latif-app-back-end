@@ -9,6 +9,8 @@
   {"name": "image", "type": "file","label": "Image", "required": true},
   {"name": "active", "type": "boolean","label": "Active", "required": true},
   {"name": "longitude", "type": "map","label": "Longitude", "required": true},
-  {"name": "latitude", "type": "map","label": "Latitude", "required": true},
-  {"url": "/ads/pet/save"}
-]}
+  {"name": "latitude", "type": "map","label": "Latitude", "required": true}
+],
+"url": "/api/public/ads/create?type=SERVICE"
+}
+

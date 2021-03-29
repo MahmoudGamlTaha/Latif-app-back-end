@@ -3,7 +3,10 @@ package com.commerce.backend.constants;
 public enum MessageType {
 	Success("SUCCESS"),
 	Fail("Fail"),
-	Data("data");
+	Data("data"),
+	CurrentPage("currentPage"),
+	TotalItems("totalItems"),
+	TotalPages("totalPages");
 	private String message;
 	
 	public String getMessage() {

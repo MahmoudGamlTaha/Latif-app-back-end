@@ -21,6 +21,7 @@
   {"name": "name","type": "string", "label": "Category", "required": true},
   {"name": "food", "type": "select","label": "Food", "required": true, "options":["Dry", "Wet", "Home cooked"], "multi":true},
   {"name": "petsImages", "type": "file","label": "Pets Images", "required": true},
-  {"name": "barkingProblem", "type": "boolean", "label": "Barking Problem", "required": true},
-  {"url": "/ads/pet/save"}
-]}
+  {"name": "barkingProblem", "type": "boolean", "label": "Barking Problem", "required": true}
+],
+  "url": "/api/public/ads/create?type=Dogs"
+}

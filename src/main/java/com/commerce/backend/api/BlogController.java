@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+
 
 @RestController
 public class BlogController extends PublicApiController{
@@ -29,12 +31,10 @@ public class BlogController extends PublicApiController{
     }
 
     @GetMapping("/blogs")
-    public ResponseEntity<BasicResponse> getBlogs(@RequestParam(required = false) Integer page)
+    public ResponseEntity<BasicResponse> getBlogs(@RequestParam(required = false) Optional<Integer> page)
     {
-    	if(page == null) {
-    		page = 0;
-    	}
-    	BasicResponse response = blogServiceImpl.getBlogs(page); 
+    	BasicResponse response = blogServiceImpl.getBlogs(page.orElse(0)); 
+
         return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);
     }
 
