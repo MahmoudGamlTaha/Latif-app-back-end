@@ -25,7 +25,6 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
     public UserAds convertRequestToEntity(DynamicAdsRequest<String, String> request)
     {
         UserAds entity = null;
-        System.out.println(request);
         if(request.getType() == AdsType.ACCESSORIES) {
             entity = new UserAccAds();
         }
@@ -42,7 +41,6 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
     }
 
     private UserAds convertToEntity(DynamicAdsRequest<String, String> request, UserAds entity) {
-
         List<HashMap<String, String>> data = request.getUserAds();
        
         HashMap<String, Object> hashedData = new HashMap<String, Object>();
@@ -54,7 +52,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         entity.setDescription((String) hashedData.get("description"));
         entity.setShortDescription(((String) hashedData.get("short_description")));
        
-        //entity.setActive(hashedData.get("active").toString().equalsIgnoreCase(String.valueOf(true)));
+        entity.setActive(hashedData.get("active").toString().equalsIgnoreCase(String.valueOf(true)));
         
         entity.setType(request.getType());
         entity.setPrice(Float.parseFloat(String.valueOf(hashedData.get("price"))));
@@ -82,7 +80,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             ((UserPetAds)entity).setDiseasesDisabilities(hashedData.get("diseasesDisabilities").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setDiseasesDisabilitiesDesc((String) hashedData.get("diseasesDisabilitiesDesc"));
             ((UserPetAds)entity).setNeutering(hashedData.get("neutering").toString().equalsIgnoreCase(String.valueOf(true)));
-            ((UserPetAds)entity).setTraining(TrainningType.valueOf((String) hashedData.get("training")));
+            ((UserPetAds)entity).setTraining(TrainningType.valueOf( (String) hashedData.get("training")));
             ((UserPetAds)entity).setPlayWithKids(hashedData.get("playWithKids").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setPassport(hashedData.get("passport").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setVaccinationCertifcate(hashedData.get("vaccinationCertificate").toString().equalsIgnoreCase(String.valueOf(true)));
