@@ -12,7 +12,6 @@
   {"name": "neutering", "type": "boolean","label": "Neutering", "required": true},
   {"name": "vaccinationCertificate", "type": "boolean","label": "Vaccination Certificate", "required": true},
   {"name": "training", "type": "select","label": "Training", "required": true, "options":[{"lable":"Litter box", "code":"LITTER_BOX"}, {"lable":"Litter box", "code":"Guarding"}], "multi":true},
-  {"name": "training", "type": "radiobutton","label": "Training", "required": true, "options":["Litter box", "Guarding"]},
   {"name": "passport", "type": "boolean","label": "Passport", "required": true},
   {"name": "playWithKids", "type": "boolean","label": "Play with kids", "required": true},
   {"name": "diseasesDisabilities", "type": "boolean","label": "Diseases or Disabilities", "required": true},
