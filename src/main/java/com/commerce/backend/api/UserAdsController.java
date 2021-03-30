@@ -112,11 +112,18 @@ public class UserAdsController extends PublicApiController {
     }
 
     @PostMapping(value = "/ads/create")
-    public ResponseEntity<BasicResponse> createUserAds( DynamicAdsRequest<String, String> userAdsRequest,
+    public ResponseEntity<BasicResponse> createUserAds(@RequestBody DynamicAdsRequest<String, String> userAdsRequest,
                                                        @RequestParam(value = "images", required = false) List<MultipartFile> file){
-    	
-    	BasicResponse response = this.userAdsService.createUserAds(userAdsRequest, file);
-    	return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);
+    	BasicResponse response = null;
+    	try {
+    	     response = this.userAdsService.createUserAds(userAdsRequest, file);
+       
+    	}catch(Exception ex) {
+    		response = new BasicResponse();
+    		response.setMsg(ex.getMessage());
+    		response.setSuccess(false);
+    	}
+    	 return new ResponseEntity<BasicResponse>(response, HttpStatus.OK); 
     }
     
     @PostMapping(value = "/ads/food/create")

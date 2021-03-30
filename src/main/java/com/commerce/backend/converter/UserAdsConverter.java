@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Function;
 
 @Component
@@ -24,7 +25,6 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
     public UserAds convertRequestToEntity(DynamicAdsRequest<String, String> request)
     {
         UserAds entity = null;
-
         if(request.getType() == AdsType.ACCESSORIES) {
             entity = new UserAccAds();
         }
@@ -41,8 +41,8 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
     }
 
     private UserAds convertToEntity(DynamicAdsRequest<String, String> request, UserAds entity) {
-
-        LinkedList<HashMap<String, String>> data = request.getUserAds();
+        List<HashMap<String, String>> data = request.getUserAds();
+       
         HashMap<String, Object> hashedData = new HashMap<String, Object>();
         for(HashMap<String, String> d: data){
             hashedData.put(d.get("id"), d.get("value"));
@@ -51,7 +51,9 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         entity.setCode((String) hashedData.get("code"));
         entity.setDescription((String) hashedData.get("description"));
         entity.setShortDescription(((String) hashedData.get("short_description")));
+       
         entity.setActive(hashedData.get("active").toString().equalsIgnoreCase(String.valueOf(true)));
+        
         entity.setType(request.getType());
         entity.setPrice(Float.parseFloat(String.valueOf(hashedData.get("price"))));
         entity.setLongitude((String) hashedData.get("longitude"));
@@ -78,7 +80,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             ((UserPetAds)entity).setDiseasesDisabilities(hashedData.get("diseasesDisabilities").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setDiseasesDisabilitiesDesc((String) hashedData.get("diseasesDisabilitiesDesc"));
             ((UserPetAds)entity).setNeutering(hashedData.get("neutering").toString().equalsIgnoreCase(String.valueOf(true)));
-            ((UserPetAds)entity).setTraining(TrainningType.valueOf((String) hashedData.get("training")));
+            ((UserPetAds)entity).setTraining(TrainningType.valueOf( (String) hashedData.get("training")));
             ((UserPetAds)entity).setPlayWithKids(hashedData.get("playWithKids").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setPassport(hashedData.get("passport").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setVaccinationCertifcate(hashedData.get("vaccinationCertificate").toString().equalsIgnoreCase(String.valueOf(true)));

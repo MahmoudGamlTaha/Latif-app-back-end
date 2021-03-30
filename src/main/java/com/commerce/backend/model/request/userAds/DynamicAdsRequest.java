@@ -5,10 +5,11 @@ import lombok.Data;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 @Data
 public class DynamicAdsRequest<T,R>  {
 
     private AdsType type;
-    private LinkedList<HashMap<T,R>> userAds = new LinkedList<>();
+    private List<HashMap<T,R>> userAds = new LinkedList<>();
 }
