@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -51,12 +50,11 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         for(HashMap<String, String> d: data){
             hashedData.put(d.get("id"), d.get("value"));
         }
-        System.out.println("5556");
+     
         entity.setName((String) hashedData.get("name"));
         entity.setCode((String) hashedData.get("code"));
         entity.setDescription((String) hashedData.get("description"));
         entity.setShortDescription(((String) hashedData.get("short_description")));
-        System.out.println("5557");
         entity.setActive(hashedData.get("active").toString().equalsIgnoreCase(String.valueOf(true)));
         
         entity.setType(request.getType());
@@ -66,7 +64,6 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         entity.setCreatedAt((new Date()));
         entity.setUpdatedAt((new Date()));
         User user = new User();
-        System.out.println("5558");
         user.setId(Long.parseLong(String.valueOf(hashedData.get("created_by"))));
         
         entity.setCreatedBy(user);
@@ -75,7 +72,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         {
             PetCategory category = new PetCategory();
             category.setId(Long.parseLong(String.valueOf(hashedData.get("category_id"))));
-            System.out.println("55510");
+         
             ((UserPetAds)entity).setCategory(category);
            // category = new PetCategory();
          //   category.setId(Long.parseLong(String.valueOf(hashedData.get("category_type"))));
@@ -84,20 +81,16 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             ((UserPetAds)entity).setBarkingProblem(hashedData.get("barkingProblem").toString().equalsIgnoreCase(String.valueOf(true)));
             }
             ((UserPetAds)entity).setBreed((String) hashedData.get("breed"));
-            System.out.println("55511");
             ((UserPetAds)entity).setStock(Integer.parseInt((String) hashedData.get("stock")));
             ((UserPetAds)entity).setWeaned(hashedData.get("weaned").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setFood(FoodType.valueOf((String) hashedData.get("food")));
-            System.out.println("55512");
             ((UserPetAds)entity).setDiseasesDisabilities(hashedData.get("diseasesDisabilities").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setDiseasesDisabilitiesDesc((String) hashedData.get("diseasesDisabilitiesDesc"));
             ((UserPetAds)entity).setNeutering(hashedData.get("neutering").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setTraining(TrainningType.valueOf( (String) hashedData.get("training")));
-            System.out.println("55513");
             ((UserPetAds)entity).setPlayWithKids(hashedData.get("playWithKids").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setPassport(hashedData.get("passport").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setVaccinationCertifcate(hashedData.get("vaccinationCertificate").toString().equalsIgnoreCase(String.valueOf(true)));
-            System.out.println("55514");
         }
        
         if(request.getType() == AdsType.ACCESSORIES) {
