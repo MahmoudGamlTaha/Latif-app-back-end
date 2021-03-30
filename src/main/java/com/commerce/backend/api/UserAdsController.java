@@ -2,6 +2,7 @@ package com.commerce.backend.api;
 
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.constants.MessageType;
+import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.error.exception.InvalidArgumentException;
 import com.commerce.backend.model.dto.UserAccVO;
 import com.commerce.backend.model.dto.UserAdsVO;
@@ -11,20 +12,14 @@ import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import com.commerce.backend.service.UserAdsService;
 
-
-import com.commerce.backend.service.UserAdsServiceImpl;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class UserAdsController extends PublicApiController {
@@ -39,21 +34,16 @@ public class UserAdsController extends PublicApiController {
 
 
     @GetMapping(value = "/ads")
-    public ResponseEntity<BasicResponse> getAll(@RequestParam(value ="page", required = false) Integer page,
+    public ResponseEntity<BasicResponse> getAll(@RequestParam(value ="page", required = false) Optional<Integer> page,
+    		                                    @RequestParam(value="location", required= false) Optional<LocationRequest> location,
     		                                                   @RequestParam(value = "type", required= true) AdsType type,
-                                                               @RequestParam(value ="size", required= false) Integer pageSize,
+                                                               @RequestParam(value ="size", required= false) Optional<Integer> pageSize,
                                                                @RequestParam(value = "sort", required = false) String sort,
-                                                               @RequestParam(value = "itemType", required = false) Long itemType,
                                                                @RequestParam(value = "category", required = false) Long category,
                                                                @RequestParam(value = "minPrice", required = false) Float minPrice,
                                                                @RequestParam(value = "maxPrice", required = false) Float maxPrice) {
-        if (Objects.isNull(page) || page < 0) {
-        	   page = 1;
-        }
-        if (Objects.isNull(pageSize) || pageSize < 0) {
-               pageSize = 20;
-        }
-       BasicResponse response = userAdsService.getAll(type, page, pageSize, sort, category, minPrice, maxPrice);  
+    	
+       BasicResponse response = userAdsService.getAll(type, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), sort, category, minPrice, maxPrice);  
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
