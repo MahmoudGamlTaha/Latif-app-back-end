@@ -14,7 +14,7 @@ public interface BlogService {
     BasicResponse getBlogs(Integer page);
     BasicResponse getBlogById(Long id);
     
-    List<BlogResponse> search(String keyword);
+    BasicResponse search(String keyword);
     BlogResponse saveBlog(BlogRequest blog, MultipartFile file);
     BasicResponse deleteBlog(Long id);
     BlogResponse update(UpdateBlogRequest blog, MultipartFile file) throws IOException;
