@@ -83,10 +83,11 @@ public class BlogServiceImpl implements BlogService{
     {
     	try {
     		
+              
     	}catch(Exception ex) {
     		
     	}
-        return null;//blogCacheService.findById(id);
+        return null;//
     }
 
 
@@ -97,14 +98,22 @@ public class BlogServiceImpl implements BlogService{
      * return blog by title
      */
     @Override
-    public List<BlogResponse> search(String keyword)
+    public BasicResponse search(String keyword)
     {
+    	 BasicResponse response = new BasicResponse();
+    	try {
         if(keyword != null) {
+        	
             List<Blog> blogList = blogCacheService.search(keyword);
-            return blogList
+            HashMap<String, Object> hashMap = new HashMap<String, Object>();
+             List<BlogResponse> blogResponse = blogList
                     .stream()
                     .map(blogResponseConverter)
                     .collect(Collectors.toList());
+           
+             hashMap.put(MessageType.Data.getMessage(), blogResponse);
+             response.setMsg(MessageType.Success.getMessage());
+             response.setResponse(hashMap);
         }
    /*     List<Blog> getBlogs = blogCacheService.findAll();
 
@@ -112,7 +121,11 @@ public class BlogServiceImpl implements BlogService{
                 stream()
                 .map(blogResponseConverter)
                 .collect(Collectors.toList());*/
-        return null;
+    	} catch(Exception ex) {
+    		response.setMsg(ex.getMessage());
+    		response.setSuccess(false);
+    	}
+        return response;
     }
 
 

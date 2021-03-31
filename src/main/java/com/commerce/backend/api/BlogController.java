@@ -45,7 +45,7 @@ public class BlogController extends PublicApiController{
     }
 
     @GetMapping("/blogs/keyword={keyword}")
-    public List<BlogResponse> search(@PathVariable String keyword)
+    public BasicResponse search(@PathVariable String keyword)
     {
         return blogServiceImpl.search(keyword);
     }
