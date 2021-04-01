@@ -129,10 +129,11 @@ public class UserAdsController extends PublicApiController {
 
     @GetMapping(value = "/ads/get-create-form")
     @ResponseBody
-    public ResponseEntity<JSONObject> getCreateForm(@RequestParam(value = "adType",required = true) AdsType adType) throws Exception {
+    public ResponseEntity<BasicResponse> getCreateForm(@RequestParam(value = "adType",required = true) AdsType adType) throws Exception {
     	adTypeRequest adRequest = new adTypeRequest();
     	adRequest.setAdsType(adType);
-    	return new ResponseEntity<JSONObject>(userAdsService.getPetsResponse(adRequest), HttpStatus.OK);
+    	
+    	return new ResponseEntity<BasicResponse>(userAdsService.getCreateForm(adRequest), HttpStatus.OK);
     }
 
     

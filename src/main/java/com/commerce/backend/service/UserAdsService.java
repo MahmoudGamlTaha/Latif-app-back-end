@@ -41,7 +41,7 @@ public interface UserAdsService {
 
 	Long getAllCount(String category, Float minPrice, Float maxPrice, String color);
 
-    JSONObject getPetsResponse(adTypeRequest petType) throws Exception;
+    BasicResponse getCreateForm(adTypeRequest petType);
 
     <T> UserAdsVO savePet(UserPetsAdsRequest userPetsAdsRequest);
 }

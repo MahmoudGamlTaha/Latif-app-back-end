@@ -2,6 +2,7 @@ package com.commerce.backend.service;
 
 
 import com.commerce.backend.constants.AdsType;
+import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.converter.UserAdsConverter;
 import com.commerce.backend.converter.UserAdsToVoConverter;
 import com.commerce.backend.dao.*;
@@ -238,29 +239,43 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public JSONObject getPetsResponse(adTypeRequest adsType) throws Exception {
+	public BasicResponse getCreateForm(adTypeRequest adsType){
 
-		InputStream is;
-		System.out.println("ads"+adsType);
+		InputStream is = null;
+		BasicResponse response = new BasicResponse();
+		HashMap<String, Object> mapResponse = new HashMap<String, Object>(); 
+		try {
 		is = new ClassPathResource("jsonFiles/basicResponse.json").getInputStream();
 		if(adsType != null)
 		{
-			
 			String adType = adsType.getAdsType().getType().toLowerCase();
-			
 			is = new ClassPathResource("jsonFiles/"+adType+"Rs.json").getInputStream();
 		}
-
-		try {
+       
+		
 			JSONParser jsonParser = new JSONParser();
 			JSONObject jsonObject = (JSONObject)jsonParser.parse(
 					new InputStreamReader(is, StandardCharsets.UTF_8));
-			is.close();
-			return jsonObject;
-		} catch (IOException e) {
-			throw new Exception("Error: "+e.getMessage());
+			response.setMsg(MessageType.Success.getMessage());
+			response.setSuccess(true);
+            mapResponse.put(MessageType.Data.getMessage(), jsonObject);
+			response.setResponse(mapResponse);
+			
+		} catch (Exception e) {
+			response.setMsg(e.getMessage());
+			response.setSuccess(false);
+		} finally {
+			if(is != null) {
+			  try {
+				is.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				response.setMsg(e.getMessage());
+				response.setSuccess(false);
+			}
+			}
 		}
-
+		return response;
 	}
 
 	@Override
