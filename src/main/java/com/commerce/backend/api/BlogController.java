@@ -31,8 +31,7 @@ public class BlogController extends PublicApiController{
     }
 
     @GetMapping("/blogs")
-    public ResponseEntity<BasicResponse> getBlogs(@RequestParam(required = false) Optional<Integer> page)
-    {
+    public ResponseEntity<BasicResponse> getBlogs(@RequestParam(required = false) Optional<Integer> page){
     	BasicResponse response = blogServiceImpl.getBlogs(page.orElse(0)); 
         return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);
     }

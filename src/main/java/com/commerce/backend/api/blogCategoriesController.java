@@ -24,14 +24,12 @@ public class blogCategoriesController extends PublicApiController{
     }
 
     @GetMapping("/blogCategory")
-    public List<BlogCategoryResponse> getAll()
-    {
+    public List<BlogCategoryResponse> getAll(){
         return blogCategoryService.findAll();
     }
 
     @GetMapping("/blogCategory/id={id}")
-    public BlogCategoryResponse getById(@PathVariable Long id)
-    {
+    public BlogCategoryResponse getById(@PathVariable Long id){
         return blogCategoryService.findById(id);
     }
 
