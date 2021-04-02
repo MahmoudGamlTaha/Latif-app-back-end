@@ -12,6 +12,7 @@ import com.commerce.backend.model.response.blog.BlogResponse;
 import com.commerce.backend.service.cache.BlogCacheServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -81,13 +82,19 @@ public class BlogServiceImpl implements BlogService{
     @Override
     public BasicResponse getBlogById(Long id)
     {
-    	try {
-    		
-              
-    	}catch(Exception ex) {
-    		
-    	}
-        return null;//
+        BasicResponse response = new BasicResponse();
+        HashMap<String, Object> hashMapResponse = new HashMap<String, Object>();
+        try {
+            BlogResponse blog = new BlogResponse(blogCacheService.findById(id));
+            hashMapResponse.put(MessageType.Data.getMessage(), blog);
+            response.setSuccess(true);
+            response.setResponse(hashMapResponse);
+        }catch(Exception ex) {
+            response.setMsg(ex.getMessage());
+            hashMapResponse.put(MessageType.Data.getMessage(), "error");
+            response.setResponse(hashMapResponse);
+        }
+        return response;
     }
 
 
@@ -98,29 +105,23 @@ public class BlogServiceImpl implements BlogService{
      * return blog by title
      */
     @Override
-    public BasicResponse search(String keyword)
+    public BasicResponse search(String keyword, Pageable pageable)
     {
     	 BasicResponse response = new BasicResponse();
+        HashMap<String, Object> hashMapResponse = new HashMap<String, Object>();
     	try {
-        if(keyword != null) {
-        	
-            List<Blog> blogList = blogCacheService.search(keyword);
-            HashMap<String, Object> hashMap = new HashMap<String, Object>();
-             List<BlogResponse> blogResponse = blogList
-                    .stream()
-                    .map(blogResponseConverter)
-                    .collect(Collectors.toList());
-           
-             hashMap.put(MessageType.Data.getMessage(), blogResponse);
-             response.setMsg(MessageType.Success.getMessage());
-             response.setResponse(hashMap);
-        }
-   /*     List<Blog> getBlogs = blogCacheService.findAll();
-
-        return getBlogs.
-                stream()
-                .map(blogResponseConverter)
-                .collect(Collectors.toList());*/
+            if(keyword != null) {
+                Page<Blog> blogList = blogCacheService.search(keyword, pageable);
+                List<BlogResponse> blogResponse =  blogList.get()
+                            .map(blogResponseConverter)
+                            .collect(Collectors.toList());
+                hashMapResponse.put(MessageType.Data.getMessage(), blogResponse);
+                hashMapResponse.put(MessageType.CurrentPage.getMessage(), blogList.getNumber());
+                hashMapResponse.put(MessageType.TotalItems.getMessage(), blogList.getTotalElements());
+                hashMapResponse.put(MessageType.TotalPages.getMessage(), blogList.getTotalPages());
+                response.setSuccess(true);
+                response.setResponse(hashMapResponse);
+            }
     	} catch(Exception ex) {
     		response.setMsg(ex.getMessage());
     		response.setSuccess(false);
@@ -142,8 +143,20 @@ public class BlogServiceImpl implements BlogService{
     }
 
     @Override
-    public BlogResponse update(UpdateBlogRequest blogRequest, MultipartFile file) throws IOException {
-        return blogCacheService.update(blogRequest, file);
+    public BasicResponse update(UpdateBlogRequest blogRequest, MultipartFile file) throws IOException {
+        BasicResponse response = new BasicResponse();
+        HashMap<String, Object> hashMapResponse = new HashMap<String, Object>();
+        try {
+            BlogResponse blog = blogCacheService.update(blogRequest, file);
+            hashMapResponse.put(MessageType.Data.getMessage(), blog);
+            response.setSuccess(true);
+            response.setResponse(hashMapResponse);
+        }catch(Exception ex) {
+            response.setMsg(ex.getMessage());
+            hashMapResponse.put(MessageType.Data.getMessage(), "error");
+            response.setResponse(hashMapResponse);
+        }
+        return response;
     }
 
     /**

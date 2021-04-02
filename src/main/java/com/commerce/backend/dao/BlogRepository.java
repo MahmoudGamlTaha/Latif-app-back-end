@@ -8,11 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface BlogRepository extends JpaRepository<Blog, Long> {
 
-    @Query("SELECT b FROM Blog b WHERE CONCAT(b.title, b.description) LIKE %?1%")
-    List<Blog> findAll(String keyword);
+    @Query(value = "SELECT b FROM Blog b WHERE CONCAT(b.title, b.description) LIKE %?1%",
+            countQuery = "SELECT count(*) FROM Blog b WHERE CONCAT(b.title, b.description) LIKE %?1%",
+            nativeQuery = true)
+    Page<Blog> findAll(String keyword, Pageable pageable);
 }

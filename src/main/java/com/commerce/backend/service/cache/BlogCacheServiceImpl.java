@@ -77,15 +77,15 @@ public class BlogCacheServiceImpl implements BlogCacheService{
      * return Blog By Id
      */
     @Override
-    @Cacheable(key = "#root.methodName")
-    public BlogResponse findById(Long id)
+    //@Cacheable(key = "#root.methodName")
+    public Blog findById(Long id)
     {
         Blog blog = blogRepository.findById(id).orElse(null);
         if(Objects.isNull(blog))
         {
             throw new ResourceNotFoundException("Not Found");
         }
-        return new BlogResponse(blog);
+        return blog;
     }
 
 
@@ -97,9 +97,9 @@ public class BlogCacheServiceImpl implements BlogCacheService{
      */
     @Override
     @Cacheable(key = "#keyword", unless = "{#root.caches[0].get(#keyword) == null, #result.equals(null)}")
-    public List<Blog> search(String keyword)
+    public Page<Blog> search(String keyword, Pageable pageable)
     {
-        return blogRepository.findAll(keyword);
+        return blogRepository.findAll(keyword, pageable);
     }
 
 
