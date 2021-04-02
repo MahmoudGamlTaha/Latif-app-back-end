@@ -39,7 +39,7 @@ public class UserAdsController extends PublicApiController {
                                                                @RequestParam(value = "minPrice", required = false) Float minPrice,
                                                                @RequestParam(value = "maxPrice", required = false) Float maxPrice) {
     	
-       BasicResponse response = userAdsService.getAll(type, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), sort, category, minPrice, maxPrice);  
+        BasicResponse response = userAdsService.getAll(type, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), sort, category, minPrice, maxPrice);  
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
