@@ -136,9 +136,9 @@ public class BlogServiceImpl implements BlogService{
      * save blog
      */
     @Override
-    public BlogResponse saveBlog(BlogRequest blog, MultipartFile file)
+    public BasicResponse saveBlog(BlogRequest blog, List<String> externFiles, List<MultipartFile> files, boolean external)
     {
-        return blogCacheService.saveBlog(blog, file);
+        return blogCacheService.saveBlog(blog, externFiles, external, files);
     }
 
     @Override

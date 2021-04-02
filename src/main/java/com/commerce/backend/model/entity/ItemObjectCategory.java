@@ -41,6 +41,9 @@ public class ItemObjectCategory {
     @Column(name = "icon")
     private String icon;
     
+    @Column(name = "icon_select")
+    private String icon_select;
+    
     @OneToMany(mappedBy="child", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ItemObjectCategory> child = new HashSet<ItemObjectCategory>();
     

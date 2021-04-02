@@ -1,5 +1,6 @@
 package com.commerce.backend.service.cache;
 
+import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.dao.BlogCategoryRepository;
 import com.commerce.backend.dao.BlogRepository;
@@ -28,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -103,27 +105,35 @@ public class BlogCacheServiceImpl implements BlogCacheService{
 
     @Override
     //@Cacheable(key = "#root.methodName")
-    public BlogResponse saveBlog(BlogRequest blog, MultipartFile file)
+    public BasicResponse saveBlog(BlogRequest blog, List<String> paths, boolean external,  List<MultipartFile> files)
     {
-        String filename = currentTimeMillis()+"-"+StringUtils.cleanPath(file.getOriginalFilename());
-        filename = filename.toLowerCase().replaceAll(" ", "-");
-        try {
-            Files.copy(file.getInputStream(), rootLocation.resolve(filename));
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
+    	BasicResponse response = new BasicResponse();
+    	HashMap<String, Object> hashMap = new HashMap<String, Object>();
+    	for(MultipartFile file : files) {
+	    String filename = currentTimeMillis() + "-" + StringUtils.cleanPath(file.getOriginalFilename());
+	    filename = filename.toLowerCase().replaceAll(" ",  "-");
+	    try{
+	        Files.copy(file.getInputStream(), rootLocation.resolve(filename));
+	    }catch (Exception e) {
+	      response.setMsg(e.getMessage());
+	      response.setSuccess(false);
+	      return response;
+	    }
         BlogCategory category = blogCategoryRepository.findById(blog.getCategory()).orElse(null);
         Blog entity = Blog.builder()
                 .title(blog.getTitle())
                 .description(blog.getDescription())
                 .category(category)
                 .path(path + "blogs")
-                .image("upload/"+filename)
+                .image("upload/" + filename)
                 .date(new Date())
                 .created_at(new Date())
                 .build();
         Blog test = blogRepository.save(entity);
-        return new BlogResponse(test);
+        hashMap.put(MessageType.Data.getMessage(), test);
+        response.setResponse(hashMap);
+    	}
+        return response ;
     }
 
     @Override

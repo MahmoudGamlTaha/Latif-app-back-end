@@ -15,7 +15,7 @@ public interface BlogService {
     BasicResponse getBlogById(Long id);
     
     BasicResponse search(String keyword);
-    BlogResponse saveBlog(BlogRequest blog, MultipartFile file);
+    BasicResponse saveBlog(BlogRequest blog, List<String> externFiles, List<MultipartFile> files, boolean external);
     BasicResponse deleteBlog(Long id);
-    BlogResponse update(UpdateBlogRequest blog, MultipartFile file) throws IOException;
+    BlogResponse  update(UpdateBlogRequest blog, MultipartFile file) throws IOException;
 }

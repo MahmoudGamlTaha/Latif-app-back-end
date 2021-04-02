@@ -19,8 +19,14 @@ public class CategoryRequest {
      @Size(min = 3, max = 200)
      String name ;
      
+     @NotBlank
+     @Size(min = 3, max = 200)
+     String nameAr ;
+     
      String icon;
-    
+     
+     String icon_select_path;
+     
      @Positive
      @NotNull
      Integer type;
@@ -29,4 +35,6 @@ public class CategoryRequest {
 	 Long catParent;
 	  
 	 boolean active;
+	 
+	 boolean isExternalLink;
 }

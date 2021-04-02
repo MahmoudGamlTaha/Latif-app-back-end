@@ -68,18 +68,25 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 			category = new PetCategory();
 			category.setName(request.getName());
 			category.setIcon(request.getIcon());
+			category.setIsExternalLink(request.isExternalLink());
+			category.setNameAr(request.getNameAr());
+			category.setIcon_select(request.getIcon_select_path());
+			category.setActive(request.isActive());
 			 Optional<PetCategory> cat = this.petCategoryRepository.findById(request.getCatParent());
 			 PetCategory parent	= cat.isPresent()?cat.get(): null;
 			 category.setParent_id(parent);
 			this.petCategoryRepository.save((PetCategory)category);
 		}else if(request.getType() == CategoryType.ACCESSORIES.getType()){
-			category = new ItemCategory();
-			category.setName(request.getName());
-			category.setIcon(request.getIcon());
-			Optional<ItemCategory> itemCategory = this.itemCategoryRepository.findById(request.getCatParent());
-			 ItemCategory parent = itemCategory.isPresent()?itemCategory.get(): null;
-			category.setParent_id(parent);
-			this.itemCategoryRepository.save((ItemCategory)category);
+				category = new ItemCategory();
+				category.setName(request.getName());
+				category.setIcon(request.getIcon());
+				category.setIsExternalLink(request.isExternalLink());
+				category.setNameAr(request.getNameAr());
+				category.setIcon_select(request.getIcon_select_path());
+				Optional<ItemCategory> itemCategory = this.itemCategoryRepository.findById(request.getCatParent());
+				ItemCategory parent = itemCategory.isPresent()?itemCategory.get(): null;
+				category.setParent_id(parent);
+				this.itemCategoryRepository.save((ItemCategory)category);
 		}
 		return category;
 	}
