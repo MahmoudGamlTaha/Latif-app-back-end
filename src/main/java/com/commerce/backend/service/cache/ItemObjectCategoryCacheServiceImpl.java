@@ -103,6 +103,7 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 		BasicResponse categoryByType = new BasicResponse();
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		try {
+			
 		     List<ItemObjectCategory> itemObjectCategory  = this.itemObjectRepository.findAllByType(id);
 		     List<ItemObjectCategoryResponse> catList =  itemObjectCategory.stream()
 			   .map(itemObjectCategoryResponseConverter)
