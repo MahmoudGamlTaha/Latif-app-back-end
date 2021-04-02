@@ -14,5 +14,5 @@ import java.util.List;
 public interface ItemObjectCategoryRepository extends CrudRepository<ItemObjectCategory, Long> {
     List<ItemObjectCategory>    findAllByOrderByName();
     @Query("SELECT b FROM ItemObjectCategory b WHERE type = ?1 AND active = true")
-    List<ItemObjectCategory>    findAllByType(Integer id);
+    List<ItemObjectCategory>    findAllByType(Integer type);
 }
