@@ -30,8 +30,7 @@ public class blogCategoriesController extends PublicApiController{
     }
 
     @GetMapping("/blogCategory/id={id}")
-    public BlogCategoryResponse getById(@PathVariable Long id)
-    {
+    public BlogCategoryResponse getById(@PathVariable Long id){
         return blogCategoryService.findById(id);
     }
 
