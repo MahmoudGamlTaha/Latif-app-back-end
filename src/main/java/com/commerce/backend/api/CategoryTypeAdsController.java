@@ -26,7 +26,7 @@ public class CategoryTypeAdsController extends PublicApiController{
         return service.getCategoryTypes();
     }
 
-    @GetMapping("/ads-type/id={id}")
+    @GetMapping("/ads-type/{id}")
     public ResponseEntity<BasicResponse> getCategoryById(@PathVariable Long id)
     {
         return service.getCategoryTypeById(id);
