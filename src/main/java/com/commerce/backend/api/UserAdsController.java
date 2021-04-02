@@ -1,18 +1,14 @@
 package com.commerce.backend.api;
 
 import com.commerce.backend.constants.AdsType;
-import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.error.exception.InvalidArgumentException;
-import com.commerce.backend.model.dto.UserAccVO;
 import com.commerce.backend.model.dto.UserAdsVO;
-import com.commerce.backend.model.dto.UserPetAdsVO;
 import com.commerce.backend.model.request.userAds.*;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import com.commerce.backend.service.UserAdsService;
 
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

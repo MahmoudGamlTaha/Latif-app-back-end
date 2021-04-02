@@ -34,7 +34,6 @@ public class BlogController extends PublicApiController{
     public ResponseEntity<BasicResponse> getBlogs(@RequestParam(required = false) Optional<Integer> page)
     {
     	BasicResponse response = blogServiceImpl.getBlogs(page.orElse(0)); 
-
         return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);
     }
 
@@ -52,9 +51,13 @@ public class BlogController extends PublicApiController{
 
     @PostMapping("/blogs/create")
     @Timed
-    public BlogResponse createBlog(@ModelAttribute @Valid BlogRequest blog,
-                                   @RequestParam(value = "file", required = false) MultipartFile file) {
-        return blogServiceImpl.saveBlog(blog, file);
+    public ResponseEntity<BasicResponse> createBlog(@ModelAttribute @Valid BlogRequest blog,
+                                   @RequestParam(value = "files", required = false)
+                                   Optional<List<MultipartFile>> file,
+                                   @RequestParam(value = "extrnFile", required = false)
+                                   Optional<List<String>> extrnFile,
+                                   boolean isExternal) {
+        return new ResponseEntity<BasicResponse> (blogServiceImpl.saveBlog(blog,  extrnFile.orElse(null),file.orElse(null),isExternal), HttpStatus.OK);
     }
 
     @PostMapping("/update")

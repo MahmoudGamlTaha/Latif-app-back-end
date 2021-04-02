@@ -16,7 +16,7 @@ public interface BlogCacheService {
     Page<Blog> findAll(Integer  page);
     BlogResponse findById(Long id);
     List<Blog> search(String keyword);
-    BlogResponse saveBlog(BlogRequest blog, MultipartFile file);
+    BasicResponse saveBlog(BlogRequest blog, List<String> externalPath, boolean external, List<MultipartFile> files);
     BlogResponse update(UpdateBlogRequest blog, MultipartFile file) throws IOException;
     BasicResponse deleteBlog(Long id);;
 }
