@@ -27,9 +27,8 @@ public class CategoryController extends PublicApiController {
         this.itemObjectCategoryService = itemObjectCategoryService;
     }
 
-    @GetMapping(value = "/cat-by-type")
-    @ResponseBody
-    public ResponseEntity<BasicResponse> getCategoryByAdsType(@RequestParam Integer adtypeId){
+    @GetMapping(value = "/cat-by-type/type={adtypeId}")
+    public ResponseEntity<BasicResponse> getCategoryByAdsType(@PathVariable Integer adtypeId){
 
     	BasicResponse response = this.itemObjectCategoryService.findAllByTypeId(adtypeId);
     	return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);

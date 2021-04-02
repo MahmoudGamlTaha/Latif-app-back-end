@@ -24,8 +24,7 @@ public class blogCategoriesController extends PublicApiController{
     }
 
     @GetMapping("/blogCategory")
-    public List<BlogCategoryResponse> getAll()
-    {
+    public List<BlogCategoryResponse> getAll(){
         return blogCategoryService.findAll();
     }
 

@@ -54,7 +54,7 @@ public class CategoryTypeServiceImpl implements CategoryTypeService {
 
 	@Override
 	public ResponseEntity<BasicResponse> getCategoryTypeById(Long id) {
-		// TODO Auto-generated method stub
+		this.categoryTypeRepository.findById(id);
 		return null;
 	}
 
