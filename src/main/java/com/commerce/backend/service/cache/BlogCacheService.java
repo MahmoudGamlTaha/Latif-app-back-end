@@ -7,6 +7,7 @@ import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.blog.BlogResponse;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -14,8 +15,8 @@ import java.util.List;
 
 public interface BlogCacheService {
     Page<Blog> findAll(Integer  page);
-    BlogResponse findById(Long id);
-    List<Blog> search(String keyword);
+    Blog findById(Long id);
+    Page<Blog> search(String keyword, Pageable pageable);
     BasicResponse saveBlog(BlogRequest blog, List<String> externalPath, boolean external, List<MultipartFile> files);
     BlogResponse update(UpdateBlogRequest blog, MultipartFile file) throws IOException;
     BasicResponse deleteBlog(Long id);;

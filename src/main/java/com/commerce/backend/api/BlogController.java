@@ -8,6 +8,7 @@ import com.commerce.backend.service.BlogService;
 import com.commerce.backend.service.BlogServiceImpl;
 import io.micrometer.core.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,15 +38,16 @@ public class BlogController extends PublicApiController{
     }
 
     @GetMapping("/blogs/id={id}")
-    public BlogResponse getBlogById(@PathVariable Long id)
+    public ResponseEntity<BasicResponse> getBlogById(@PathVariable Long id)
     {
-        return null;//blogServiceImpl.getBlogById(id);
+        BasicResponse response = blogServiceImpl.getBlogById(id);
+        return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);
     }
 
     @GetMapping("/blogs/keyword={keyword}")
-    public BasicResponse search(@PathVariable String keyword)
+    public BasicResponse search(@PathVariable String keyword, Pageable pageable)
     {
-        return blogServiceImpl.search(keyword);
+        return blogServiceImpl.search(keyword, pageable);
     }
 
     @PostMapping("/blogs/create")
@@ -60,7 +62,7 @@ public class BlogController extends PublicApiController{
     }
 
     @PostMapping("/update")
-    public BlogResponse updateBlog(@ModelAttribute @Valid UpdateBlogRequest blogRequest,
+    public BasicResponse updateBlog(@ModelAttribute @Valid UpdateBlogRequest blogRequest,
                                    @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
         return blogServiceImpl.update(blogRequest, file);
     }
