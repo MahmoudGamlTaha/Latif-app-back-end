@@ -38,7 +38,7 @@
 		<mapping class="com.commerce.backend.model.entity.UserPetAds"/>
 		<mapping class="com.commerce.backend.model.entity.UserAccAds"/>
 		<mapping class="com.commerce.backend.model.entity.UserServiceAds"/>
-
+        <mapping class="com.commerce.backend.model.entity.ItemObjectCategory"/>
 
 	</session-factory>
 </hibernate-configuration>

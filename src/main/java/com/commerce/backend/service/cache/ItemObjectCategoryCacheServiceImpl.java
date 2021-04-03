@@ -6,9 +6,11 @@ import com.commerce.backend.converter.category.ItemObjectCategoryResponseConvert
 import com.commerce.backend.dao.ItemCategoryRepository;
 import com.commerce.backend.dao.ItemObjectCategoryRepository;
 import com.commerce.backend.dao.PetCategoryRepository;
+import com.commerce.backend.dao.ServiceCategoryRepository;
 import com.commerce.backend.model.entity.ItemCategory;
 import com.commerce.backend.model.entity.ItemObjectCategory;
 import com.commerce.backend.model.entity.PetCategory;
+import com.commerce.backend.model.entity.ServiceCategory;
 import com.commerce.backend.model.request.category.CategoryRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
@@ -32,17 +34,20 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 
     private final ItemObjectCategoryRepository itemObjectRepository;
     private final PetCategoryRepository petCategoryRepository;
+    private final ServiceCategoryRepository serviceCategoryRepository;
     private final ItemCategoryRepository itemCategoryRepository;
     private final ItemObjectCategoryResponseConverter itemObjectCategoryResponseConverter;
 
     @Autowired
     public ItemObjectCategoryCacheServiceImpl(ItemObjectCategoryRepository productCategoryRepository,
     		PetCategoryRepository petCategoryRepository, ItemCategoryRepository itemCategoryRepository,
-    		ItemObjectCategoryResponseConverter itemObjectCategoryResponseConverter) {
+    		ItemObjectCategoryResponseConverter itemObjectCategoryResponseConverter,
+    		ServiceCategoryRepository serviceCategoryRepository) {
         this.itemObjectRepository = productCategoryRepository;
         this.petCategoryRepository = petCategoryRepository;
         this.itemCategoryRepository = itemCategoryRepository;
         this.itemObjectCategoryResponseConverter = itemObjectCategoryResponseConverter;
+        this.serviceCategoryRepository = serviceCategoryRepository;
     }
 
     @Override
@@ -103,13 +108,29 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 		BasicResponse categoryByType = new BasicResponse();
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		try {
-			
+			if(id == CategoryType.PETS.getType()) {
+				List<PetCategory> petCategory = this.petCategoryRepository.findAllByOrderByName();
+				List<ItemObjectCategoryResponse> catList =  petCategory.stream()
+						   .map(itemObjectCategoryResponseConverter)
+						   .collect(Collectors.toList());
+						response.put(MessageType.Data.getMessage(), catList);
+						categoryByType.setSuccess(true);
+			}else if(id == CategoryType.SERVICE.getType()){
+				List<ServiceCategory> petCategory = this.serviceCategoryRepository.findAllByOrderByName();
+				List<ItemObjectCategoryResponse> catList =  petCategory.stream()
+						   .map(itemObjectCategoryResponseConverter)
+						   .collect(Collectors.toList());
+						response.put(MessageType.Data.getMessage(), catList);
+						categoryByType.setSuccess(true);
+			}
+			else {
 		     List<ItemObjectCategory> itemObjectCategory  = this.itemObjectRepository.findByType(id);
 		     List<ItemObjectCategoryResponse> catList =  itemObjectCategory.stream()
 			   .map(itemObjectCategoryResponseConverter)
 			   .collect(Collectors.toList());
 			response.put(MessageType.Data.getMessage(), catList);
 			categoryByType.setSuccess(true);
+			}
 		}catch(Exception ex) {
 			response.put(MessageType.Data.getMessage(), ex.getMessage());
 			categoryByType.setSuccess(false);
