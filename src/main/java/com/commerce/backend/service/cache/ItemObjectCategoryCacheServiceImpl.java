@@ -79,7 +79,7 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 			category.setActive(request.isActive());
 			 Optional<PetCategory> cat = this.petCategoryRepository.findById(request.getCatParent());
 			 PetCategory parent	= cat.isPresent()?cat.get(): null;
-			 category.setParent_id(parent);
+			 category.setParent(parent);
 			this.petCategoryRepository.save((PetCategory)category);
 		}else if(request.getType() == CategoryType.ACCESSORIES.getType()){
 				category = new ItemCategory();
@@ -90,7 +90,7 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 				category.setIcon_select(request.getIcon_select_path());
 				Optional<ItemCategory> itemCategory = this.itemCategoryRepository.findById(request.getCatParent());
 				ItemCategory parent = itemCategory.isPresent()?itemCategory.get(): null;
-				category.setParent_id(parent);
+				category.setParent(parent);
 				this.itemCategoryRepository.save((ItemCategory)category);
 		}
 		return category;
