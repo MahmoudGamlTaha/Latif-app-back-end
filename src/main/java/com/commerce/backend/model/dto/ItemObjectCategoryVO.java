@@ -14,6 +14,7 @@ public class ItemObjectCategoryVO {
     private String name;
     private String nameAr;
     private String icon;
+    private String iconSelect;
     private Integer type;
     private Boolean isExternalLink;
     private ItemObjectCategoryVO parent;

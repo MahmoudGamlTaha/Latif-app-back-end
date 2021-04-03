@@ -31,7 +31,7 @@ public class CategoryController extends PublicApiController {
         this.itemObjectCategoryService = itemObjectCategoryService;
     }
 
-    @GetMapping(value = "/cat-by-type/type={adtypeId}")
+    @GetMapping(value = "/cat-by-adType/type={adtypeId}")
     @ResponseBody
     public ResponseEntity<BasicResponse> getCategoryByAdsType(@PathVariable("adtypeId") Integer adtypeId){
     	logger2.info("======path variable=========:"+ adtypeId);

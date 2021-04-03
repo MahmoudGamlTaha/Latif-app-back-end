@@ -20,6 +20,7 @@ public class ItemObjectCategoryResponseConverter implements Function<ItemObjectC
         		.id(itemCategory.getId())
         		.name(itemCategory.getName())
         		.type(itemCategory.getType())
+        		.iconSelect(itemCategory.getIcon_select())
         		.nameAr(itemCategory.getNameAr())
         		.isExternalLink(itemCategory.getIsExternalLink())
         		.build());
