@@ -11,6 +11,9 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 
 @Entity
 @Table(name = "item_category")
@@ -36,6 +39,7 @@ public class ItemObjectCategory {
     
     @ManyToOne(optional= true)
     @JoinColumn(name = "parent_id")
+    @NotFound(action = NotFoundAction.IGNORE)
     private ItemObjectCategory parent;
     
     @Column(name = "icon")
