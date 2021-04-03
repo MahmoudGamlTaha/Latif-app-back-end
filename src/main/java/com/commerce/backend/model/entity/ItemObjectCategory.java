@@ -28,15 +28,15 @@ public class ItemObjectCategory {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", length = 250)
+    @Column(name = "name", length = 250, nullable = false, unique = true)
     private String name;
     
     @Column(name = "name_ar", length = 250)
     private String nameAr;
     
-    @OneToOne
+    @ManyToOne(optional= true)
     @JoinColumn(name = "parent_id")
-    private ItemObjectCategory parent_id;
+    private ItemObjectCategory parent;
     
     @Column(name = "icon")
     private String icon;
@@ -44,7 +44,7 @@ public class ItemObjectCategory {
     @Column(name = "icon_select")
     private String icon_select;
     
-    @OneToMany(mappedBy="child", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ItemObjectCategory> child = new HashSet<ItemObjectCategory>();
     
     @Column(name = "type", insertable = false, updatable = false)
@@ -63,7 +63,7 @@ public class ItemObjectCategory {
    public ItemObjectCategory(String name, String icon, ItemObjectCategory parent) {
 	  this.setName(name);
 	  this.setIcon(icon);
-	  this.setParent_id(parent);
+	  this.setParent(parent);
   }
 
 }
