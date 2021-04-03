@@ -1,0 +1,87 @@
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        Type:
+         Descriptor:
+          sql:
+           BasicBinder: TRACE
+server:
+  error:
+    whitelabel:
+      enabled: true
+  port: 8080
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 1200000
+      maximum-pool-size: 5
+      minimum-idle: 2
+      pool-name: data-source 
+    url: ${JDBC_DATABASE_URL}
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
+  jackson:
+    date-format: MMMM dd yyyy / HH:mm
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        show-sql: true
+      #  naming:
+     #   physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl #org.hibernate.cfg.ImprovedNamingStrategy
+  mail:
+    host: smtp.gmail.com
+    host_address: host_address
+    username: username
+    password: password
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          connectiontimeout: 5000
+          starttls:
+            enable: true
+            required: true
+          timeout: 5000
+          writetimeout: 5000
+    protocol: smtp
+  mvc:
+    throw-exception-if-no-handler-found: true
+
+security:
+  public-pattern: /api/public/**
+  auth:
+    username: user_name
+    url: http://localhost:8081/oauth/check_token
+    client_id: client_id
+    client_password: client_password
+    connection_timeout: 60
+    read_timeout: 60
+    whitelist: >
+      /,
+      /v2/api-docs,
+      /swagger-resources,
+      /swagger-resources/**,
+      /configuration/ui,
+      /configuration/security,
+      /swagger-ui.html,
+      /webjars/**,
+      /api/public/**,
+      /userRole/**
+swagger:
+  host:
+    address: latifapp.herokuapp.com
+    path: /
+  api:
+    name: Latif APP Documentation API
+    version: v1
+  contact:
+    name: highcoder
+    url: https://www.highcoder.com
+    email: support@highcoder.com
