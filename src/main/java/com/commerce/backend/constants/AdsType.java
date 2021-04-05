@@ -12,8 +12,8 @@ public enum AdsType {
 	Dogs(Values.DOGS),
 	DELIVERY(Values.DELIVERY),
 	VETERINARY(Values.VETERINARY),
+	DRIVER(Values.Driver),
 	ALL(Values.ALL);
-
 	
 	private String type;
 	 AdsType(String type) {
@@ -28,6 +28,7 @@ public enum AdsType {
 		 public static final String ACCESSORIES = "ACCESSORIES";
 		 public static final String ALL = "ALL";
 		 public static final String DOGS = "DOGS";
+		 public static final String Driver = "Driver";
 	
 	 }
 }

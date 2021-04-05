@@ -87,8 +87,8 @@ public class ItemObjectCategoryServiceImpl implements ItemObjectCategoryService 
 
 
 	@Override
-	public BasicResponse findAllByTypeId(Integer id) {
-		return itemObjectCategoryCacheService.findAllByTypeId(id);
+	public BasicResponse findAllByTypeId(Integer id, Integer page) {
+		return itemObjectCategoryCacheService.findAllByTypeId(id, page);
 	}
 	
 }

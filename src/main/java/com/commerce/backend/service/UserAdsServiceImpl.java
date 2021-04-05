@@ -95,9 +95,6 @@ public class UserAdsServiceImpl implements UserAdsService {
 		
 		if(type == AdsType.ACCESSORIES) {
 			Page<UserAccAds> userAccAds = this.userItemsAdsRepository.findAll(pageable);
-			  /* userAccAds.get()
-			   .map(this.userAdsConverter)
-			   .collect(Collectors.toList());*/
 			 response.setMsg("success");
 			 response.setSuccess(true);
 			 hashMap.put("count", userAccAds.getSize());
@@ -272,6 +269,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 				// TODO Auto-generated catch block
 				response.setMsg(e.getMessage());
 				response.setSuccess(false);
+			
 			}
 			}
 		}

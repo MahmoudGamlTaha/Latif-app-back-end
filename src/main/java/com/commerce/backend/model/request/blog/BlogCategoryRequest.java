@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 @Data
@@ -14,6 +15,9 @@ public class BlogCategoryRequest {
     String name;
 
     @NotBlank
-    @Size(max = 40)
+    @Size(min = 40, max = 300)
     String description;
+    
+    @Positive
+    Long category;
 }

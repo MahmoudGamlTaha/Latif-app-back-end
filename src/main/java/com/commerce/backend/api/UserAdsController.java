@@ -99,8 +99,11 @@ public class UserAdsController extends PublicApiController {
 
     @PostMapping(value = "/ads/create")
     public ResponseEntity<BasicResponse> createUserAds(@RequestBody DynamicAdsRequest<String, String> userAdsRequest,
-                                                       @RequestParam(value = "images", required = false) List<MultipartFile> file){
+                                                       @RequestParam(value = "images", required = false) List<MultipartFile> files,
+                                                       @RequestParam(value = "images", required = false) List<MultipartFile> file,
+                                                       @RequestParam(value = "external_link", required = false) Optional<Boolean> external){
     	BasicResponse response = null;
+    	HttpStatus status = HttpStatus.OK;
     	try {
     	     response = this.userAdsService.createUserAds(userAdsRequest, file);
        
@@ -108,8 +111,9 @@ public class UserAdsController extends PublicApiController {
     		response = new BasicResponse();
     		response.setMsg(ex.getMessage());
     		response.setSuccess(false);
+    		status = HttpStatus.BAD_REQUEST;
     	}
-    	 return new ResponseEntity<BasicResponse>(response, HttpStatus.OK); 
+    	 return new ResponseEntity<BasicResponse>(response, status); 
     }
     
     @PostMapping(value = "/ads/food/create")
