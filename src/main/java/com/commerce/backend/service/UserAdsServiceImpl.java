@@ -6,8 +6,7 @@ import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.converter.UserAdsConverter;
 import com.commerce.backend.converter.UserAdsToVoConverter;
 import com.commerce.backend.dao.*;
-import com.commerce.backend.model.dto.UserAdsVO;
-import com.commerce.backend.model.dto.UserPetAdsVO;
+import com.commerce.backend.model.dto.*;
 import com.commerce.backend.model.entity.*;
 import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
 import com.commerce.backend.model.request.userAds.UserPetsAdsRequest;
@@ -28,6 +27,8 @@ import java.util.Objects;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -54,6 +55,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	private UserAdsToVoConverter userAdsToVoConverter;
 	private UserAdsConverter userAdsConverter;
 	private UserAdsImageRepository userAdsImageRepository;
+	private CustomUserAdsRepo repo;
 	private final Path rootLocation = Paths.get("upload");
 	@Value("${swagger.host.path}")
 	private String path;
@@ -62,7 +64,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	public UserAdsServiceImpl(UserAdsRepository userAdsRepository, UserPetsAdsRepository userPetsAdsRepository,
 							  UserServiceAdsRepository userServiceAdsRepository,
 							  UserItemsAdsRepository userItemsAdsRepository, UserMedicalAdsRepository userMedicalAdsRepository,
-							  UserAdsToVoConverter userAdsToVoConverter, UserAdsConverter userAdsConverter, UserAdsImageRepository userAdsImageRepository) {
+							  UserAdsToVoConverter userAdsToVoConverter, UserAdsConverter userAdsConverter, UserAdsImageRepository userAdsImageRepository, CustomUserAdsRepo repo) {
 	
 
 	
@@ -74,6 +76,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		this.userAdsToVoConverter = userAdsToVoConverter;
 		this.userAdsConverter = userAdsConverter;
 		this.userAdsImageRepository = userAdsImageRepository;
+		this.repo = repo;
 	}
 
 	public UserAdsServiceImpl() {
@@ -167,9 +170,26 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public UserAdsVO findAdsById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public BasicResponse findAdsById(Long id) throws Exception {
+		try{
+			UserAds ad = (UserAds) repo.findById(id).orElse(null);
+			UserAdsVO vo = userAdsToVoConverter.apply(ad);
+			return res(vo);
+		}
+		catch (Exception e)
+		{
+			throw new Exception("Error: "+e);
+		}
+	}
+
+	public BasicResponse res(Object obj)
+	{
+		BasicResponse res = new BasicResponse();
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("data", obj);
+		res.setSuccess(true);
+		res.setResponse(map);
+		return res;
 	}
 
 

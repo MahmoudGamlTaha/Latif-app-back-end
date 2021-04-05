@@ -18,8 +18,8 @@ public interface UserAdsService {
     BasicResponse getAll(AdsType type ,Integer page, Integer size, String sort, Long category, Float minPrice, Float maxPrice);
    
     Long getAllCount(UserAdsVO userAdsVO, Float minPrice, Float maxPrice);
-    
-    UserAdsVO findAdsById(Long id);
+
+    BasicResponse findAdsById(Long id) throws Exception;
 
     List<UserAdsVO> getRelatedAds(UserAdsVO userAds);
 

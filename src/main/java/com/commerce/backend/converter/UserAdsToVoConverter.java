@@ -46,6 +46,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		else if(UserAds.class.cast(source).getType() == AdsType.SERVICE) {
 			userAdsVo = new UserServiceVO();
 		}
+		assert userAdsVo != null;
 		this.copyUserAdsEntityToVo(UserAds.class.cast(source), userAdsVo);
 		return userAdsVo;
 	}
@@ -167,13 +168,13 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		destination.setShort_description(source.getShortDescription());
 		destination.setPrice(source.getPrice());
 		User user = new User();
-		user.setId(source.getCreatedBy().getId());
-		user.setFirstName(source.getCreatedBy().getFirstName());
-		user.setLastName(source.getCreatedBy().getLastName());
-		user.setAvatar(source.getCreatedBy().getAvatar());
-		user.setPhone(source.getCreatedBy().getPhone());
+		//user.setId(source.getCreatedBy().getId());
+		//user.setFirstName(source.getCreatedBy().getFirstName());
+		//user.setLastName(source.getCreatedBy().getLastName());
+		//user.setAvatar(source.getCreatedBy().getAvatar());
+		//user.setPhone(source.getCreatedBy().getPhone());
 
-		destination.setCreatedBy(user);
+		//destination.setCreatedBy(user);
 		destination.setCreated_at(new Date());
 		destination.setUpdated_at(new Date());
 		destination.setType(source.getType());

@@ -66,14 +66,14 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         User user = new User();
         user.setId(Long.parseLong(String.valueOf(hashedData.get("created_by"))));
         
-        entity.setCreatedBy(user);
+        //entity.setCreatedBy(user);
 
         if(request.getType() == AdsType.PETS || request.getType() == AdsType.Dogs)
         {
             PetCategory category = new PetCategory();
             category.setId(Long.parseLong(String.valueOf(hashedData.get("category_id"))));
          
-            ((UserPetAds)entity).setCategory(category);
+            //((UserPetAds)entity).setCategory(category);
            // category = new PetCategory();
          //   category.setId(Long.parseLong(String.valueOf(hashedData.get("category_type"))));
            // ((UserPetAds)entity).setPetCategoryType(category);
@@ -101,14 +101,14 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
 			((UserAccAds)entity).setItemCategoryId(category);
         }
         else if(request.getType() == AdsType.PET_CARE) {
-            ((UserMedicalAds)entity).setAllowServiceAtHome((Boolean) hashedData.get("allow_at_home"));
+            //((UserMedicalAds)entity).setAllowServiceAtHome((Boolean) hashedData.get("allow_at_home"));
         }
         else if(request.getType() == AdsType.SERVICE) {
 			((UserServiceAds)entity).setAllowServiceAtHome((Boolean) hashedData.get("allow_at_home"));
 			ServiceCategory serviceCategory = new ServiceCategory();
 			serviceCategory.setId(Long.parseLong(String.valueOf(hashedData.get("category_id"))));
-            ((UserServiceAds)entity).setServiceCategory(serviceCategory);
-            ((UserServiceAds)entity).setServiceCategoryType(serviceCategory);
+            //((UserServiceAds)entity).setServiceCategory(serviceCategory);
+            //((UserServiceAds)entity).setServiceCategoryType(serviceCategory);
         }
         return entity;
     }
