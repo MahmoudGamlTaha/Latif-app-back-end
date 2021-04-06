@@ -12,6 +12,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.constants.FoodType;
 import com.commerce.backend.constants.TrainningType;
@@ -51,8 +54,7 @@ public class UserPetAds extends UserAds {
 	private TrainningType training;
 	
 	@Column(name = "food")
-	@Enumerated(EnumType.ORDINAL)
-	private FoodType food;
+	private String food;
 	
 	@Column(name = "barking_problem")
 	private Boolean barkingProblem;
@@ -69,15 +71,16 @@ public class UserPetAds extends UserAds {
 	@Column(name = "diseases_disabilities_desc")
 	private String diseasesDisabilitiesDesc;
 
-	@ManyToOne
-	@JoinColumn(name ="category_type")
-	private PetCategory petCategoryType;
+	//@ManyToOne
+	//@JoinColumn(name ="category_type")
+	//private PetCategory petCategoryType;
 
-	@ManyToOne
-	@JoinColumn(name ="category_id")
-	private PetCategory category;
+	//@ManyToOne
+	//@JoinColumn(name ="category_id")
+	//private PetCategory category;
 	
 	@OneToMany(mappedBy="userAdsImage", cascade = CascadeType.ALL)
+	@NotFound(action = NotFoundAction.IGNORE)
 	private Set<UserAdsImage> petsImages;
 	
 }

@@ -18,13 +18,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserServiceAds extends UserAds {
-	@ManyToOne
-	@JoinColumn(name ="category_type")
-	ServiceCategory serviceCategoryType;
+	//@ManyToOne
+	//@JoinColumn(name ="category_type")
+	//ServiceCategory serviceCategoryType;
 	
-	@ManyToOne(optional = true, fetch = FetchType.LAZY)
-	@JoinColumn(name = "category_id")
-	ServiceCategory serviceCategory;
+	//@ManyToOne(optional = true, fetch = FetchType.LAZY)
+	//@JoinColumn(name = "category_id")
+	//ServiceCategory serviceCategory;
 	
 	@Column(name = "allow_at_home")
 	Boolean allowServiceAtHome;

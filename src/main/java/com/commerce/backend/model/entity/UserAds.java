@@ -31,9 +31,9 @@ public class UserAds {
 	@Column(name = "type", insertable = false, updatable = false, nullable = false)
 	private AdsType type;        
 	
-	@ManyToOne(cascade = {CascadeType.MERGE})
-	@JoinColumn(name = "created_by")
-	private User createdBy;
+      @ManyToOne(cascade = {CascadeType.MERGE})
+	  @JoinColumn(name = "created_by")
+	 private User createdBy;
 	
 	@Column(name = "active")
 	private boolean active;
@@ -61,5 +61,8 @@ public class UserAds {
 	
 	@Column(name = "price")
 	private Float price;
+	
+	@Column(name = "external_link")
+	private Boolean externalLink;  
   
 }

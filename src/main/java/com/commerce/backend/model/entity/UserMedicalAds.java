@@ -16,13 +16,13 @@ import lombok.Setter;
 @Setter
 @Getter
 public class UserMedicalAds extends UserAds {
-   @ManyToOne
-   @JoinColumn(name ="category_type")
-   MedicalCategory medicalCategory;
+   //@ManyToOne
+   //@JoinColumn(name ="category_type")
+   //MedicalCategory medicalCategory;
    
-   @ManyToOne
-   @JoinColumn(name ="category_id")
-   MedicalCategory medicalCategoryType;
+   //@ManyToOne
+   //@JoinColumn(name ="category_id")
+   //MedicalCategory medicalCategoryType;
    
    @Column(name = "allow_at_home")
    Boolean allowServiceAtHome;

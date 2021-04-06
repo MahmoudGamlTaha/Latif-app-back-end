@@ -42,7 +42,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         }
         return convertToEntity(request, entity);
     }
-
+    
     private UserAds convertToEntity(DynamicAdsRequest<String, String> request, UserAds entity) {
         List<HashMap<String, String>> data = request.getUserAds();
        
@@ -63,27 +63,25 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         entity.setLatitude((String) hashedData.get("latitude"));
         entity.setCreatedAt((new Date()));
         entity.setUpdatedAt((new Date()));
+        entity.setExternalLink(Boolean.parseBoolean(String.valueOf(getHashMapKeyWithCheck(hashedData, "external_link"))));
         User user = new User();
         user.setId(Long.parseLong(String.valueOf(hashedData.get("created_by"))));
         
-        entity.setCreatedBy(user);
+         entity.setCreatedBy(user);
 
         if(request.getType() == AdsType.PETS || request.getType() == AdsType.Dogs)
         {
             PetCategory category = new PetCategory();
             category.setId(Long.parseLong(String.valueOf(hashedData.get("category_id"))));
-         
-            ((UserPetAds)entity).setCategory(category);
-           // category = new PetCategory();
-         //   category.setId(Long.parseLong(String.valueOf(hashedData.get("category_type"))));
-           // ((UserPetAds)entity).setPetCategoryType(category);
+     
             if(request.getType() == AdsType.Dogs) {
             ((UserPetAds)entity).setBarkingProblem(hashedData.get("barkingProblem").toString().equalsIgnoreCase(String.valueOf(true)));
             }
             ((UserPetAds)entity).setBreed((String) hashedData.get("breed"));
             ((UserPetAds)entity).setStock(Integer.parseInt((String) hashedData.get("stock")));
-            ((UserPetAds)entity).setWeaned(hashedData.get("weaned").toString().equalsIgnoreCase(String.valueOf(true)));
-            ((UserPetAds)entity).setFood(FoodType.valueOf((String) hashedData.get("food")));
+//            ((UserPetAds)entity).setWeaned(hashedData.get("weaned").toString().equalsIgnoreCase(String.valueOf(true)));
+            ((UserPetAds)entity).setWeaned(Boolean.parseBoolean(String.valueOf(hashedData.get("weaned")).toLowerCase()));
+            ((UserPetAds)entity).setFood(String.valueOf(hashedData.get("food")));
             ((UserPetAds)entity).setDiseasesDisabilities(hashedData.get("diseasesDisabilities").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setDiseasesDisabilitiesDesc((String) hashedData.get("diseasesDisabilitiesDesc"));
             ((UserPetAds)entity).setNeutering(hashedData.get("neutering").toString().equalsIgnoreCase(String.valueOf(true)));
@@ -107,9 +105,25 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
 			((UserServiceAds)entity).setAllowServiceAtHome((Boolean) hashedData.get("allow_at_home"));
 			ServiceCategory serviceCategory = new ServiceCategory();
 			serviceCategory.setId(Long.parseLong(String.valueOf(hashedData.get("category_id"))));
-            ((UserServiceAds)entity).setServiceCategory(serviceCategory);
-            ((UserServiceAds)entity).setServiceCategoryType(serviceCategory);
+            //((UserServiceAds)entity).setServiceCategory(serviceCategory);
+            //((UserServiceAds)entity).setServiceCategoryType(serviceCategory);
         }
         return entity;
     }
+    
+    @SuppressWarnings("unused")
+	private Valid validateHashMap(HashMap<String, Object> hashedData, AdsType type) {
+    	return new Valid();
+    }
+    private Object getHashMapKeyWithCheck(HashMap<String, Object> hashedData, String key) {
+    	if(hashedData.containsKey(key)) {
+    		return hashedData.get(key);
+    	}
+    	return new Object();
+    }
+    private  class Valid{
+       public boolean success;
+       public String msg;
+    }
+    
 }
