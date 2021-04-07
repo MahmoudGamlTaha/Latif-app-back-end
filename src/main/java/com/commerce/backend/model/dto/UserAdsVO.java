@@ -24,9 +24,9 @@ public class UserAdsVO {
 	
 	private String name ;
 	
-	private String longitude;
+	private double longitude;
 	
-	private String latitude;
+	private double latitude;
 	
 	private Date created_at;
 	

@@ -21,14 +21,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -163,6 +160,14 @@ public class UserAdsServiceImpl implements UserAdsService {
 		return null;
 	}
 
+	@Override
+	public BasicResponse findNearest(double longitude, double latitude, Pageable page)
+	{
+		List<UserAds> ads = repo.findNearest(longitude, latitude, page);
+		List<UserAdsVO> collect = new ArrayList<>();
+		ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
+		return res(collect);
+	}
 	@Override
 	public List<UserAdsVO> getNearByAdsByCategory(AdsType adsType, Long Category) {
 		// TODO Auto-generated method stub

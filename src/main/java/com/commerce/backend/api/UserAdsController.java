@@ -10,6 +10,7 @@ import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import com.commerce.backend.service.UserAdsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +40,7 @@ public class UserAdsController extends PublicApiController {
                                                                @RequestParam(value = "minPrice", required = false) Float minPrice,
                                                                @RequestParam(value = "maxPrice", required = false) Float maxPrice) {
     	
-        BasicResponse response = userAdsService.getAll(type, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), sort, category, minPrice, maxPrice);  
+        BasicResponse response = userAdsService.getAll(type, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), sort, category, minPrice, maxPrice);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -83,6 +84,14 @@ public class UserAdsController extends PublicApiController {
         return new ResponseEntity<>(userAds, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/ads/nearest")
+    public ResponseEntity<BasicResponse> getNearByAds(@RequestParam(value ="longitude") double longitude,
+                                                      @RequestParam(value ="latitude") double latitude,
+                                                      @RequestParam(value ="page", required = false) Pageable page)
+    {
+        BasicResponse res = userAdsService.findNearest(longitude, latitude, page);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
  
     @GetMapping(value = "/ads/interested")
     public ResponseEntity<List<UserAdsVO>> getByInterested(@RequestParam("token") String token,

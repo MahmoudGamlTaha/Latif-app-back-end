@@ -86,6 +86,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		else if(userAdsRequest.getType() == AdsType.SERVICE) {
 			userAds = new UserServiceAds();
 		}
+		assert userAds != null;
 		return copyUserAdsObject(userAdsRequest, userAds);
 	}
 
@@ -103,7 +104,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		destination.setType(source.getType());
 		User user = new User();
 		user.setId(source.getUserAds().getCreatedBy());
-	//	destination.setCreatedBy(user);
+		destination.setCreatedBy(user);
 		destination.setCreatedAt(new Date());
 		destination.setUpdatedAt(new Date());
 		//--------------------------------------------------------
@@ -141,7 +142,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 
 		}
 		else if(source.getType() == AdsType.PET_CARE) {
-		//	((UserMedicalAds)destination).setAllowServiceAtHome(((UserMedicalAdsRequest) source.getUserAdsRequest()).getAvaliable_at_home());
+			((UserMedicalAds)destination).setAllowServiceAtHome(((UserMedicalAdsRequest) source.getUserAdsRequest()).getAvaliable_at_home());
 		}
 		else if(source.getType() == AdsType.SERVICE) {
 		/*	UserServiceAdsRequest UserServiceAdsRequest = (UserServiceAdsRequest) source.getUserAdsRequest();
@@ -159,6 +160,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 
 	public UserAdsVO copyUserAdsEntityToVo(UserAds source, UserAdsVO destination) {
 		//assert(source.getType() == destination.getType());
+		destination.setId(source.getId());
 		destination.setActive(source.isActive());
 		destination.setCode(source.getCode());
 		destination.setDescription(source.getDescription());

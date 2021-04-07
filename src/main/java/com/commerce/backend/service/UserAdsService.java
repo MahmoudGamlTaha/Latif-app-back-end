@@ -8,6 +8,7 @@ import com.commerce.backend.model.request.userAds.adTypeRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import org.json.simple.JSONObject;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -44,4 +45,6 @@ public interface UserAdsService {
     BasicResponse getCreateForm(adTypeRequest petType);
 
     <T> UserAdsVO savePet(UserPetsAdsRequest userPetsAdsRequest);
+
+    BasicResponse findNearest(double longitude, double latitude, Pageable page);
 }
