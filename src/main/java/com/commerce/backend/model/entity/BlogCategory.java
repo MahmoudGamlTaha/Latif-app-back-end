@@ -30,7 +30,16 @@ public class BlogCategory {
 
     @Column(name = "description")
     private String description;
-
+    
+    @Column(name = "icon")
+    private String icon;
+    
+    @Column(name = "external_link")
+    private Boolean externalLink;
+    
+    @Column(name = "active")
+    private Boolean active;
+    
     //@JsonIdentityReference(alwaysAsId = true)
     @JsonBackReference
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)

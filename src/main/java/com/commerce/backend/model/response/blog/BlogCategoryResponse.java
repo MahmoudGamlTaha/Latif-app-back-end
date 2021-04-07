@@ -12,10 +12,14 @@ public class BlogCategoryResponse {
     private Long id;
     private String name;
     private String description;
+    private String icon;
+    private Boolean external_link;
 
     public BlogCategoryResponse(BlogCategory blogCategory) {
         this.id = blogCategory.getId();
         this.name = blogCategory.getName();
         this.description = blogCategory.getDescription();
+        this.icon = blogCategory.getIcon();
+        this.external_link = blogCategory.getExternalLink();
     }
 }
