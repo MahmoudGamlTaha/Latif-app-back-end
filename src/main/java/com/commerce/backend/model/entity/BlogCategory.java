@@ -27,12 +27,18 @@ public class BlogCategory {
 
     @Column(name = "name")
     private String name;
+    
+    @Column(name = "name_ar")
+    private String nameAr;
 
     @Column(name = "description")
     private String description;
     
     @Column(name = "icon")
     private String icon;
+    
+    @Column(name = "icon_select")
+    private String iconSelect;
     
     @Column(name = "external_link")
     private Boolean externalLink;
