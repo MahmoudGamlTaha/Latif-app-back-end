@@ -15,11 +15,13 @@ public class ItemObjectCategoryResponseConverter implements Function<ItemObjectC
     	
         ItemObjectCategoryResponse itemCategoryResponse = new ItemObjectCategoryResponse();
         if(itemCategory != null) {
+
         itemCategoryResponse.setCategory(ItemObjectCategoryVO
         		.builder()
         		.id(itemCategory.getId())
         		.name(itemCategory.getName())
         		.icon(itemCategory.getIcon())
+        		.parent(this.apply(itemCategory.getParent()))
         		.type(itemCategory.getType())
         		.iconSelect(itemCategory.getIcon_select())
         		.nameAr(itemCategory.getNameAr())

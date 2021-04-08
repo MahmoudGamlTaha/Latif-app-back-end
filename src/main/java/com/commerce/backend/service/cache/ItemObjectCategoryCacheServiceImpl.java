@@ -67,8 +67,12 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 	}
 
 	@Override
-	public ItemObjectCategory createItemObjectCategory(CategoryRequest request) {
+	public BasicResponse createItemObjectCategory(CategoryRequest request) {
 	    ItemObjectCategory category = null;
+	    ItemObjectCategory catReponse = null;
+	    BasicResponse basicRes = new BasicResponse();
+	    HashMap<String, Object> keyResponse = new HashMap<String, Object>();
+	    try {
 		if(request.getType() == CategoryType.PETS.getType()) {
 			category = new PetCategory();
 			category.setName(request.getName());
@@ -78,9 +82,13 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 			category.setIcon_select(request.getIcon_select());
 			category.setActive(request.isActive());
 			 Optional<PetCategory> cat = this.petCategoryRepository.findById(request.getCatParent());
-			 PetCategory parent	= cat.isPresent()?cat.get(): null;
+			 PetCategory parent	= cat.isPresent()? cat.get(): null;
 			 category.setParent(parent);
-			this.petCategoryRepository.save((PetCategory)category);
+			 catReponse = this.petCategoryRepository.save((PetCategory)category);
+			basicRes.setMsg(MessageType.Success.getMessage());
+			keyResponse.put(MessageType.Data.getMessage(), catReponse);
+			basicRes.setResponse(keyResponse);
+		   
 		}else if(request.getType() == CategoryType.ACCESSORIES.getType()){
 				category = new ItemCategory();
 				category.setName(request.getName());
@@ -88,12 +96,39 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 				category.setIsExternalLink(request.isExternalLink());
 				category.setNameAr(request.getNameAr());
 				category.setIcon_select(request.getIcon_select());
+				category.setActive(request.isActive());
 				Optional<ItemCategory> itemCategory = this.itemCategoryRepository.findById(request.getCatParent());
 				ItemCategory parent = itemCategory.isPresent()?itemCategory.get(): null;
 				category.setParent(parent);
-				this.itemCategoryRepository.save((ItemCategory)category);
+				catReponse = this.itemCategoryRepository.save((ItemCategory)category);
+				basicRes.setMsg(MessageType.Success.getMessage());
+				keyResponse.put(MessageType.Data.getMessage(), catReponse);
+				basicRes.setResponse(keyResponse);
+		} else {
+			// do validation on type and refactor this method
+			category = new ItemObjectCategory();
+			category.setName(request.getName());
+			category.setIcon(request.getIcon());
+			category.setIsExternalLink(request.isExternalLink());
+			category.setNameAr(request.getNameAr());
+			category.setIcon_select(request.getIcon_select());
+			category.setType(request.getType());
+			category.setActive(request.isActive());
+			Optional<ItemObjectCategory> itemCategory = this.itemObjectRepository.findById(request.getCatParent());
+			ItemObjectCategory parent = itemCategory.isPresent()?itemCategory.get(): null;
+			category.setParent(parent);
+			catReponse = this.itemObjectRepository.save(category);	
+			keyResponse.put(MessageType.Data.getMessage(), catReponse);
+			basicRes.setResponse(keyResponse);
 		}
-		return category;
+	     ItemObjectCategoryResponse itemObjectCategoryRes =  this.itemObjectCategoryResponseConverter.apply(catReponse);
+		 keyResponse.put(MessageType.Data.getMessage(), itemObjectCategoryRes);
+		 basicRes.setResponse(keyResponse);
+	    } catch(Exception ex) {
+	    	basicRes.setMsg(ex.getMessage());
+	    	basicRes.setSuccess(false);
+	    }
+		return basicRes;
 	}
 
 	@Override
