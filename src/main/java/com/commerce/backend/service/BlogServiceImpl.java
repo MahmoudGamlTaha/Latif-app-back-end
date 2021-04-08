@@ -91,7 +91,7 @@ public class BlogServiceImpl implements BlogService{
             response.setResponse(hashMapResponse);
         }catch(Exception ex) {
             response.setMsg(ex.getMessage());
-            hashMapResponse.put(MessageType.Data.getMessage(), "error");
+            hashMapResponse.put(MessageType.Data.getMessage(), ex.getStackTrace());
             response.setResponse(hashMapResponse);
         }
         return response;
