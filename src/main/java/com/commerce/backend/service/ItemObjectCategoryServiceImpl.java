@@ -67,11 +67,8 @@ public class ItemObjectCategoryServiceImpl implements ItemObjectCategoryService 
 
 
 	@Override
-	public ItemObjectCategoryResponse createItemObjectCategory(CategoryRequest  request) {
-		ItemObjectCategory itemObjectCategory = itemObjectCategoryCacheService.createItemObjectCategory(request);
-		ItemObjectCategoryResponse itemObjectResponse = new ItemObjectCategoryResponse();
-		ItemObjectCategoryVO itemObjectCategoryVO = new ItemObjectCategoryVO(itemObjectCategory);
-		itemObjectResponse.setCategory(itemObjectCategoryVO);
+	public BasicResponse createItemObjectCategory(CategoryRequest  request) {
+		BasicResponse itemObjectResponse = itemObjectCategoryCacheService.createItemObjectCategory(request);
 		return itemObjectResponse;
 	}
 

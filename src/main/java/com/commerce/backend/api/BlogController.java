@@ -51,7 +51,7 @@ public class BlogController extends PublicApiController{
     }
 
     @PostMapping("/blogs/create")
-    @Timed
+    //@Timed
     public ResponseEntity<BasicResponse> createBlog(@ModelAttribute @Valid BlogRequest blog,
                                    @RequestParam(value = "files", required = false)
                                    Optional<List<MultipartFile>> file,
@@ -62,14 +62,18 @@ public class BlogController extends PublicApiController{
     }
 
     @PostMapping("/update")
-    public BasicResponse updateBlog(@ModelAttribute @Valid UpdateBlogRequest blogRequest,
+    public ResponseEntity<BasicResponse> updateBlog(@ModelAttribute @Valid UpdateBlogRequest blogRequest,
                                    @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
-        return blogServiceImpl.update(blogRequest, file);
+    	BasicResponse response = blogServiceImpl.update(blogRequest, file);
+    	HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+    	return new ResponseEntity<BasicResponse>(response, status );
     }
 
     @PostMapping("/blogs/delete")
-    public BasicResponse deleteBlog(Long id)
+    public ResponseEntity<BasicResponse> deleteBlog(Long id)
     {
-        return blogServiceImpl.deleteBlog(id);
+    	BasicResponse response  = blogServiceImpl.deleteBlog(id);
+    	HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<BasicResponse>( response, status);
     }
 }
