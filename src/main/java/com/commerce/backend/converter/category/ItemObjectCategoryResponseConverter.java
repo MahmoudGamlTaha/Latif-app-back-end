@@ -19,6 +19,7 @@ public class ItemObjectCategoryResponseConverter implements Function<ItemObjectC
         		.builder()
         		.id(itemCategory.getId())
         		.name(itemCategory.getName())
+        		.icon(itemCategory.getIcon())
         		.type(itemCategory.getType())
         		.iconSelect(itemCategory.getIcon_select())
         		.nameAr(itemCategory.getNameAr())

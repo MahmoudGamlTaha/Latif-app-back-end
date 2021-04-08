@@ -75,7 +75,7 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 			category.setIcon(request.getIcon());
 			category.setIsExternalLink(request.isExternalLink());
 			category.setNameAr(request.getNameAr());
-			category.setIcon_select(request.getIcon_select_path());
+			category.setIcon_select(request.getIcon_select());
 			category.setActive(request.isActive());
 			 Optional<PetCategory> cat = this.petCategoryRepository.findById(request.getCatParent());
 			 PetCategory parent	= cat.isPresent()?cat.get(): null;
@@ -87,7 +87,7 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 				category.setIcon(request.getIcon());
 				category.setIsExternalLink(request.isExternalLink());
 				category.setNameAr(request.getNameAr());
-				category.setIcon_select(request.getIcon_select_path());
+				category.setIcon_select(request.getIcon_select());
 				Optional<ItemCategory> itemCategory = this.itemCategoryRepository.findById(request.getCatParent());
 				ItemCategory parent = itemCategory.isPresent()?itemCategory.get(): null;
 				category.setParent(parent);

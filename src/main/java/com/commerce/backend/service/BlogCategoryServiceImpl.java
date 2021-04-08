@@ -1,5 +1,6 @@
 package com.commerce.backend.service;
 
+import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.converter.blog.BlogCategoryResponseConverter;
 import com.commerce.backend.dao.BlogCategoryRepository;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
@@ -14,9 +15,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -36,13 +40,26 @@ public class BlogCategoryServiceImpl {
         this.blogCategoryResponseConverter = blogCategoryResponseConverter;
     }
 
-    public List<BlogCategoryResponse> findAll()
+    public BasicResponse findAll(Pageable page)
     {
+    	 BasicResponse response = new BasicResponse();
+    	 HashMap<String, Object> keyResponse = new HashMap<String, Object>();
+    	try {
         List<BlogCategory> cat = cacheService.findAll();
-        return cat.
+        List<BlogCategoryResponse> catList  = cat.
                 stream()
                 .map(blogCategoryResponseConverter)
                 .collect(Collectors.toList());
+       
+        response.setMsg(MessageType.Success.getMessage());
+        keyResponse.put(MessageType.Data.getMessage(), catList);
+        response.setSuccess(true);
+        response.setResponse(keyResponse);
+    	}catch(Exception ex) {
+    	response.setMsg(ex.getMessage());
+    	response.setSuccess(false);
+    	}
+    	return response;
     }
 
     public BlogCategoryResponse findById(Long id)
