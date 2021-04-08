@@ -50,7 +50,6 @@ public class Blog {
 
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    //@Column(name = "user_id")
     private User userId;
 
     @Column(name = "date")

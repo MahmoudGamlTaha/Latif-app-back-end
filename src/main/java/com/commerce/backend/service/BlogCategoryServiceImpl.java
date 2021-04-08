@@ -119,7 +119,7 @@ public class BlogCategoryServiceImpl {
             response.setMsg("Removed");
         }catch (Exception e){
             response.setSuccess(false);
-            response.setMsg("Error");
+            response.setMsg(e.getMessage());
         }
         return response;
     }
