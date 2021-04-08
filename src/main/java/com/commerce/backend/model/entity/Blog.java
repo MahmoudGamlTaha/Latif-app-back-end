@@ -33,7 +33,7 @@ public class Blog {
     @Column(name = "title", nullable = false, length=250)
     private String title;
 
-    @JsonIdentityReference(alwaysAsId = true)
+//    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne(optional = true)
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "category_id")
