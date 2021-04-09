@@ -31,8 +31,9 @@ public class UserAdsController extends PublicApiController {
 
 
     @GetMapping(value = "/ads")
+    @ResponseBody
     public ResponseEntity<BasicResponse> getAll(@RequestParam(value ="page", required = false) Optional<Integer> page,
-    		                                    @RequestParam(value="location", required= false) Optional<LocationRequest> location,
+    		                                     Optional<LocationRequest> location,
     		                                                   @RequestParam(value = "type", required= true) AdsType type,
                                                                @RequestParam(value ="size", required= false) Optional<Integer> pageSize,
                                                                @RequestParam(value = "sort", required = false) String sort,
@@ -40,7 +41,7 @@ public class UserAdsController extends PublicApiController {
                                                                @RequestParam(value = "minPrice", required = false) Float minPrice,
                                                                @RequestParam(value = "maxPrice", required = false) Float maxPrice) {
     	
-        BasicResponse response = userAdsService.getAll(type, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), sort, category, minPrice, maxPrice);
+        BasicResponse response = userAdsService.getAll(type, location.orElse(null), page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), sort, category, minPrice, maxPrice);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -85,11 +86,12 @@ public class UserAdsController extends PublicApiController {
     }
 
     @GetMapping(value = "/ads/nearest")
+    @ResponseBody
     public ResponseEntity<BasicResponse> getNearByAds(@RequestParam(value ="longitude") double longitude,
                                                       @RequestParam(value ="latitude") double latitude,
-                                                      @RequestParam(value ="page", required = false) Pageable page)
+                                                      Optional<Integer> distance, Integer page, Integer size)
     {
-        BasicResponse res = userAdsService.findNearest(longitude, latitude, page);
+        BasicResponse res = userAdsService.findNearby(longitude, latitude, distance.orElse(SystemConstant.DISTANCE), page, size);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
  

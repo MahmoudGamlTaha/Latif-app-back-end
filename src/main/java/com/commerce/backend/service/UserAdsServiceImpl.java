@@ -9,6 +9,7 @@ import com.commerce.backend.dao.*;
 import com.commerce.backend.model.dto.*;
 import com.commerce.backend.model.entity.*;
 import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
+import com.commerce.backend.model.request.userAds.LocationRequest;
 import com.commerce.backend.model.request.userAds.UserPetsAdsRequest;
 import com.commerce.backend.model.request.userAds.adTypeRequest;
 import com.commerce.backend.model.response.BasicResponse;
@@ -40,6 +41,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+
+import javax.xml.stream.Location;
 
 import static java.lang.System.currentTimeMillis;
 
@@ -86,45 +89,20 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public BasicResponse getAll(AdsType type, Integer page, Integer size, String sort, Long category, Float minPrice,
-			Float maxPrice) {
+	public BasicResponse getAll(AdsType type, LocationRequest location, Integer page, Integer size, String sort, Long category, Float minPrice,
+								Float maxPrice) {
 		try {
-		Pageable pageable = PageRequest.of(page, size);
-		 BasicResponse response = new BasicResponse();
-		 HashMap<String, Object> hashMap = new HashMap<String, Object>();
-		
-		if(type == AdsType.ACCESSORIES) {
-			Page<UserAccAds> userAccAds = this.userItemsAdsRepository.findAll(pageable);
-			  /* userAccAds.get()
-			   .map(this.userAdsConverter)
-			   .collect(Collectors.toList());*/
-			 response.setMsg("success");
-			 response.setSuccess(true);
-			 hashMap.put("count", userAccAds.getSize());
-			 hashMap.put("data", userAccAds);
-		}
-		else if(type == AdsType.PET_CARE) {
-		    Page<UserMedicalAds> userMedicalAds = this.userMedicalAdsRepository.findAll(pageable);
-		     hashMap.put("count", userMedicalAds.getSize());
-			 hashMap.put("data", userMedicalAds);
-		}
-		else if(type == AdsType.PETS) {
-			Page<UserPetAds> userPetAds = this.userPetsAdsRepository.findAll(pageable);
-			
-			hashMap.put("count", userPetAds.getSize());
-			 hashMap.put("data", userPetAds);
-		} 
-		else if(type == AdsType.SERVICE) {
-		    List<UserServiceAds> userServiceAds =  this.userServiceAdsRepository.findAllMobile();
-		    
-		    List<UserAdsVO> userAds =   userServiceAds.stream()
-		    .map(userAdsToVoConverter)
-		    .collect(Collectors.toList());
-		    hashMap.put("count", userServiceAds.size());				    
-			hashMap.put("data", userAds );
-		}
-		 response.setResponse(hashMap);
-		 return response;
+			Pageable pageable = PageRequest.of(page, size);
+			List<UserAdsVO> collect = new ArrayList<>();
+			if(location != null)
+			{
+				Page<UserAds> ads = repo.findAll(location.getLongitude(), location.getLatitude(), type.getType(), pageable);
+				ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
+			}else if(type != null){
+				Page<UserAds> ads = repo.findUserAdsByType(type.getType(), pageable);
+				ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
+			}
+			return res(collect);
 		 
 		}catch(Exception ex) {
 			
@@ -132,6 +110,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 			 HashMap<String, Object> hashMap = new HashMap<String, Object>();
 			 hashMap.put("success",false);
 			 hashMap.put("error", ex.getMessage());
+			 response.setResponse(hashMap);
 			 return response;
 		}
 	}
@@ -153,6 +132,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		return null;
 	}
 
+	@Deprecated
 	@Override
 	public List<UserAdsVO> getNearByAds(Integer page, Integer size, String sort, Long category, Float minPrice,
 			Float maxPrice, UserAdsVO adsCriteria) {
@@ -161,9 +141,14 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public BasicResponse findNearest(double longitude, double latitude, Pageable page)
+	public BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size)
 	{
-		List<UserAds> ads = repo.findNearest(longitude, latitude, page);
+		Pageable pageable = Pageable.unpaged();
+		if(page != null && size != null)
+		{
+			pageable = PageRequest.of(page, size);
+		}
+		List<UserAds> ads = repo.findNearest(longitude, latitude, distance, pageable);
 		List<UserAdsVO> collect = new ArrayList<>();
 		ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 		return res(collect);
@@ -193,6 +178,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("data", obj);
 		res.setSuccess(true);
+		res.setMsg("success");
 		res.setResponse(map);
 		return res;
 	}

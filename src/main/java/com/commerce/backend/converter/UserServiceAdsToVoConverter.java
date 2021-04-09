@@ -105,10 +105,10 @@ public class UserServiceAdsToVoConverter implements Function<Class<? extends Use
 		//	((UserAccAds)destination).setUsed(source.getUserAccRequest().getUsed());
 			ItemObjectCategory category = new ItemCategory();
 			//category.setId(source.getUserAccRequest().getCategory_id());
-			((UserAccAds)destination).setItemCategoryId((ItemCategory)category);
+			//((UserAccAds)destination).setItemCategoryId((ItemCategory)category);
 		     category = new ItemCategory();
 		     //category.setId(source.getUserAccRequest().getCategory_type_id());
-			((UserAccAds)destination).setItemCategoryType((ItemCategory)category);
+			//((UserAccAds)destination).setItemCategoryType((ItemCategory)category);
 		}
 		if(source.getType() == AdsType.PETS) {
 		//	((UserPetAds)destination).setBarkingProblem(source.getUserPetsAdsRequest().getBarkingProblem());

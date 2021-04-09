@@ -3,6 +3,7 @@ package com.commerce.backend.service;
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.model.dto.UserAdsVO;
 import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
+import com.commerce.backend.model.request.userAds.LocationRequest;
 import com.commerce.backend.model.request.userAds.UserPetsAdsRequest;
 import com.commerce.backend.model.request.userAds.adTypeRequest;
 import com.commerce.backend.model.response.BasicResponse;
@@ -16,7 +17,7 @@ import java.util.List;
 public interface UserAdsService {
     ProductDetailsResponse findByUrl(String url);
 
-    BasicResponse getAll(AdsType type ,Integer page, Integer size, String sort, Long category, Float minPrice, Float maxPrice);
+    BasicResponse getAll(AdsType type , LocationRequest location, Integer page, Integer size, String sort, Long category, Float minPrice, Float maxPrice);
    
     Long getAllCount(UserAdsVO userAdsVO, Float minPrice, Float maxPrice);
 
@@ -46,5 +47,5 @@ public interface UserAdsService {
 
     <T> UserAdsVO savePet(UserPetsAdsRequest userPetsAdsRequest);
 
-    BasicResponse findNearest(double longitude, double latitude, Pageable page);
+    BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size);
 }
