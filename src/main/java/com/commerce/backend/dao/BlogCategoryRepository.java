@@ -4,6 +4,8 @@ import com.commerce.backend.model.entity.BlogCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,4 +16,6 @@ public interface BlogCategoryRepository extends JpaRepository<BlogCategory, Long
     List<BlogCategory> findAll(String keyword);
 
     Optional<BlogCategory> findByName(String name);
+    
+    Page<BlogCategory>findByActive(Boolean active, Pageable page);
 }

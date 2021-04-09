@@ -15,6 +15,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -45,14 +46,17 @@ public class BlogCategoryServiceImpl {
     	 BasicResponse response = new BasicResponse();
     	 HashMap<String, Object> keyResponse = new HashMap<String, Object>();
     	try {
-        List<BlogCategory> cat = cacheService.findAll();
+        Page<BlogCategory> cat = cacheService.findAll(page);
         List<BlogCategoryResponse> catList  = cat.
-                stream()
+                get()
                 .map(blogCategoryResponseConverter)
                 .collect(Collectors.toList());
        
         response.setMsg(MessageType.Success.getMessage());
         keyResponse.put(MessageType.Data.getMessage(), catList);
+        keyResponse.put(MessageType.CurrentPage.getMessage(), cat.getNumber());
+        keyResponse.put(MessageType.TotalItems.getMessage(), cat.getTotalElements());
+        keyResponse.put(MessageType.TotalPages.getMessage(), cat.getTotalPages());
         response.setSuccess(true);
         response.setResponse(keyResponse);
     	}catch(Exception ex) {

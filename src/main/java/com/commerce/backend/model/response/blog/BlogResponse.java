@@ -31,6 +31,7 @@ public class BlogResponse {
         this.description = blog.getDescription();
         this.image = blog.getImage();
         this.path = blog.getPath();
+        
         this.createdDate = blog.getCreated_at();
         this.user = new UserResponseConverter().apply(blog.getUserId());
     }
