@@ -1,6 +1,6 @@
 {"form":[
   {"name": "name","type": "string", "label": "Category", "required": true},
-  {"name": "code", "type": "string","label": "Code", "required": true},
+  {"name": "category", "type": "url_option", "label": "category", "url":"/api/public/cat-by-adType/type=1" , "required": true},
   {"name": "description", "type": "string","label": "Description", "required": true},
   {"name": "short_description", "type": "string","label": "Short Description", "required": true},
   {"name": "active", "type": "boolean","label": "Active", "required": true},

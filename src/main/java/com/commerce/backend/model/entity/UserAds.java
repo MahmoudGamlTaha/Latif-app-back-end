@@ -27,6 +27,9 @@ public class UserAds {
 	@Column(name = "code", length = 250, unique = true)
 	private String code;
 	
+	@Column(name = "city", length = 100)
+	private String city;
+	
 	//@Transient
 	@Column(name = "type", insertable = false, updatable = false, nullable = false)
 	private AdsType type;        

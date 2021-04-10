@@ -1,5 +1,6 @@
 package com.commerce.backend.api;
 
+import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.model.request.category.CategoryRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -31,12 +33,14 @@ public class CategoryController extends PublicApiController {
         this.itemObjectCategoryService = itemObjectCategoryService;
     }
 
-    @GetMapping(value = "/cat-by-adType/type={adtypeId}")
+    @GetMapping(value = "/cat-by-adType/type={adtypeId}/{page}")
     @ResponseBody
-    public ResponseEntity<BasicResponse> getCategoryByAdsType(@PathVariable("adtypeId") Integer adtypeId){
+    public ResponseEntity<BasicResponse> getCategoryByAdsType(@PathVariable("adtypeId") Integer adtypeId, 
+    		                                                   @PathVariable(name="page",required = false) Optional<Integer> page){
     	logger2.info("======path variable=========:"+ adtypeId);
-    	BasicResponse response = this.itemObjectCategoryService.findAllByTypeId(adtypeId);
-    	return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);
+    	BasicResponse response = this.itemObjectCategoryService.findAllByTypeId(adtypeId, page.orElse(0));
+    	HttpStatus status = response.getMsg() != MessageType.Success.getMessage()?HttpStatus.BAD_REQUEST: HttpStatus.OK;
+    	return new ResponseEntity<BasicResponse>(response, status);
     }
     @GetMapping(value = "/pet-category")
     public ResponseEntity<List<ItemObjectCategoryResponse>> getPetCategories() {
