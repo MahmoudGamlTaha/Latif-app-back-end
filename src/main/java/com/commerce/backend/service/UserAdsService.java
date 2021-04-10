@@ -32,13 +32,11 @@ public interface UserAdsService {
 
     List<UserAdsVO> getNearByAdsByCategory(AdsType adsType, Long Category);
     
-  
     
     List<UserAdsVO> getInterested(Long userId, String token);
   
-    BasicResponse createUserAds(DynamicAdsRequest<String, String> ads, List<MultipartFile> file);
+    BasicResponse createUserAds(DynamicAdsRequest<String, String> ads,List<String> xfiles ,List<MultipartFile> file, boolean external);
     
-
     List<UserAdsVO> searchItemDisplay(String keyword, Integer page, Integer size);
 
 	Long getAllCount(String category, Float minPrice, Float maxPrice, String color);

@@ -9,6 +9,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -25,7 +28,12 @@ public class UserAdsImage {
    @Column(name = "image")
    private String image;
 
-   @ManyToOne
+   @ManyToOne(optional = true)
    @JoinColumn(name = "user_ads_id")
-   private UserPetAds userAdsImage;
+   @NotFound(action = NotFoundAction.IGNORE)
+   private UserAds userAdsImage;
+   
+   @Column(name = "external_link")
+   private Boolean isExternalLink;
+   
 }

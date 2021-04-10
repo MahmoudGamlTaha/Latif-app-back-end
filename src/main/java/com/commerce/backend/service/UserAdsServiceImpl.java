@@ -52,6 +52,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	private UserServiceAdsRepository userServiceAdsRepository;
 	private UserItemsAdsRepository userItemsAdsRepository;
 	private UserMedicalAdsRepository userMedicalAdsRepository;
+	
 	private UserAdsToVoConverter userAdsToVoConverter;
 	private UserAdsConverter userAdsConverter;
 	private UserAdsImageRepository userAdsImageRepository;
@@ -137,7 +138,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 				Page<UserAds> ads = repo.findUserAdsByType(type.getType(), pageable);
 				ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 			}
-			return res(collect);
+			return res(collect, true);
 		 
 		}catch(Exception ex) {
 			
@@ -178,6 +179,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	@Override
 	public BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size)
 	{
+		try {
 		Pageable pageable = Pageable.unpaged();
 		if(page != null && size != null)
 		{
@@ -186,7 +188,11 @@ public class UserAdsServiceImpl implements UserAdsService {
 		List<UserAds> ads = repo.findNearest(longitude, latitude, distance, pageable);
 		List<UserAdsVO> collect = new ArrayList<>();
 		ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
-		return res(collect);
+		return res(collect, true);
+		}catch(Exception ex) {
+			
+			return res(ex, false);
+		}
 	}
 	@Override
 	public List<UserAdsVO> getNearByAdsByCategory(AdsType adsType, Long Category) {
@@ -207,7 +213,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		}
 	}
 
-	public BasicResponse res(Object obj, boolean error )
+	public BasicResponse res(Object obj, boolean sucess )
 	{
 		BasicResponse res = new BasicResponse();
 		HashMap<String, Object> map = new HashMap<>();
@@ -217,7 +223,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		} else {
 			map.put(MessageType.Data.getMessage(),  obj);
 		}
-		res.setSuccess(error);
+		res.setSuccess(sucess);
 		res.setResponse(map);
 		return res;
 	}
@@ -236,41 +242,23 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public BasicResponse createUserAds(DynamicAdsRequest<String, String> ads, List<MultipartFile> file) {
+	public BasicResponse createUserAds(DynamicAdsRequest<String, String> ads, List<String> files, List<MultipartFile> file, boolean external) {
 		UserAds entity = this.userAdsConverter.convertRequestToEntity(ads);
 		if(ads.getType() == AdsType.ACCESSORIES) {
-
 			this.userItemsAdsRepository.save((UserAccAds)entity);
 		}
 		else if(ads.getType() == AdsType.PET_CARE) {
 			this.userMedicalAdsRepository.save((UserMedicalAds)entity);
 		}
 		else if(ads.getType() == AdsType.PETS) {
-			if(file != null) {
-				String filename = currentTimeMillis() + "-" + StringUtils.cleanPath(Objects.requireNonNull(file.get(0).getOriginalFilename()));
-				filename = filename.toLowerCase().replaceAll(" ", "-");
-				try {
-					Files.copy(file.get(0).getInputStream(), rootLocation.resolve(filename));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				((UserPetAds) entity).setImage("upload/pets" + filename);
-				if(file.size() > 1)
-				{
-					UserAdsImage userAdsImage = new UserAdsImage();
-					for (int i = 1; i < file.size(); i++)
-					{
-						userAdsImage.setImage("upload/pets" + filename);
-						userAdsImage.setUserAdsImage((UserPetAds) entity);
-						userAdsImageRepository.save(userAdsImage);
-					}
-
-				}
-			}
-			this.userPetsAdsRepository.save((UserPetAds)entity);
+			((UserPetAds) entity).setImage("upload/"+ ads.getType() + file.get(0).getName());	
+			this.saveEntityFiles(entity, files, file, ads.getType(), external);
+	    	this.userPetsAdsRepository.save((UserPetAds)entity);
 		}
 		else if(ads.getType() == AdsType.SERVICE) {
 		   this.userServiceAdsRepository.save((UserServiceAds)entity);
+		} else if(ads.getType() == AdsType.DRIVER) {
+			
 		}
 		BasicResponse response = new BasicResponse();
 		response.setSuccess(true);
@@ -332,6 +320,47 @@ public class UserAdsServiceImpl implements UserAdsService {
 	@Override
 	public <T> UserAdsVO savePet(UserPetsAdsRequest userPetsAdsRequest) {
 		return new UserPetAdsVO();
+	}
+	
+	public boolean saveEntityFiles(UserAds entity, List<String> fileList, List<MultipartFile> files, AdsType type, boolean external) {
+		try {	
+		if(files != null && !external) {
+			String filename = currentTimeMillis() + "-" + StringUtils.cleanPath(Objects.requireNonNull(files.get(0).getOriginalFilename()));
+			filename = filename.toLowerCase().replaceAll(" ", "-");
+			try {
+				Files.copy(files.get(0).getInputStream(), rootLocation.resolve(filename));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			((UserPetAds) entity).setImage("/upload/ads/" + type.getType()+ "/" + filename);
+			if(files.size() > 1)
+			{
+				UserAdsImage userAdsImage = new UserAdsImage();
+				for (int i = 1; i < files.size(); i++)
+				{
+					userAdsImage.setImage("/upload/ads/" + type.getType()+ "/"  + filename);
+					userAdsImage.setUserAdsImage((UserPetAds) entity);
+					userAdsImageRepository.save(userAdsImage);
+				}
+
+			}
+		}else if(external && fileList != null) {
+			
+			fileList.stream().forEach(path -> {
+				boolean flag = true;
+				UserAdsImage userAdsImage = new UserAdsImage();
+				userAdsImage.setImage(path);
+				userAdsImage.setIsExternalLink(true);
+				userAdsImage.setUserAdsImage(entity);
+				userAdsImageRepository.save(userAdsImage);
+				flag = false;
+			});
+		}
+		}catch(Exception ex) {
+			ex.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 

@@ -1,6 +1,7 @@
 package com.commerce.backend.model.entity;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.*;
 import com.commerce.backend.constants.AdsType;
@@ -67,5 +68,8 @@ public class UserAds {
 	
 	@Column(name = "external_link")
 	private Boolean externalLink;  
+	
+	@OneToMany
+	private Set<UserAdsImage> images;
   
 }

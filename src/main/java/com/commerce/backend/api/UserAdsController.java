@@ -33,7 +33,7 @@ public class UserAdsController extends PublicApiController {
     @GetMapping(value = "/ads")
     @ResponseBody
     public ResponseEntity<BasicResponse> getAll(@RequestParam(value ="page", required = false) Optional<Integer> page,
-    		                                     Optional<LocationRequest> location,
+                                                                                                            Optional<LocationRequest> location,
     		                                                   @RequestParam(value = "type", required= true) AdsType type,
                                                                @RequestParam(value ="size", required= false) Optional<Integer> pageSize,
                                                                @RequestParam(value = "sort", required = false) String sort,
@@ -117,13 +117,13 @@ public class UserAdsController extends PublicApiController {
 
     @PostMapping(value = "/ads/create")
     public ResponseEntity<BasicResponse> createUserAds(@RequestBody DynamicAdsRequest<String, String> userAdsRequest,
-                                                       @RequestParam(value = "images", required = false) List<MultipartFile> files,
-                                                       @RequestParam(value = "images", required = false) List<MultipartFile> file,
+                                                       @RequestParam(value = "images", required = false) Optional<List<String>> xfiles,
+                                                       @RequestParam(value = "images", required = false) Optional<List<MultipartFile>> files,
                                                        @RequestParam(value = "external_link", required = false) Optional<Boolean> external){
     	BasicResponse response = null;
     	HttpStatus status = HttpStatus.OK;
     	try {
-    	     response = this.userAdsService.createUserAds(userAdsRequest, file);
+    	     response = this.userAdsService.createUserAds(userAdsRequest, xfiles.orElse(null), files.orElse(null), external.orElse(false));
        
     	}catch(Exception ex) {
     		response = new BasicResponse();

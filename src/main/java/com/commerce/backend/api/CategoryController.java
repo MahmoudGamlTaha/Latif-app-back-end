@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 import java.util.Optional;
-
 import javax.validation.Valid;
 
 @RestController
@@ -33,10 +31,10 @@ public class CategoryController extends PublicApiController {
         this.itemObjectCategoryService = itemObjectCategoryService;
     }
 
-    @GetMapping(value = "/cat-by-adType/type={adtypeId}/{page}")
+    @GetMapping(value = {"/cat-by-adType/type={adtypeId}", "/cat-by-adType/type={adtypeId}/{page}"})
     @ResponseBody
     public ResponseEntity<BasicResponse> getCategoryByAdsType(@PathVariable("adtypeId") Integer adtypeId, 
-    		                                                   @PathVariable(name="page",required = false) Optional<Integer> page){
+    		                                                   @PathVariable(required = false) Optional<Integer> page){
     	logger2.info("======path variable=========:"+ adtypeId);
     	BasicResponse response = this.itemObjectCategoryService.findAllByTypeId(adtypeId, page.orElse(0));
     	HttpStatus status = response.getMsg() != MessageType.Success.getMessage()?HttpStatus.BAD_REQUEST: HttpStatus.OK;

@@ -94,7 +94,7 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 				category = new ItemCategory();
 				category.setName(request.getName());
 				category.setIcon(request.getIcon());
-				category.setIcon_select(request.getIcon_select_path());
+				category.setIcon_select(request.getIcon_select());
 				category.setIsExternalLink(request.isExternalLink());
 				category.setNameAr(request.getNameAr());
 
