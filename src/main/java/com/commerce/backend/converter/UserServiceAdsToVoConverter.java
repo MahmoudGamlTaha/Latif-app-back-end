@@ -105,19 +105,19 @@ public class UserServiceAdsToVoConverter implements Function<Class<? extends Use
 		//	((UserAccAds)destination).setUsed(source.getUserAccRequest().getUsed());
 			ItemObjectCategory category = new ItemCategory();
 			//category.setId(source.getUserAccRequest().getCategory_id());
-			((UserAccAds)destination).setItemCategoryId((ItemCategory)category);
+			//((UserAccAds)destination).setItemCategoryId((ItemCategory)category);
 		     category = new ItemCategory();
 		     //category.setId(source.getUserAccRequest().getCategory_type_id());
-			((UserAccAds)destination).setItemCategoryType((ItemCategory)category);
+			//((UserAccAds)destination).setItemCategoryType((ItemCategory)category);
 		}
 		if(source.getType() == AdsType.PETS) {
 		//	((UserPetAds)destination).setBarkingProblem(source.getUserPetsAdsRequest().getBarkingProblem());
-			PetCategory category = new PetCategory();
+			//PetCategory category = new PetCategory();
 			//category.setId(source.getUserPetsAdsRequest().getCategory());
-			((UserPetAds)destination).setCategory(category);
-	         category = new PetCategory();
+			//((UserPetAds)destination).setCategory(category);
+	         //category = new PetCategory();
 	        // category.setId(source.getUserPetsAdsRequest().getCategoryType());
-			((UserPetAds)destination).setPetCategoryType(category);
+			//((UserPetAds)destination).setPetCategoryType(category);
 			/*((UserPetAds)destination).setBreed(source.getUserPetsAdsRequest().getBreed());
 			((UserPetAds)destination).setBarkingProblem(source.getUserPetsAdsRequest().getBarkingProblem());
 			((UserPetAds)destination).setFood(source.getUserPetsAdsRequest().getFood());
@@ -163,8 +163,8 @@ public class UserServiceAdsToVoConverter implements Function<Class<? extends Use
 		if(source.getType() == AdsType.PETS) {
 			
 			((UserPetAdsVO)destination).setBarkingProblem(((UserPetAds)source).getBarkingProblem());
-			ItemObjectCategoryVO itemObjectCategoryVO = new ItemObjectCategoryVO(((UserPetAds)source).getCategory());
-			((UserPetAdsVO)destination).setCategory(itemObjectCategoryVO);
+			//ItemObjectCategoryVO itemObjectCategoryVO = new ItemObjectCategoryVO(((UserPetAds)source).getCategory());
+			//((UserPetAdsVO)destination).setCategory(itemObjectCategoryVO);
 			((UserPetAdsVO)destination).setBreed(((UserPetAds)source).getBreed());
 			((UserPetAdsVO)destination).setBarkingProblem(((UserPetAds)source).getBarkingProblem());
 			//((UserPetAdsVO)destination).setFood(((UserPetAds)source).getFood());

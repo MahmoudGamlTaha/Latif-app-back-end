@@ -30,11 +30,11 @@ public class UserAdsRequest {
 	
 	 @NotBlank
 	 @Pattern(regexp = "^(\\+|-)?(?:180(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\\.[0-9]{1,6})?))$\r\n")
-	private String longitude;
+	private double longitude;
 
 	 @NotBlank
 	 @Pattern(regexp= "^(\\+|-)?(?:90(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\\.[0-9]{1,6})?))$\r\n")
-	private String latitude;
+	private double latitude;
 	
 	 @Pattern(regexp = "[0-9a-zA-Z #,-,_]+")
 	private String description;

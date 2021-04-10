@@ -6,10 +6,10 @@ import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.converter.UserAdsConverter;
 import com.commerce.backend.converter.UserAdsToVoConverter;
 import com.commerce.backend.dao.*;
-import com.commerce.backend.model.dto.UserAdsVO;
-import com.commerce.backend.model.dto.UserPetAdsVO;
+import com.commerce.backend.model.dto.*;
 import com.commerce.backend.model.entity.*;
 import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
+import com.commerce.backend.model.request.userAds.LocationRequest;
 import com.commerce.backend.model.request.userAds.UserPetsAdsRequest;
 import com.commerce.backend.model.request.userAds.adTypeRequest;
 import com.commerce.backend.model.response.BasicResponse;
@@ -22,12 +22,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -43,6 +42,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import javax.xml.stream.Location;
+
 import static java.lang.System.currentTimeMillis;
 
 @Service
@@ -54,6 +55,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	private UserAdsToVoConverter userAdsToVoConverter;
 	private UserAdsConverter userAdsConverter;
 	private UserAdsImageRepository userAdsImageRepository;
+	private CustomUserAdsRepo repo;
 	private final Path rootLocation = Paths.get("upload");
 	@Value("${swagger.host.path}")
 	private String path;
@@ -62,7 +64,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	public UserAdsServiceImpl(UserAdsRepository userAdsRepository, UserPetsAdsRepository userPetsAdsRepository,
 							  UserServiceAdsRepository userServiceAdsRepository,
 							  UserItemsAdsRepository userItemsAdsRepository, UserMedicalAdsRepository userMedicalAdsRepository,
-							  UserAdsToVoConverter userAdsToVoConverter, UserAdsConverter userAdsConverter, UserAdsImageRepository userAdsImageRepository) {
+							  UserAdsToVoConverter userAdsToVoConverter, UserAdsConverter userAdsConverter, UserAdsImageRepository userAdsImageRepository, CustomUserAdsRepo repo) {
 	
 
 	
@@ -74,6 +76,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		this.userAdsToVoConverter = userAdsToVoConverter;
 		this.userAdsConverter = userAdsConverter;
 		this.userAdsImageRepository = userAdsImageRepository;
+		this.repo = repo;
 	}
 
 	public UserAdsServiceImpl() {
@@ -86,9 +89,10 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public BasicResponse getAll(AdsType type, Integer page, Integer size, String sort, Long category, Float minPrice,
-			Float maxPrice) {
+	public BasicResponse getAll(AdsType type, LocationRequest location, Integer page, Integer size, String sort, Long category, Float minPrice,
+								Float maxPrice) {
 		try {
+/* <<<<<<< complete_form_bulider
 		Pageable pageable = PageRequest.of(page, size);
 		 BasicResponse response = new BasicResponse();
 		 HashMap<String, Object> hashMap = new HashMap<String, Object>();
@@ -122,6 +126,18 @@ public class UserAdsServiceImpl implements UserAdsService {
 		}
 		 response.setResponse(hashMap);
 		 return response;
+=======*/
+			Pageable pageable = PageRequest.of(page, size);
+			List<UserAdsVO> collect = new ArrayList<>();
+			if(location != null)
+			{
+				Page<UserAds> ads = repo.findAll(location.getLongitude(), location.getLatitude(), type.getType(), pageable);
+				ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
+			}else if(type != null){
+				Page<UserAds> ads = repo.findUserAdsByType(type.getType(), pageable);
+				ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
+			}
+			return res(collect);
 		 
 		}catch(Exception ex) {
 			
@@ -129,6 +145,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 			 HashMap<String, Object> hashMap = new HashMap<String, Object>();
 			 hashMap.put("success",false);
 			 hashMap.put("error", ex.getMessage());
+			 response.setResponse(hashMap);
 			 return response;
 		}
 	}
@@ -150,6 +167,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		return null;
 	}
 
+	@Deprecated
 	@Override
 	public List<UserAdsVO> getNearByAds(Integer page, Integer size, String sort, Long category, Float minPrice,
 			Float maxPrice, UserAdsVO adsCriteria) {
@@ -158,15 +176,50 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
+	public BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size)
+	{
+		Pageable pageable = Pageable.unpaged();
+		if(page != null && size != null)
+		{
+			pageable = PageRequest.of(page, size);
+		}
+		List<UserAds> ads = repo.findNearest(longitude, latitude, distance, pageable);
+		List<UserAdsVO> collect = new ArrayList<>();
+		ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
+		return res(collect);
+	}
+	@Override
 	public List<UserAdsVO> getNearByAdsByCategory(AdsType adsType, Long Category) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public UserAdsVO findAdsById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public BasicResponse findAdsById(Long id) {
+		try{
+			UserAds ad = (UserAds) repo.findById(id).orElse(null);
+			UserAdsVO vo = userAdsToVoConverter.apply(ad);
+			return res(vo, true);
+		}
+		catch (Exception e)
+		{
+			return res(e, false);
+		}
+	}
+
+	public BasicResponse res(Object obj, boolean error )
+	{
+		BasicResponse res = new BasicResponse();
+		HashMap<String, Object> map = new HashMap<>();
+
+		if( obj instanceof Exception) {
+		 map.put(MessageType.Data.getMessage(), ((Exception) obj).getMessage());
+		} else {
+			map.put(MessageType.Data.getMessage(),  obj);
+		}
+		res.setSuccess(error);
+		res.setResponse(map);
+		return res;
 	}
 
 

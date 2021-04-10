@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 public class BlogCategoryRequest {
     @NotBlank
     @Size(min = 3, max = 250)
-    @Pattern(regexp = "[0-9a-zA-Z #,_]+")
+    //@Pattern(regexp = "[0-9a-zA-Z #,_]+")
     String name;
 
     @NotBlank
@@ -20,4 +20,8 @@ public class BlogCategoryRequest {
     
     @Positive
     Long category;
+    
+    String icon;
+    
+    Boolean external_link;
 }

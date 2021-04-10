@@ -10,6 +10,7 @@ import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import com.commerce.backend.service.UserAdsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +31,9 @@ public class UserAdsController extends PublicApiController {
 
 
     @GetMapping(value = "/ads")
+    @ResponseBody
     public ResponseEntity<BasicResponse> getAll(@RequestParam(value ="page", required = false) Optional<Integer> page,
-    		                                    @RequestParam(value="location", required= false) Optional<LocationRequest> location,
+    		                                     Optional<LocationRequest> location,
     		                                                   @RequestParam(value = "type", required= true) AdsType type,
                                                                @RequestParam(value ="size", required= false) Optional<Integer> pageSize,
                                                                @RequestParam(value = "sort", required = false) String sort,
@@ -39,9 +41,16 @@ public class UserAdsController extends PublicApiController {
                                                                @RequestParam(value = "minPrice", required = false) Float minPrice,
                                                                @RequestParam(value = "maxPrice", required = false) Float maxPrice) {
     	
-        BasicResponse response = userAdsService.getAll(type, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), sort, category, minPrice, maxPrice);  
+        BasicResponse response = userAdsService.getAll(type, location.orElse(null), page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), sort, category, minPrice, maxPrice);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping("/ads/ad-by-Id")
+    public ResponseEntity<BasicResponse> getAdById(@RequestParam(value = "id", required = true) Long id) throws Exception {
+        BasicResponse res = userAdsService.findAdsById(id);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
 
     @GetMapping(value = "/ads/count")
     public ResponseEntity<Long> getAllCount(@RequestParam(value = "category", required = false) String category,
@@ -76,6 +85,15 @@ public class UserAdsController extends PublicApiController {
         return new ResponseEntity<>(userAds, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/ads/nearest")
+    @ResponseBody
+    public ResponseEntity<BasicResponse> getNearByAds(@RequestParam(value ="longitude") double longitude,
+                                                      @RequestParam(value ="latitude") double latitude,
+                                                      Optional<Integer> distance, Integer page, Integer size)
+    {
+        BasicResponse res = userAdsService.findNearby(longitude, latitude, distance.orElse(SystemConstant.DISTANCE), page, size);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
  
     @GetMapping(value = "/ads/interested")
     public ResponseEntity<List<UserAdsVO>> getByInterested(@RequestParam("token") String token,

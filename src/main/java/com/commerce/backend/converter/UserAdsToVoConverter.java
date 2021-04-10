@@ -46,6 +46,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		else if(UserAds.class.cast(source).getType() == AdsType.SERVICE) {
 			userAdsVo = new UserServiceVO();
 		}
+		assert userAdsVo != null;
 		this.copyUserAdsEntityToVo(UserAds.class.cast(source), userAdsVo);
 		return userAdsVo;
 	}
@@ -85,9 +86,10 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		else if(userAdsRequest.getType() == AdsType.SERVICE) {
 			userAds = new UserServiceAds();
 		}
+		assert userAds != null;
 		return copyUserAdsObject(userAdsRequest, userAds);
 	}
-
+    @Deprecated 
 	private UserAds copyUserAdsObject(UserAdsGeneralAdsRequest source, UserAds destination) {
 		//assert(source.getType() == destination.getType());
 
@@ -102,7 +104,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		destination.setType(source.getType());
 		User user = new User();
 		user.setId(source.getUserAds().getCreatedBy());
-	//	destination.setCreatedBy(user);
+		destination.setCreatedBy(user);
 		destination.setCreatedAt(new Date());
 		destination.setUpdatedAt(new Date());
 		//--------------------------------------------------------
@@ -140,7 +142,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 
 		}
 		else if(source.getType() == AdsType.PET_CARE) {
-		//	((UserMedicalAds)destination).setAllowServiceAtHome(((UserMedicalAdsRequest) source.getUserAdsRequest()).getAvaliable_at_home());
+			((UserMedicalAds)destination).setAllowServiceAtHome(((UserMedicalAdsRequest) source.getUserAdsRequest()).getAvaliable_at_home());
 		}
 		else if(source.getType() == AdsType.SERVICE) {
 		/*	UserServiceAdsRequest UserServiceAdsRequest = (UserServiceAdsRequest) source.getUserAdsRequest();
@@ -158,6 +160,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 
 	public UserAdsVO copyUserAdsEntityToVo(UserAds source, UserAdsVO destination) {
 		//assert(source.getType() == destination.getType());
+		destination.setId(source.getId());
 		destination.setActive(source.isActive());
 		destination.setCode(source.getCode());
 		destination.setDescription(source.getDescription());
@@ -167,12 +170,13 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		destination.setShort_description(source.getShortDescription());
 		destination.setPrice(source.getPrice());
 		User user = new User();
+		if(source.getCreatedBy() != null) {
 		user.setId(source.getCreatedBy().getId());
 		user.setFirstName(source.getCreatedBy().getFirstName());
 		user.setLastName(source.getCreatedBy().getLastName());
 		user.setAvatar(source.getCreatedBy().getAvatar());
 		user.setPhone(source.getCreatedBy().getPhone());
-
+		}
 		destination.setCreatedBy(user);
 		destination.setCreated_at(new Date());
 		destination.setUpdated_at(new Date());
@@ -184,11 +188,11 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			//((UserPetAdsVO)destination).setCategory(itemObjectCategoryVO);
 			((UserPetAdsVO)destination).setBreed(((UserPetAds)source).getBreed());
 			((UserPetAdsVO)destination).setBarkingProblem(((UserPetAds)source).getBarkingProblem());
-			//((UserPetAdsVO)destination).setFood(((UserPetAds)source).getFood());
+			((UserPetAdsVO)destination).setFood(((UserPetAds)source).getFood());
 			((UserPetAdsVO)destination).setDiseasesDisabilities(((UserPetAds)source).getDiseasesDisabilities());;
 			((UserPetAdsVO)destination).setDiseasesDisabilitiesDesc(((UserPetAds)source).getDiseasesDisabilitiesDesc());
 			((UserPetAdsVO)destination).setNeutering(((UserPetAds)source).getNeutering());
-			//((UserPetAdsVO)destination).setTraining(((UserPetAds)source).getTraining());
+			((UserPetAdsVO)destination).setTraining(((UserPetAds)source).getTraining());
 			((UserPetAdsVO)destination).setPlayWithKids(((UserPetAds)source).getPlayWithKids());
 			((UserPetAdsVO)destination).setPassport(((UserPetAds)source).getPassport());
 		    ((UserPetAdsVO)destination).setVaccinationCertificate(((UserPetAds)source).getVaccinationCertifcate());;

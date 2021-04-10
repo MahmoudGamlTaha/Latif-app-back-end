@@ -9,6 +9,8 @@ import com.commerce.backend.model.response.blog.BlogCategoryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -28,9 +30,9 @@ public class BlogCategoryCacheService {
     }
 
     @Cacheable(key = "#root.methodName")
-    public List<BlogCategory> findAll()
+    public Page<BlogCategory> findAll(Pageable page)
     {
-        return repo.findAll();
+        return repo.findByActive(true, page);//(page);
     }
 
     @Cacheable(key = "#id", unless = "{#root.caches[0].get(#id) == null, #result.equals(null)}")

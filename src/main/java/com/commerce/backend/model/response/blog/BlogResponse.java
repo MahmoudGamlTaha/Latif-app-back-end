@@ -25,10 +25,13 @@ public class BlogResponse {
     public BlogResponse(Blog blog) {
         this.id = blog.getId();
         this.title = blog.getTitle();
+        if(blog.getCategory() != null) {
         this.category = blog.getCategory().getName();
+        }
         this.description = blog.getDescription();
         this.image = blog.getImage();
         this.path = blog.getPath();
+        
         this.createdDate = blog.getCreated_at();
         this.user = new UserResponseConverter().apply(blog.getUserId());
     }

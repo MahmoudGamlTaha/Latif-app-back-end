@@ -31,7 +31,7 @@ private Boolean neutering;
 
 private Boolean vaccinationCertificate;
 
-private Boolean training;
+private TrainningType training;
 
 private Boolean barkingProblem;
 
@@ -45,7 +45,7 @@ private String diseasesDisabilitiesDesc;
 
 private ItemObjectCategoryVO category;
 
-private Integer food;
+private String food;
 
 private Set<UserAdsImage> petsImages;
 

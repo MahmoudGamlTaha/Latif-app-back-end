@@ -3,11 +3,13 @@ package com.commerce.backend.service;
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.model.dto.UserAdsVO;
 import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
+import com.commerce.backend.model.request.userAds.LocationRequest;
 import com.commerce.backend.model.request.userAds.UserPetsAdsRequest;
 import com.commerce.backend.model.request.userAds.adTypeRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import org.json.simple.JSONObject;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -15,11 +17,11 @@ import java.util.List;
 public interface UserAdsService {
     ProductDetailsResponse findByUrl(String url);
 
-    BasicResponse getAll(AdsType type ,Integer page, Integer size, String sort, Long category, Float minPrice, Float maxPrice);
+    BasicResponse getAll(AdsType type , LocationRequest location, Integer page, Integer size, String sort, Long category, Float minPrice, Float maxPrice);
    
     Long getAllCount(UserAdsVO userAdsVO, Float minPrice, Float maxPrice);
-    
-    UserAdsVO findAdsById(Long id);
+
+    BasicResponse findAdsById(Long id) throws Exception;
 
     List<UserAdsVO> getRelatedAds(UserAdsVO userAds);
 
@@ -44,4 +46,6 @@ public interface UserAdsService {
     BasicResponse getCreateForm(adTypeRequest petType);
 
     <T> UserAdsVO savePet(UserPetsAdsRequest userPetsAdsRequest);
+
+    BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size);
 }

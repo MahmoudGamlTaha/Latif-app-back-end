@@ -1,5 +1,6 @@
 package com.commerce.backend.api;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,8 @@ import org.springframework.web.method.annotation.MethodArgumentConversionNotSupp
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.commerce.backend.model.response.BasicResponse;
+
+import javax.persistence.EntityExistsException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,4 +39,13 @@ public abstract class PublicApiController {
          response.setSuccess(false);
     	return new ResponseEntity<BasicResponse>(response, HttpStatus.NOT_ACCEPTABLE);
     }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<BasicResponse> handleEntityExistsException(DataIntegrityViolationException ex){
+    	 BasicResponse response = new BasicResponse();
+         response.setMsg(ex.getMessage());
+         response.setSuccess(false);
+    	return new ResponseEntity<BasicResponse>(response, HttpStatus.NOT_ACCEPTABLE);
+    } 
+    
 }

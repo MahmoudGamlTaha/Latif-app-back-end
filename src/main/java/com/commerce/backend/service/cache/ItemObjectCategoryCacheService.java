@@ -14,6 +14,6 @@ public interface ItemObjectCategoryCacheService {
     BasicResponse findAllByTypeId(Integer id, Integer page);
     List<PetCategory> findPetsCategories();
     List<ItemCategory> findItemCategories();
-    ItemObjectCategory createItemObjectCategory(CategoryRequest request);
+    BasicResponse createItemObjectCategory(CategoryRequest request);
     ItemObjectCategory deleteItemObjectCategory(Long id);
 }

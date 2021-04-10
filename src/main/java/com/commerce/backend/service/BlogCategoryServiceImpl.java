@@ -1,5 +1,6 @@
 package com.commerce.backend.service;
 
+import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.converter.blog.BlogCategoryResponseConverter;
 import com.commerce.backend.dao.BlogCategoryRepository;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
@@ -14,9 +15,13 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -36,13 +41,29 @@ public class BlogCategoryServiceImpl {
         this.blogCategoryResponseConverter = blogCategoryResponseConverter;
     }
 
-    public List<BlogCategoryResponse> findAll()
+    public BasicResponse findAll(Pageable page)
     {
-        List<BlogCategory> cat = cacheService.findAll();
-        return cat.
-                stream()
+    	 BasicResponse response = new BasicResponse();
+    	 HashMap<String, Object> keyResponse = new HashMap<String, Object>();
+    	try {
+        Page<BlogCategory> cat = cacheService.findAll(page);
+        List<BlogCategoryResponse> catList  = cat.
+                get()
                 .map(blogCategoryResponseConverter)
                 .collect(Collectors.toList());
+       
+        response.setMsg(MessageType.Success.getMessage());
+        keyResponse.put(MessageType.Data.getMessage(), catList);
+        keyResponse.put(MessageType.CurrentPage.getMessage(), cat.getNumber());
+        keyResponse.put(MessageType.TotalItems.getMessage(), cat.getTotalElements());
+        keyResponse.put(MessageType.TotalPages.getMessage(), cat.getTotalPages());
+        response.setSuccess(true);
+        response.setResponse(keyResponse);
+    	}catch(Exception ex) {
+    	response.setMsg(ex.getMessage());
+    	response.setSuccess(false);
+    	}
+    	return response;
     }
 
     public BlogCategoryResponse findById(Long id)
@@ -102,7 +123,7 @@ public class BlogCategoryServiceImpl {
             response.setMsg("Removed");
         }catch (Exception e){
             response.setSuccess(false);
-            response.setMsg("Error");
+            response.setMsg(e.getMessage());
         }
         return response;
     }
