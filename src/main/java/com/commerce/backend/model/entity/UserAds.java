@@ -31,8 +31,8 @@ public class UserAds {
 	@Column(name = "type", insertable = false, updatable = false, nullable = false)
 	private AdsType type;        
 	
-      @ManyToOne(cascade = {CascadeType.MERGE})
-	  @JoinColumn(name = "created_by")
+   @ManyToOne(cascade = {CascadeType.MERGE})
+	 @JoinColumn(name = "created_by")
 	 private User createdBy;
 	
 	@Column(name = "active")
@@ -42,10 +42,10 @@ public class UserAds {
 	private String name ;
 	
 	@Column(name = "longitude", length = 200)
-	private String longitude;
+	private double longitude;
 	
 	@Column(name = "latitude", length = 200 )
-	private String latitude;
+	private double latitude;
 	
 	@Column(name = "created_at")
 	private Date createdAt;

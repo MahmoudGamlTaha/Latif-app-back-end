@@ -59,15 +59,15 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         
         entity.setType(request.getType());
         entity.setPrice(Float.parseFloat(String.valueOf(hashedData.get("price"))));
-        entity.setLongitude((String) hashedData.get("longitude"));
-        entity.setLatitude((String) hashedData.get("latitude"));
+        entity.setLongitude((double) hashedData.get("longitude"));
+        entity.setLatitude((double) hashedData.get("latitude"));
         entity.setCreatedAt((new Date()));
         entity.setUpdatedAt((new Date()));
         entity.setExternalLink(Boolean.parseBoolean(String.valueOf(getHashMapKeyWithCheck(hashedData, "external_link"))));
         User user = new User();
         user.setId(Long.parseLong(String.valueOf(hashedData.get("created_by"))));
         
-         entity.setCreatedBy(user);
+        entity.setCreatedBy(user);
 
         if(request.getType() == AdsType.PETS || request.getType() == AdsType.Dogs)
         {
@@ -96,7 +96,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             ((UserAccAds)entity).setUsed((Boolean) hashedData.get("used"));
 			ItemCategory category = new ItemCategory();
 			category.setId(Long.parseLong(String.valueOf(hashedData.get("category_id"))));
-			((UserAccAds)entity).setItemCategoryId(category);
+			//((UserAccAds)entity).setItemCategoryId(category);
         }
         else if(request.getType() == AdsType.PET_CARE) {
             ((UserMedicalAds)entity).setAllowServiceAtHome((Boolean) hashedData.get("allow_at_home"));
