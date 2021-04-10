@@ -25,7 +25,7 @@ public class CategoryRequest {
      
      String icon;
      
-     String icon_select_path;
+     String icon_select;
      
      @Positive
      @NotNull

@@ -45,7 +45,7 @@ public class UserAdsController extends PublicApiController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/ads/ad")
+    @GetMapping("/ads/ad-by-Id")
     public ResponseEntity<BasicResponse> getAdById(@RequestParam(value = "id", required = true) Long id) throws Exception {
         BasicResponse res = userAdsService.findAdsById(id);
         return new ResponseEntity<>(res, HttpStatus.OK);

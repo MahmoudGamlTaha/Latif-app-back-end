@@ -9,6 +9,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import java.util.Date;
 
 @AllArgsConstructor
@@ -29,8 +33,9 @@ public class Blog {
     @Column(name = "title", nullable = false, length=250)
     private String title;
 
-    @JsonIdentityReference(alwaysAsId = true)
-    @ManyToOne
+//    @JsonIdentityReference(alwaysAsId = true)
+    @ManyToOne(optional = true)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "category_id")
     private BlogCategory category;
 
@@ -45,7 +50,6 @@ public class Blog {
 
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    //@Column(name = "user_id")
     private User userId;
 
     @Column(name = "date")

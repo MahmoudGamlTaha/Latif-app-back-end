@@ -24,11 +24,11 @@ public class CachingConfiguration {
     public CacheManager cacheManager(Ticker ticker) {
         CaffeineCache productCache = buildCache("product", ticker, 10, MINUTES);
         CaffeineCache productDisplayCache = buildCache("product_variant", ticker, 10, MINUTES);
-        CaffeineCache productCategoryCache = buildCache("item_category", ticker, 1, MINUTES);
+        CaffeineCache productCategoryCache = buildCache("item_category", ticker, 2,  TimeUnit.SECONDS);
         CaffeineCache productColorCache = buildCache("product_color", ticker, 1, HOURS);
-        CaffeineCache blog = buildCache("blog", ticker, 1, MINUTES);
-        CaffeineCache blogCategory = buildCache("blog_category", ticker, 20, MINUTES);
-        CaffeineCache role = buildCache("role", ticker, 20, MINUTES);
+        CaffeineCache blog = buildCache("blog", ticker, 2, TimeUnit.SECONDS);
+        CaffeineCache blogCategory = buildCache("blog_category", ticker, 2,  TimeUnit.SECONDS);
+        CaffeineCache role = buildCache("role", ticker, 2,  TimeUnit.SECONDS);
 
         SimpleCacheManager manager = new SimpleCacheManager();
 

@@ -160,25 +160,29 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public BasicResponse findAdsById(Long id) throws Exception {
+	public BasicResponse findAdsById(Long id) {
 		try{
 			UserAds ad = (UserAds) repo.findById(id).orElse(null);
 			UserAdsVO vo = userAdsToVoConverter.apply(ad);
-			return res(vo);
+			return res(vo, true);
 		}
 		catch (Exception e)
 		{
-			throw new Exception("Error: "+e);
+			return res(e, false);
 		}
 	}
 
-	public BasicResponse res(Object obj)
+	public BasicResponse res(Object obj, boolean error )
 	{
 		BasicResponse res = new BasicResponse();
 		HashMap<String, Object> map = new HashMap<>();
-		map.put("data", obj);
-		res.setSuccess(true);
-		res.setMsg("success");
+
+		if( obj instanceof Exception) {
+		 map.put(MessageType.Data.getMessage(), ((Exception) obj).getMessage());
+		} else {
+			map.put(MessageType.Data.getMessage(),  obj);
+		}
+		res.setSuccess(error);
 		res.setResponse(map);
 		return res;
 	}

@@ -57,8 +57,8 @@ public class CategoryController extends PublicApiController {
     }
     
     @PostMapping(value = "/category/create")
-    public ResponseEntity<ItemObjectCategoryResponse> createCategory(@RequestBody @Valid CategoryRequest request){
-    	ItemObjectCategoryResponse itemCategory = itemObjectCategoryService.createItemObjectCategory(request);
+    public ResponseEntity<BasicResponse> createCategory(@RequestBody @Valid CategoryRequest request){
+    	BasicResponse itemCategory = itemObjectCategoryService.createItemObjectCategory(request);
     	return new ResponseEntity<>(itemCategory, HttpStatus.OK);
     }
     

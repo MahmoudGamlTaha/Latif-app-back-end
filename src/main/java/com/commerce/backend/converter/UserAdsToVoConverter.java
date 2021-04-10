@@ -89,7 +89,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		assert userAds != null;
 		return copyUserAdsObject(userAdsRequest, userAds);
 	}
-
+    @Deprecated 
 	private UserAds copyUserAdsObject(UserAdsGeneralAdsRequest source, UserAds destination) {
 		//assert(source.getType() == destination.getType());
 
@@ -170,13 +170,14 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		destination.setShort_description(source.getShortDescription());
 		destination.setPrice(source.getPrice());
 		User user = new User();
-		//user.setId(source.getCreatedBy().getId());
-		//user.setFirstName(source.getCreatedBy().getFirstName());
-		//user.setLastName(source.getCreatedBy().getLastName());
-		//user.setAvatar(source.getCreatedBy().getAvatar());
-		//user.setPhone(source.getCreatedBy().getPhone());
-
-		//destination.setCreatedBy(user);
+		if(source.getCreatedBy() != null) {
+		user.setId(source.getCreatedBy().getId());
+		user.setFirstName(source.getCreatedBy().getFirstName());
+		user.setLastName(source.getCreatedBy().getLastName());
+		user.setAvatar(source.getCreatedBy().getAvatar());
+		user.setPhone(source.getCreatedBy().getPhone());
+		}
+		destination.setCreatedBy(user);
 		destination.setCreated_at(new Date());
 		destination.setUpdated_at(new Date());
 		destination.setType(source.getType());
@@ -187,11 +188,11 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			//((UserPetAdsVO)destination).setCategory(itemObjectCategoryVO);
 			((UserPetAdsVO)destination).setBreed(((UserPetAds)source).getBreed());
 			((UserPetAdsVO)destination).setBarkingProblem(((UserPetAds)source).getBarkingProblem());
-			//((UserPetAdsVO)destination).setFood(((UserPetAds)source).getFood());
+			((UserPetAdsVO)destination).setFood(((UserPetAds)source).getFood());
 			((UserPetAdsVO)destination).setDiseasesDisabilities(((UserPetAds)source).getDiseasesDisabilities());;
 			((UserPetAdsVO)destination).setDiseasesDisabilitiesDesc(((UserPetAds)source).getDiseasesDisabilitiesDesc());
 			((UserPetAdsVO)destination).setNeutering(((UserPetAds)source).getNeutering());
-			//((UserPetAdsVO)destination).setTraining(((UserPetAds)source).getTraining());
+			((UserPetAdsVO)destination).setTraining(((UserPetAds)source).getTraining());
 			((UserPetAdsVO)destination).setPlayWithKids(((UserPetAds)source).getPlayWithKids());
 			((UserPetAdsVO)destination).setPassport(((UserPetAds)source).getPassport());
 		    ((UserPetAdsVO)destination).setVaccinationCertificate(((UserPetAds)source).getVaccinationCertifcate());;
