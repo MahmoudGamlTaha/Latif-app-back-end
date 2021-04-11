@@ -43,7 +43,7 @@ public interface UserAdsService {
 
     BasicResponse getCreateForm(adTypeRequest petType);
     
-    BasicResponse getCreateFilterForm(adTypeRequest petType);
+    BasicResponse getFilterForm(adTypeRequest petType);
 
     <T> UserAdsVO savePet(UserPetsAdsRequest userPetsAdsRequest);
 

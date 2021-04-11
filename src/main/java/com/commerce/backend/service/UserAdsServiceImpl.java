@@ -318,17 +318,17 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 	
 	@Override
-	public BasicResponse getCreateFilterForm(adTypeRequest adsType){
+	public BasicResponse getFilterForm(adTypeRequest adsType){
 
 		InputStream is = null;
 		BasicResponse response = new BasicResponse();
 		HashMap<String, Object> mapResponse = new HashMap<String, Object>(); 
 		try {
-		is = new ClassPathResource("jsonFiles/basicResponse.json").getInputStream();
+		is = new ClassPathResource("jsonFilter/basicResponse.json").getInputStream();
 		if(adsType != null)
 		{
 			String adType = adsType.getAdsType().getType().toLowerCase();
-			is = new ClassPathResource("jsonFiles/"+adType+"Rs.json").getInputStream();
+			is = new ClassPathResource("jsonFilter/"+adType+"Rs.json").getInputStream();
 		}
        
 		

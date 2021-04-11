@@ -153,7 +153,15 @@ public class UserAdsController extends PublicApiController {
     	
     	return new ResponseEntity<BasicResponse>(userAdsService.getCreateForm(adRequest), HttpStatus.OK);
     }
-
+    
+    @GetMapping(value = "/ads/get-filter-form")
+    @ResponseBody
+    public ResponseEntity<BasicResponse> getFilterForm(@RequestParam(value = "adType",required = true) AdsType adType) throws Exception {
+    	adTypeRequest adRequest = new adTypeRequest();
+    	adRequest.setAdsType(adType);
+    	
+    	return new ResponseEntity<BasicResponse>(userAdsService.getFilterForm(petType)Form(adRequest), HttpStatus.OK);
+    }
     
     /*@GetMapping(value = "/ads/type")
     @ResponseBody
