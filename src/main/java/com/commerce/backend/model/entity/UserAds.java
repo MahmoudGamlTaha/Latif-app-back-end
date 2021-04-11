@@ -4,6 +4,10 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import com.commerce.backend.constants.AdsType;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -69,7 +73,8 @@ public class UserAds {
 	@Column(name = "external_link")
 	private Boolean externalLink;  
 	
-	@OneToMany
-	private Set<UserAdsImage> images;
+	@OneToMany(mappedBy="userAdsImage", cascade = CascadeType.ALL)
+	@NotFound(action = NotFoundAction.IGNORE)
+	private Set<UserAdsImage> petsImages;
   
 }

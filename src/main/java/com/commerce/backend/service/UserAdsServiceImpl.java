@@ -316,6 +316,47 @@ public class UserAdsServiceImpl implements UserAdsService {
 		}
 		return response;
 	}
+	
+	@Override
+	public BasicResponse getCreateFilterForm(adTypeRequest adsType){
+
+		InputStream is = null;
+		BasicResponse response = new BasicResponse();
+		HashMap<String, Object> mapResponse = new HashMap<String, Object>(); 
+		try {
+		is = new ClassPathResource("jsonFiles/basicResponse.json").getInputStream();
+		if(adsType != null)
+		{
+			String adType = adsType.getAdsType().getType().toLowerCase();
+			is = new ClassPathResource("jsonFiles/"+adType+"Rs.json").getInputStream();
+		}
+       
+		
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObject = (JSONObject)jsonParser.parse(
+					new InputStreamReader(is, StandardCharsets.UTF_8));
+			response.setMsg(MessageType.Success.getMessage());
+			response.setSuccess(true);
+            mapResponse.put(MessageType.Data.getMessage(), jsonObject);
+			response.setResponse(mapResponse);
+			
+		} catch (Exception e) {
+			response.setMsg(e.getMessage());
+			response.setSuccess(false);
+		} finally {
+			if(is != null) {
+			  try {
+				is.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				response.setMsg(e.getMessage());
+				response.setSuccess(false);
+			
+			}
+			}
+		}
+		return response;
+	}
 
 	@Override
 	public <T> UserAdsVO savePet(UserPetsAdsRequest userPetsAdsRequest) {

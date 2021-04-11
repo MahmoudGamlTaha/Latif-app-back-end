@@ -1,0 +1,16 @@
+{"form":[
+  {"name": "name","type": "string", "label": "Category", "required": true},
+  {"name": "code", "type": "string","label": "Code", "required": true},
+  {"name": "description", "type": "string","label": "Description", "required": true},
+  {"name": "short_description", "type": "string","label": "Short Description", "required": true},
+  {"name": "category", "type": "url_option", "label": "category", "url":"/api/public/cat-by-adType/type=3" , "required": true},
+  {"name": "allow_at_home", "type": "boolean","label": "Allow at home", "required": true},
+  {"name": "price", "type": "money","label": "Price", "required": true},
+  {"name": "image", "type": "file","label": "Image", "required": true},
+  {"name": "active", "type": "boolean","label": "Active", "required": true},
+  {"name": "longitude", "type": "map","label": "Longitude", "required": true},
+  {"name": "latitude", "type": "map","label": "Latitude", "required": true}
+],
+"url": "/api/public/ads/create?type=SERVICE"
+}
+
