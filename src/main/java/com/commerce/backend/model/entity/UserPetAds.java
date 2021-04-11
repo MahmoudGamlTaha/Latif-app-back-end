@@ -79,8 +79,4 @@ public class UserPetAds extends UserAds {
 	//@JoinColumn(name ="category_id")
 	//private PetCategory category;
 	
-	@OneToMany(mappedBy="userAdsImage", cascade = CascadeType.ALL)
-	@NotFound(action = NotFoundAction.IGNORE)
-	private Set<UserAdsImage> petsImages;
-	
 }

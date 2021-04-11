@@ -11,18 +11,11 @@ import com.commerce.backend.constants.AdsType;
 import lombok.Getter;
 import lombok.Setter;
 
-@DiscriminatorValue(AdsType.Values.ACCESSORIES)
 @Entity
-@Getter
+@DiscriminatorValue(AdsType.Values.Driver)
 @Setter
-public class UserAccAds  extends UserAds{
-  @Column(name = "used")
-  public Boolean used;
-  //@ManyToOne
-  //@JoinColumn(name ="category_type")
-  //ItemCategory itemCategoryType;
-  
-  //@ManyToOne
-  //@JoinColumn(name ="category_id")
-  //ItemCategory itemCategoryId;
+@Getter
+public class UserDriverAds extends UserAds {
+   @Column(name = "driver_method")
+    Boolean driver_method;
 }

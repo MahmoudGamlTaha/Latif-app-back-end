@@ -1,6 +1,8 @@
 {"form":[
   {"name": "name","type": "string", "label": "name", "label_ar": "الاسم", "required": true},
+  {"name": "category", "type": "url_option", "label": "category", "url":"/api/public/cat-by-adType/type=1" , "required": true},
   {"name": "code", "type": "string","label": "Code", "label_ar":"كود", "required": true},
+  {"name": "city", "type": "select","label": "city of ads", "label_ar": "مكان الاعلان", "required": true, "options":[{"label" : "Cairo", "code":"Cairo"}, {"label" : "Giza", "code":"Giza"}, {"label" : "Minia", "code":"Minia"}], "multi":false},
   {"name": "description", "type": "string","label": "Description", "label_ar":"الوصف", "required": true},
   {"name": "short_description", "type": "string","label": "Short Description", "required": true},
   {"name": "active", "type": "boolean","label": "Active", "required": true},

@@ -10,6 +10,7 @@ import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import com.commerce.backend.service.UserAdsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +31,9 @@ public class UserAdsController extends PublicApiController {
 
 
     @GetMapping(value = "/ads")
+    @ResponseBody
     public ResponseEntity<BasicResponse> getAll(@RequestParam(value ="page", required = false) Optional<Integer> page,
-    		                                    @RequestParam(value="location", required= false) Optional<LocationRequest> location,
+                                                                                                            Optional<LocationRequest> location,
     		                                                   @RequestParam(value = "type", required= true) AdsType type,
                                                                @RequestParam(value ="size", required= false) Optional<Integer> pageSize,
                                                                @RequestParam(value = "sort", required = false) String sort,
@@ -39,7 +41,7 @@ public class UserAdsController extends PublicApiController {
                                                                @RequestParam(value = "minPrice", required = false) Float minPrice,
                                                                @RequestParam(value = "maxPrice", required = false) Float maxPrice) {
     	
-        BasicResponse response = userAdsService.getAll(type, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), sort, category, minPrice, maxPrice);  
+        BasicResponse response = userAdsService.getAll(type, location.orElse(null), page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), sort, category, minPrice, maxPrice);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -83,6 +85,15 @@ public class UserAdsController extends PublicApiController {
         return new ResponseEntity<>(userAds, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/ads/nearest")
+    @ResponseBody
+    public ResponseEntity<BasicResponse> getNearByAds(@RequestParam(value ="longitude") double longitude,
+                                                      @RequestParam(value ="latitude") double latitude,
+                                                      Optional<Integer> distance, Integer page, Integer size)
+    {
+        BasicResponse res = userAdsService.findNearby(longitude, latitude, distance.orElse(SystemConstant.DISTANCE), page, size);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
  
     @GetMapping(value = "/ads/interested")
     public ResponseEntity<List<UserAdsVO>> getByInterested(@RequestParam("token") String token,
@@ -106,17 +117,21 @@ public class UserAdsController extends PublicApiController {
 
     @PostMapping(value = "/ads/create")
     public ResponseEntity<BasicResponse> createUserAds(@RequestBody DynamicAdsRequest<String, String> userAdsRequest,
-                                                       @RequestParam(value = "images", required = false) List<MultipartFile> file){
+                                                       @RequestParam(value = "images", required = false) Optional<List<String>> xfiles,
+                                                       @RequestParam(value = "images", required = false) Optional<List<MultipartFile>> files,
+                                                       @RequestParam(value = "external_link", required = false) Optional<Boolean> external){
     	BasicResponse response = null;
+    	HttpStatus status = HttpStatus.OK;
     	try {
-    	     response = this.userAdsService.createUserAds(userAdsRequest, file);
+    	     response = this.userAdsService.createUserAds(userAdsRequest, xfiles.orElse(null), files.orElse(null), external.orElse(false));
        
     	}catch(Exception ex) {
     		response = new BasicResponse();
     		response.setMsg(ex.getMessage());
     		response.setSuccess(false);
+    		status = HttpStatus.BAD_REQUEST;
     	}
-    	 return new ResponseEntity<BasicResponse>(response, HttpStatus.OK); 
+    	 return new ResponseEntity<BasicResponse>(response, status); 
     }
     
     @PostMapping(value = "/ads/food/create")
@@ -138,7 +153,15 @@ public class UserAdsController extends PublicApiController {
     	
     	return new ResponseEntity<BasicResponse>(userAdsService.getCreateForm(adRequest), HttpStatus.OK);
     }
-
+    
+    @GetMapping(value = "/ads/get-filter-form")
+    @ResponseBody
+    public ResponseEntity<BasicResponse> getFilterForm(@RequestParam(value = "adType",required = true) AdsType adType) throws Exception {
+    	adTypeRequest adRequest = new adTypeRequest();
+    	adRequest.setAdsType(adType);
+    	
+    	return new ResponseEntity<BasicResponse>(userAdsService.getFilterForm(adRequest), HttpStatus.OK);
+    }
     
     /*@GetMapping(value = "/ads/type")
     @ResponseBody

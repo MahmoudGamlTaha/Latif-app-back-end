@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ItemObjectCategoryCacheService {
     List<ItemObjectCategory> findAllByOrderByName();
-    BasicResponse findAllByTypeId(Integer id);
+    BasicResponse findAllByTypeId(Integer id, Integer page);
     List<PetCategory> findPetsCategories();
     List<ItemCategory> findItemCategories();
     BasicResponse createItemObjectCategory(CategoryRequest request);

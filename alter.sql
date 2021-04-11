@@ -1,3 +1,13 @@
+drop table public.user_ads_image
+CREATE TABLE public.user_ads_image (
+	id int8 NOT NULL,
+	is_external_url bool NULL,
+	image varchar(250) NULL,
+	user_ads_id int8 NOT NULL,
+	created_at date NULL,
+	update_at date NULL
+);
+__________________________________________________________________________________________
 ALTER TABLE public.user_ads ALTER COLUMN training TYPE varchar(200) USING training::varchar;
 __________________________________________________
 update category_type set code = 'PETS' where id = 1;

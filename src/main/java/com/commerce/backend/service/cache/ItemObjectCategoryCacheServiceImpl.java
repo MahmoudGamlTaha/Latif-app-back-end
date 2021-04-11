@@ -2,6 +2,7 @@ package com.commerce.backend.service.cache;
 
 import com.commerce.backend.constants.CategoryType;
 import com.commerce.backend.constants.MessageType;
+import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.converter.category.ItemObjectCategoryResponseConverter;
 import com.commerce.backend.dao.ItemCategoryRepository;
 import com.commerce.backend.dao.ItemObjectCategoryRepository;
@@ -19,10 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -93,8 +94,10 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 				category = new ItemCategory();
 				category.setName(request.getName());
 				category.setIcon(request.getIcon());
+				category.setIcon_select(request.getIcon_select());
 				category.setIsExternalLink(request.isExternalLink());
 				category.setNameAr(request.getNameAr());
+
 				category.setIcon_select(request.getIcon_select());
 				category.setActive(request.isActive());
 				Optional<ItemCategory> itemCategory = this.itemCategoryRepository.findById(request.getCatParent());
@@ -139,31 +142,46 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 	}
 
 	@Override
-	public BasicResponse findAllByTypeId(Integer id) {
+	public BasicResponse findAllByTypeId(Integer id, Integer page) {
 		BasicResponse categoryByType = new BasicResponse();
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		try {
+			Pageable pageable = PageRequest.of(page,SystemConstant.MOBILE_PAGE_SIZE);
 			if(id == CategoryType.PETS.getType()) {
-				List<PetCategory> petCategory = this.petCategoryRepository.findAllByOrderByName();
-				List<ItemObjectCategoryResponse> catList =  petCategory.stream()
+				
+				Page<PetCategory> petCategory = this.petCategoryRepository.findAll(pageable);
+				List<ItemObjectCategoryResponse> catList =  petCategory.get()
 						   .map(itemObjectCategoryResponseConverter)
 						   .collect(Collectors.toList());
+				
 						response.put(MessageType.Data.getMessage(), catList);
 						categoryByType.setSuccess(true);
+						response.put(MessageType.CurrentPage.getMessage(), petCategory.getNumber());
+						response.put(MessageType.TotalItems.getMessage(),  petCategory.getTotalElements());
+						response.put(MessageType.TotalPages.getMessage(),  petCategory.getTotalPages());
+						
 			}else if(id == CategoryType.SERVICE.getType()){
-				List<ServiceCategory> petCategory = this.serviceCategoryRepository.findAllByOrderByName();
-				List<ItemObjectCategoryResponse> catList =  petCategory.stream()
+				Page<ServiceCategory> serviceCategory = this.serviceCategoryRepository.findAll(pageable);
+				List<ItemObjectCategoryResponse> catList =  serviceCategory.get()
 						   .map(itemObjectCategoryResponseConverter)
 						   .collect(Collectors.toList());
+				
 						response.put(MessageType.Data.getMessage(), catList);
+						response.put(MessageType.CurrentPage.getMessage(), serviceCategory.getNumber());
+						response.put(MessageType.TotalItems.getMessage(),  serviceCategory.getTotalElements());
+						response.put(MessageType.TotalPages.getMessage(),  serviceCategory.getTotalPages());
 						categoryByType.setSuccess(true);
 			}
 			else {
-		     List<ItemObjectCategory> itemObjectCategory  = this.itemObjectRepository.findByType(id);
-		     List<ItemObjectCategoryResponse> catList =  itemObjectCategory.stream()
+				
+		     Page<ItemObjectCategory> itemObjectCategory  = this.itemObjectRepository.findByType(id, pageable);
+		     List<ItemObjectCategoryResponse> catList =  itemObjectCategory.get()
 			   .map(itemObjectCategoryResponseConverter)
 			   .collect(Collectors.toList());
 			response.put(MessageType.Data.getMessage(), catList);
+			response.put(MessageType.CurrentPage.getMessage(), itemObjectCategory.getNumber());
+			response.put(MessageType.TotalItems.getMessage(),  itemObjectCategory.getTotalElements());
+			response.put(MessageType.TotalPages.getMessage(),  itemObjectCategory.getTotalPages());
 			categoryByType.setSuccess(true);
 			}
 		}catch(Exception ex) {

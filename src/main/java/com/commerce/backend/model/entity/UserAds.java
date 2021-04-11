@@ -1,8 +1,13 @@
 package com.commerce.backend.model.entity;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import com.commerce.backend.constants.AdsType;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -27,12 +32,15 @@ public class UserAds {
 	@Column(name = "code", length = 250, unique = true)
 	private String code;
 	
+	@Column(name = "city", length = 100)
+	private String city;
+	
 	//@Transient
 	@Column(name = "type", insertable = false, updatable = false, nullable = false)
 	private AdsType type;        
 	
-      @ManyToOne(cascade = {CascadeType.MERGE})
-	  @JoinColumn(name = "created_by")
+   @ManyToOne(cascade = {CascadeType.MERGE})
+	 @JoinColumn(name = "created_by")
 	 private User createdBy;
 	
 	@Column(name = "active")
@@ -42,10 +50,10 @@ public class UserAds {
 	private String name ;
 	
 	@Column(name = "longitude", length = 200)
-	private String longitude;
+	private double longitude;
 	
 	@Column(name = "latitude", length = 200 )
-	private String latitude;
+	private double latitude;
 	
 	@Column(name = "created_at")
 	private Date createdAt;
@@ -64,5 +72,9 @@ public class UserAds {
 	
 	@Column(name = "external_link")
 	private Boolean externalLink;  
+	
+	@OneToMany(mappedBy="userAdsImage", cascade = CascadeType.ALL)
+	@NotFound(action = NotFoundAction.IGNORE)
+	private Set<UserAdsImage> petsImages;
   
 }
