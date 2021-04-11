@@ -160,7 +160,7 @@ public class UserAdsController extends PublicApiController {
     	adTypeRequest adRequest = new adTypeRequest();
     	adRequest.setAdsType(adType);
     	
-    	return new ResponseEntity<BasicResponse>(userAdsService.getFilterForm(petType)Form(adRequest), HttpStatus.OK);
+    	return new ResponseEntity<BasicResponse>(userAdsService.getFilterForm(adRequest), HttpStatus.OK);
     }
     
     /*@GetMapping(value = "/ads/type")
