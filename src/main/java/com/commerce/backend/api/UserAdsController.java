@@ -44,6 +44,7 @@ public class UserAdsController extends PublicApiController {
         BasicResponse response = userAdsService.getAll(type, location.orElse(null), page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), sort, category, minPrice, maxPrice);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    
 
     @GetMapping("/ads/ad-by-Id")
     public ResponseEntity<BasicResponse> getAdById(@RequestParam(value = "id", required = true) Long id) throws Exception {
@@ -134,29 +135,17 @@ public class UserAdsController extends PublicApiController {
     	 return new ResponseEntity<BasicResponse>(response, status); 
     }
     
-    @PostMapping(value = "/ads/food/create")
-    public ResponseEntity<UserAdsVO> createFoodAds(@RequestBody UserPetsAdsRequest userPetsAdsRequest){
-    	
-    	return null;
-    }
-    @PostMapping(value = "/ads/service/create")
-    public ResponseEntity<UserAdsVO> createrServiceAds(@RequestBody UserPetsAdsRequest userPetsAdsRequest){
-    	
-    	return null;
-    }
-
     @GetMapping(value = "/ads/get-create-form")
     @ResponseBody
     public ResponseEntity<BasicResponse> getCreateForm(@RequestParam(value = "adType",required = true) AdsType adType) throws Exception {
     	adTypeRequest adRequest = new adTypeRequest();
-    	adRequest.setAdsType(adType);
-    	
+     	adRequest.setAdsType(adType);	
     	return new ResponseEntity<BasicResponse>(userAdsService.getCreateForm(adRequest), HttpStatus.OK);
     }
     
     @GetMapping(value = "/ads/get-filter-form")
     @ResponseBody
-    public ResponseEntity<BasicResponse> getFilterForm(@RequestParam(value = "adType",required = true) AdsType adType) throws Exception {
+    public ResponseEntity<BasicResponse> getFilterForm(@RequestParam(value = "adType",required = true) AdsType adType, @RequestParam(value = "adType",required = false) long type_cat_id) throws Exception {
     	adTypeRequest adRequest = new adTypeRequest();
     	adRequest.setAdsType(adType);
     	

@@ -1,13 +1,13 @@
 {"form":[
   {"name": "name","type": "string", "label": "name", "required": true},
-  {"name": "category", "type": "url_option", "label": "category", "url":"/api/public/cat-by-adType/type=2" , "required": true},
+  {"name": "category", "type": "url_option", "label": "type", "url":"/api/public/cat-by-adType/type=2" , "required": true},
   {"name": "used", "type": "boolean","label": "Used", "required": true},
   {"name": "price", "type": "money","label": "Price", "required": true},
-  {"name": "image", "type": "file","label": "Image", "required": true},
+  {"name": "image", "type": "files","label": "Image", "required": true},
   {"name": "active", "type": "boolean","label": "Active", "required": true},
   {"name": "longitude", "type": "map","label": "Longitude", "required": true},
   {"name": "latitude", "type": "map","label": "Latitude", "required": true}
 ],
-"url": "/api/public/ads/create?type=SERVICE"
+"url": "/api/public/ads/create?type=ACCESSORIES"
 }
 

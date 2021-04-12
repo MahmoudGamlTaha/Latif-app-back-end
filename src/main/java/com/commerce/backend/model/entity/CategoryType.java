@@ -17,7 +17,7 @@ public class CategoryType {
     @SequenceGenerator(name="category_type_id_seq", sequenceName= "category_type_id_seq", allocationSize = 1)
     @Column(name = "id")
     private Long id;
-
+    
     @Column(name = "name")
     private String name;
     

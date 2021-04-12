@@ -244,15 +244,18 @@ public class UserAdsServiceImpl implements UserAdsService {
 	@Override
 	public BasicResponse createUserAds(DynamicAdsRequest<String, String> ads, List<String> files, List<MultipartFile> file, boolean external) {
 		UserAds entity = this.userAdsConverter.convertRequestToEntity(ads);
-		if(ads.getType() == AdsType.ACCESSORIES) {
+		entity.setExternalLink(external);
+		this.saveEntityFiles(entity, files, file, ads.getType(), external);
+		if(ads.getType() == AdsType.ACCESSORIES) 
+		{
 			this.userItemsAdsRepository.save((UserAccAds)entity);
 		}
 		else if(ads.getType() == AdsType.PET_CARE) {
 			this.userMedicalAdsRepository.save((UserMedicalAds)entity);
 		}
-		else if(ads.getType() == AdsType.PETS) {
+		else if(ads.getType() == AdsType.PETS || ads.getType() == AdsType.Dogs) {
 			((UserPetAds) entity).setImage("upload/"+ ads.getType() + file.get(0).getName());	
-			this.saveEntityFiles(entity, files, file, ads.getType(), external);
+			
 	    	this.userPetsAdsRepository.save((UserPetAds)entity);
 		}
 		else if(ads.getType() == AdsType.SERVICE) {

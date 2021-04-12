@@ -34,7 +34,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         else if(request.getType() == AdsType.PET_CARE){
             entity = new UserMedicalAds();
         }
-        else if(request.getType() == AdsType.PETS) {
+        else if(request.getType() == AdsType.PETS || request.getType() == AdsType.Dogs) {
             entity = new UserPetAds();
         }
         else if(request.getType() == AdsType.SERVICE) {
@@ -52,7 +52,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         }
      
         entity.setName((String) hashedData.get("name"));
-        entity.setCode((String) hashedData.get("code"));
+      //  entity.setCode((String) hashedData.get("code"));
         entity.setDescription((String) hashedData.get("description"));
         entity.setShortDescription(((String) hashedData.get("short_description")));
         entity.setActive(hashedData.get("active").toString().equalsIgnoreCase(String.valueOf(true)));
@@ -63,7 +63,6 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         entity.setLatitude((double) hashedData.get("latitude"));
         entity.setCreatedAt((new Date()));
         entity.setUpdatedAt((new Date()));
-        entity.setExternalLink(Boolean.parseBoolean(String.valueOf(getHashMapKeyWithCheck(hashedData, "external_link"))));
         User user = new User();
         user.setId(Long.parseLong(String.valueOf(hashedData.get("created_by"))));
         
@@ -119,7 +118,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
     	if(hashedData.containsKey(key)) {
     		return hashedData.get(key);
     	}
-    	return new Object();
+    	return null;
     }
     private  class Valid{
        public boolean success;
