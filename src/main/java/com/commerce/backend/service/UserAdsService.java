@@ -35,7 +35,7 @@ public interface UserAdsService {
     
     List<UserAdsVO> getInterested(Long userId, String token);
   
-    BasicResponse createUserAds(DynamicAdsRequest<String, String> ads,List<String> xfiles ,List<MultipartFile> file, boolean external);
+    BasicResponse createUserAds(DynamicAdsRequest<String, Object> ads,List<String> xfiles ,List<MultipartFile> file, boolean external);
     
     List<UserAdsVO> searchItemDisplay(String keyword, Integer page, Integer size);
 

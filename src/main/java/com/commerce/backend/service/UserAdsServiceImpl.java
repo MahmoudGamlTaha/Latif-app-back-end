@@ -38,6 +38,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -240,19 +242,25 @@ public class UserAdsServiceImpl implements UserAdsService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+    @Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public BasicResponse createUserAds(DynamicAdsRequest<String, String> ads, List<String> files, List<MultipartFile> file, boolean external) {
+	public BasicResponse createUserAds(DynamicAdsRequest<String, Object> ads, List<String> files, List<MultipartFile> file, boolean external) {
+		BasicResponse response = new BasicResponse();
+		try {
 		UserAds entity = this.userAdsConverter.convertRequestToEntity(ads);
-		if(ads.getType() == AdsType.ACCESSORIES) {
+		this.loggerS.info("external", external);
+		entity.setExternalLink(external);
+		this.saveEntityFiles(entity, files, file, ads.getType(), external);
+		if(ads.getType() == AdsType.ACCESSORIES) 
+		{
 			this.userItemsAdsRepository.save((UserAccAds)entity);
 		}
 		else if(ads.getType() == AdsType.PET_CARE) {
 			this.userMedicalAdsRepository.save((UserMedicalAds)entity);
 		}
-		else if(ads.getType() == AdsType.PETS) {
-			((UserPetAds) entity).setImage("upload/"+ ads.getType() + file.get(0).getName());	
-			this.saveEntityFiles(entity, files, file, ads.getType(), external);
+		else if(ads.getType() == AdsType.PETS || ads.getType() == AdsType.Dogs) {
+			//((UserPetAds) entity).setImage("upload/"+ ads.getType() + file.get(0).getName());	
+			
 	    	this.userPetsAdsRepository.save((UserPetAds)entity);
 		}
 		else if(ads.getType() == AdsType.SERVICE) {
@@ -260,14 +268,22 @@ public class UserAdsServiceImpl implements UserAdsService {
 		} else if(ads.getType() == AdsType.DRIVER) {
 			
 		}
-		BasicResponse response = new BasicResponse();
+		
 		response.setSuccess(true);
 		response.setMsg("Ads created successfully ");
 		HashMap<String ,Object> map = new HashMap<String, Object>();
-		map.put("data", entity);
+		UserAdsVO userAdVo = this.userAdsToVoConverter.apply(entity);
+		map.put("data", userAdVo);
 		map.put("id", entity.getId());
 		response.setResponse(map);
 		return response;
+	}catch(Exception ex) {
+		this.loggerS.info("errr", ex.getMessage());
+		ex.printStackTrace();
+		response.setMsg(ex.getMessage());
+		
+	}
+	return response;
 	}
 
 	@Override
@@ -388,13 +404,11 @@ public class UserAdsServiceImpl implements UserAdsService {
 		}else if(external && fileList != null) {
 			
 			fileList.stream().forEach(path -> {
-				boolean flag = true;
 				UserAdsImage userAdsImage = new UserAdsImage();
 				userAdsImage.setImage(path);
 				userAdsImage.setIsExternalLink(true);
 				userAdsImage.setUserAdsImage(entity);
 				userAdsImageRepository.save(userAdsImage);
-				flag = false;
 			});
 		}
 		}catch(Exception ex) {

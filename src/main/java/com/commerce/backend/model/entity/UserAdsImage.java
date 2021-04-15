@@ -2,11 +2,13 @@ package com.commerce.backend.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.NotFound;
@@ -21,15 +23,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserAdsImage {
    @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   @Column(name = "id")
+   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_ads_img")
+   @SequenceGenerator(name="seq_ads_img", sequenceName= "seq_ads_img", allocationSize = 1)
+ //  @Column(name = "id")
 	private long id;
 
    @Column(name = "image")
    private String image;
 
-   @ManyToOne(optional = true)
-   @JoinColumn(name = "user_ads_id")
+   @ManyToOne(optional = true, fetch = FetchType.LAZY)
+   @JoinColumn(name = "user_ads_id", nullable = false)
    @NotFound(action = NotFoundAction.IGNORE)
    private UserAds userAdsImage;
    

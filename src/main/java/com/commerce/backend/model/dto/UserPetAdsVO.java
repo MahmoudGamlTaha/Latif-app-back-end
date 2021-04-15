@@ -1,12 +1,8 @@
 package com.commerce.backend.model.dto;
 
-import java.util.Set;
 
-import com.commerce.backend.constants.FoodType;
 import com.commerce.backend.constants.TrainningType;
-import com.commerce.backend.model.entity.UserAdsImage;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -46,8 +42,5 @@ private String diseasesDisabilitiesDesc;
 private ItemObjectCategoryVO category;
 
 private String food;
-
-private Set<UserAdsImage> petsImages;
-
 
 }

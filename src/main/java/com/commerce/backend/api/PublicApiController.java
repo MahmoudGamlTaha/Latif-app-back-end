@@ -47,5 +47,11 @@ public abstract class PublicApiController {
          response.setSuccess(false);
     	return new ResponseEntity<BasicResponse>(response, HttpStatus.NOT_ACCEPTABLE);
     } 
-    
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<BasicResponse> handleGeneralException(DataIntegrityViolationException ex){
+    	 BasicResponse response = new BasicResponse();
+         response.setMsg("general_message:" + ex.getMessage());
+         response.setSuccess(false);
+    	return new ResponseEntity<BasicResponse>(response, HttpStatus.NOT_ACCEPTABLE);
+    } 
 }

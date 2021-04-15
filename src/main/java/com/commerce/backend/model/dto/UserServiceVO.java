@@ -1,5 +1,10 @@
 package com.commerce.backend.model.dto;
 
-public class UserServiceVO extends UserAdsVO {
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
+public class UserServiceVO extends UserAdsVO {
+  Boolean allowAtHome;
 }

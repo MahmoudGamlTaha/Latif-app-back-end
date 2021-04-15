@@ -11,5 +11,7 @@ import java.util.List;
 public class DynamicAdsRequest<T,R>  {
 
     private AdsType type;
+    Boolean external;
     private List<HashMap<T,R>> userAds = new LinkedList<>();
+    
 }
