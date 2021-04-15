@@ -17,12 +17,15 @@ import lombok.Setter;
 @Setter
 public class UserAccAds  extends UserAds{
   @Column(name = "used")
-  public Boolean used;
+  private Boolean used;
   //@ManyToOne
   //@JoinColumn(name ="category_type")
   //ItemCategory itemCategoryType;
   
-  //@ManyToOne
-  //@JoinColumn(name ="category_id")
-  //ItemCategory itemCategoryId;
+  @ManyToOne
+  @JoinColumn(name ="category_id")
+   private ItemCategory itemCategoryId;
+  
+  @Column(name = "stock")
+  private double stock;
 }

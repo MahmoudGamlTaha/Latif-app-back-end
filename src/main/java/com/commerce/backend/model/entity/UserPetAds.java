@@ -75,8 +75,8 @@ public class UserPetAds extends UserAds {
 	//@JoinColumn(name ="category_type")
 	//private PetCategory petCategoryType;
 
-	//@ManyToOne
-	//@JoinColumn(name ="category_id")
-	//private PetCategory category;
+	@ManyToOne
+	@JoinColumn(name ="category_id")
+	private PetCategory category;
 	
 }

@@ -1,6 +1,8 @@
 package com.commerce.backend.converter;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.commerce.backend.model.request.userAds.*;
 import org.springframework.stereotype.Component;
@@ -8,17 +10,20 @@ import org.springframework.stereotype.Component;
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.model.dto.ItemObjectCategoryVO;
 import com.commerce.backend.model.dto.UserAccVO;
+import com.commerce.backend.model.dto.UserAdsImageVO;
 import com.commerce.backend.model.dto.UserAdsVO;
 import com.commerce.backend.model.dto.UserMedicalVO;
 import com.commerce.backend.model.dto.UserPetAdsVO;
 import com.commerce.backend.model.dto.UserServiceVO;
 import com.commerce.backend.model.entity.ItemCategory;
 import com.commerce.backend.model.entity.ItemObjectCategory;
+import com.commerce.backend.model.entity.MedicalCategory;
 import com.commerce.backend.model.entity.PetCategory;
 import com.commerce.backend.model.entity.ServiceCategory;
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.entity.UserAccAds;
 import com.commerce.backend.model.entity.UserAds;
+import com.commerce.backend.model.entity.UserAdsImage;
 import com.commerce.backend.model.entity.UserMedicalAds;
 import com.commerce.backend.model.entity.UserPetAds;
 import com.commerce.backend.model.entity.UserServiceAds;
@@ -169,20 +174,34 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		destination.setName(source.getName());
 		destination.setShort_description(source.getShortDescription());
 		destination.setPrice(source.getPrice());
+		destination.setExternal_link(source.getExternalLink());
+		 Set<UserAdsImage> images = source.getUserAdsImage();
+		if(images != null) {
+			 Set<UserAdsImageVO> imageVos = new HashSet<UserAdsImageVO>();
+			 images.stream().forEach(img ->{
+				 UserAdsImageVO imgVo = new UserAdsImageVO();
+				 imgVo.setId(img.getId());
+				 imgVo.setImage(img.getImage());
+				 imgVo.setExternal_link(source.getExternalLink());
+				 imgVo.setUserAdsId(source.getId());
+			     imageVos.add(imgVo);
+			 });
+  
+   	      destination.setImages(imageVos);
+		 }
 		User user = new User();
 		if(source.getCreatedBy() != null) {
-		user.setId(source.getCreatedBy().getId());
-		user.setFirstName(source.getCreatedBy().getFirstName());
-		user.setLastName(source.getCreatedBy().getLastName());
-		user.setAvatar(source.getCreatedBy().getAvatar());
-		user.setPhone(source.getCreatedBy().getPhone());
+			user.setId(source.getCreatedBy().getId());
+			user.setFirstName(source.getCreatedBy().getFirstName());
+			user.setLastName(source.getCreatedBy().getLastName());
+			user.setAvatar(source.getCreatedBy().getAvatar());
+			user.setPhone(source.getCreatedBy().getPhone());
 		}
 		destination.setCreatedBy(user);
-		destination.setCreated_at(new Date());
-		destination.setUpdated_at(new Date());
+		destination.setCreated_at(source.getCreatedAt());
+		destination.setUpdated_at(source.getUpdatedAt());
 		destination.setType(source.getType());
-		if(source.getType() == AdsType.PETS) {
-
+		if(source.getType() == AdsType.PETS || source.getType() == AdsType.Dogs) {
 			((UserPetAdsVO)destination).setBarkingProblem(((UserPetAds)source).getBarkingProblem());
 			//ItemObjectCategoryVO itemObjectCategoryVO = new ItemObjectCategoryVO(((UserPetAds)source).getCategory());
 			//((UserPetAdsVO)destination).setCategory(itemObjectCategoryVO);
@@ -196,8 +215,50 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			((UserPetAdsVO)destination).setPlayWithKids(((UserPetAds)source).getPlayWithKids());
 			((UserPetAdsVO)destination).setPassport(((UserPetAds)source).getPassport());
 		    ((UserPetAdsVO)destination).setVaccinationCertificate(((UserPetAds)source).getVaccinationCertifcate());;
-			((UserPetAdsVO)destination).setImage(((UserPetAds)source).getImage());
+		    PetCategory category = ((UserPetAds)source).getCategory();
+		    String categoryName = category == null ?null:category.getName();
+		    if(categoryName != null) {
+		    ((UserPetAdsVO)destination).setCategoryName(categoryName);
+		    ((UserPetAdsVO)destination).setCategoryNameAr(category.getNameAr());
+		    ((UserPetAdsVO)destination).setCategoryId(category.getId());
+		    }
 		}
+		if(source.getType() == AdsType.SERVICE) {
+			ServiceCategory category = ((UserServiceAds)source).getServiceCategory();
+			if(category != null) {
+			((UserServiceVO)destination).setAllowAtHome(((UserServiceAds)source).getAllowServiceAtHome());
+			((UserServiceVO)destination).setCategoryId(category.getId());
+			((UserServiceVO)destination).setCategoryName(category.getName());
+			((UserServiceVO)destination).setCategoryNameAr(category.getNameAr());
+			}
+		}
+		else if(source.getType() == AdsType.PET_CARE) {
+			((UserMedicalVO)destination).setAllowServiceAtHome(((UserMedicalAds)source).getAllowServiceAtHome());
+			MedicalCategory category = ((UserMedicalAds)source).getMedicalCategoryType();
+			if(category != null) {
+			((UserMedicalVO)destination).setAllowServiceAtHome(((UserServiceAds)source).getAllowServiceAtHome());
+			((UserMedicalVO)destination).setCategoryId(category.getId());
+			((UserMedicalVO)destination).setCategoryName(category.getName());
+			((UserMedicalVO)destination).setCategoryNameAr(category.getNameAr());
+			}
+		}
+		else if(source.getType() == AdsType.ACCESSORIES) {
+			((UserAccVO)destination).setUsed(((UserAccAds)source).getUsed());
+			((UserAccVO)destination).setCategoryId(((UserAccAds)source).getItemCategoryId().getId());
+			((UserAccVO)destination).setStock(((UserAccAds)source).getStock());
+			
+			ItemCategory category = ((UserAccAds)source).getItemCategoryId();
+			if(category != null) {
+			((UserMedicalVO)destination).setAllowServiceAtHome(((UserServiceAds)source).getAllowServiceAtHome());
+			((UserMedicalVO)destination).setCategoryId(category.getId());
+			((UserMedicalVO)destination).setCategoryName(category.getName());
+			((UserMedicalVO)destination).setCategoryNameAr(category.getNameAr());
+			}
+		}
+		else if(source.getType() == AdsType.DELIVERY) {
+			
+		}
+		 
 		return destination;
 	}
 }

@@ -1,10 +1,11 @@
 package com.commerce.backend.model.dto;
 
 import java.util.Date;
-
+import java.util.Set;
 
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.model.entity.User;
+import com.commerce.backend.model.entity.UserAdsImage;
 
 import lombok.Data;
 
@@ -37,4 +38,14 @@ public class UserAdsVO {
 	private String short_description;
 	
 	private Float price;
+	
+	private Boolean external_link;
+	
+	private String categoryName;
+	
+	private String categoryNameAr;
+	
+	private Long  categoryId;
+	
+	private Set<UserAdsImageVO> images;
 }

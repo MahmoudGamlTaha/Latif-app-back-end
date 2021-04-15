@@ -20,9 +20,9 @@ public class UserMedicalAds extends UserAds {
    //@JoinColumn(name ="category_type")
    //MedicalCategory medicalCategory;
    
-   //@ManyToOne
-   //@JoinColumn(name ="category_id")
-   //MedicalCategory medicalCategoryType;
+    @ManyToOne
+    @JoinColumn(name ="category_id")
+    MedicalCategory medicalCategoryType;
    
    @Column(name = "allow_at_home")
    Boolean allowServiceAtHome;

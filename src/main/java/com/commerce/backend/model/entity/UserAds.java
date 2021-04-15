@@ -1,6 +1,7 @@
 package com.commerce.backend.model.entity;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.NotFoundAction;
 import com.commerce.backend.constants.AdsType;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,7 +28,7 @@ public class UserAds {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ads_sequence")
 	@SequenceGenerator(name="ads_sequence", sequenceName= "ads_sequence", allocationSize = 1)
-	@Column(name = "id")
+	//@Column(name = "id")
     private long id;
 	
 	@Column(name = "code", length = 250, unique = true)
@@ -74,7 +76,9 @@ public class UserAds {
 	private Boolean externalLink;  
 	
 	@OneToMany(mappedBy="userAdsImage", cascade = CascadeType.ALL)
+	//@OneToMany(cascade = CascadeType.ALL)
 	@NotFound(action = NotFoundAction.IGNORE)
-	private Set<UserAdsImage> petsImages;
+	@Setter(AccessLevel.PRIVATE)
+	private Set<UserAdsImage> userAdsImage = new HashSet<UserAdsImage>();
   
 }
