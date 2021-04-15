@@ -1,5 +1,11 @@
 package com.commerce.backend.model.dto;
 
-public class UserAccVO extends UserAdsVO {
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
+public class UserAccVO extends UserAdsVO {
+    private Boolean used;
+    private double stock;
 }

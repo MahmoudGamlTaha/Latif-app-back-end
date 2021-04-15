@@ -8,6 +8,7 @@ import com.commerce.backend.model.request.userAds.*;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import com.commerce.backend.service.UserAdsService;
+import org.springframework.http.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -115,16 +116,16 @@ public class UserAdsController extends PublicApiController {
         List<UserAdsVO> products = userAdsService.searchItemDisplay(keyword, page, size);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
+    public ResponseEntity<BasicResponse> uploadAdsImage(){
+    	return new ResponseEntity<BasicResponse>(new BasicResponse(), HttpStatus.ACCEPTED);
+    }
 
     @PostMapping(value = "/ads/create")
-    public ResponseEntity<BasicResponse> createUserAds(@RequestBody DynamicAdsRequest<String, String> userAdsRequest,
-                                                       @RequestParam(value = "images", required = false) Optional<List<String>> xfiles,
-                                                       @RequestParam(value = "images", required = false) Optional<List<MultipartFile>> files,
-                                                       @RequestParam(value = "external_link", required = false) Optional<Boolean> external){
+    public ResponseEntity<BasicResponse> createUserAds(@RequestBody DynamicAdsRequest<String, Object> userAdsRequest){
     	BasicResponse response = null;
     	HttpStatus status = HttpStatus.OK;
     	try {
-    	     response = this.userAdsService.createUserAds(userAdsRequest, xfiles.orElse(null), files.orElse(null), external.orElse(false));
+    	     response = this.userAdsService.createUserAds(userAdsRequest, null, null, userAdsRequest.getExternal());
        
     	}catch(Exception ex) {
     		response = new BasicResponse();
@@ -152,25 +153,4 @@ public class UserAdsController extends PublicApiController {
     	return new ResponseEntity<BasicResponse>(userAdsService.getFilterForm(adRequest), HttpStatus.OK);
     }
     
-    /*@GetMapping(value = "/ads/type")
-    @ResponseBody
-     public ResponseEntity<BasicResponse> getAdsType(){
-    	getLogger().info("array {}", (Object)Arrays.asList( AdsType.class.getEnumConstants()));
-         BasicResponse response = new BasicResponse();
-         HashMap<String, Object> hashData = new HashMap<String, Object>();
-         try {
-        
-         response.setMsg(MessageType.Success.getMessage());
-         hashData.put("data", Arrays.asList( AdsType.class.getEnumConstants()));
-         response.setSuccess(true);
-         response.setResponse(hashData);
-         }catch(Exception ex) {
-            response.setSuccess(false); 
-            hashData.put("data",MessageType.Fail.getMessage());
-            response.setResponse(hashData);
-            response.setMsg(ex.getMessage());
-            
-         }
-        return new ResponseEntity<>(response, HttpStatus.OK) ;	
-    }*/
 }
