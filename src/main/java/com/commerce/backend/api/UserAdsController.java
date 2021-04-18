@@ -69,30 +69,7 @@ public class UserAdsController extends PublicApiController {
         return new ResponseEntity<>(productCount, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/ads/{url}")
-    public ResponseEntity<ProductDetailsResponse> getByUrl(@PathVariable("url") String url) {
-        if (url.isBlank()) {
-            throw new InvalidArgumentException("Invalid url params");
-        }
-        ProductDetailsResponse productDetailsResponse = userAdsService.findByUrl(url);
-        return new ResponseEntity<>(productDetailsResponse, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/ads/related/{url}")
-    public ResponseEntity<List<UserAdsVO>> getByRelated(UserAdsVO userAds) {
-        if (userAds == null) {
-            throw new InvalidArgumentException("Invalid  params");
-        }
-        List<UserAdsVO> userAdsVO = userAdsService.getRelatedAds(userAds);
-        return new ResponseEntity<>(userAdsVO, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/ads/recent")
-    public ResponseEntity<List<UserAdsVO>> getByNewlyAdded(@RequestParam(value ="ads_type", required = false)  AdsType type,  @RequestParam(value="cat_id", required = false) Long cat_id) {
-        List<UserAdsVO> userAds = userAdsService.getNewlyAddedAds(type, cat_id);
-        return new ResponseEntity<>(userAds, HttpStatus.OK);
-    }
-
+       
     @GetMapping(value = "/ads/nearest")
     @ResponseBody
     public ResponseEntity<BasicResponse> getNearByAds(@RequestParam(value ="longitude", required = true) double longitude,
@@ -157,11 +134,35 @@ public class UserAdsController extends PublicApiController {
     
     @GetMapping(value = "/ads/get-filter-form")
     @ResponseBody
-    public ResponseEntity<BasicResponse> getFilterForm(@RequestParam(value = "adType",required = true) AdsType adType, @RequestParam(value = "adType",required = false) long type_cat_id) throws Exception {
+    public ResponseEntity<BasicResponse> getFilterForm(@RequestParam(value = "adType",required = true) AdsType adType, @RequestParam(value = "category",required = false) Optional<Long> type_cat_id) throws Exception {
     	adTypeRequest adRequest = new adTypeRequest();
     	adRequest.setAdsType(adType);
     	
     	return new ResponseEntity<BasicResponse>(userAdsService.getFilterForm(adRequest), HttpStatus.OK);
     }
+    /* @GetMapping(value = "/ads/{url}")
+    public ResponseEntity<ProductDetailsResponse> getByUrl(@PathVariable("url") String url) {
+        if (url.isBlank()) {
+            throw new InvalidArgumentException("Invalid url params");
+        }
+        ProductDetailsResponse productDetailsResponse = userAdsService.findByUrl(url);
+        return new ResponseEntity<>(productDetailsResponse, HttpStatus.OK);
+    }
+
+   /* @GetMapping(value = "/ads/related/{url}")
+    public ResponseEntity<List<UserAdsVO>> getByRelated(UserAdsVO userAds) {
+        if (userAds == null) {
+            throw new InvalidArgumentException("Invalid  params");
+        }
+        List<UserAdsVO> userAdsVO = userAdsService.getRelatedAds(userAds);
+        return new ResponseEntity<>(userAdsVO, HttpStatus.OK);
+    }
+
+   /* @GetMapping(value = "/ads/recent")
+    public ResponseEntity<List<UserAdsVO>> getByNewlyAdded(@RequestParam(value ="ads_type", required = false)  AdsType type,  @RequestParam(value="cat_id", required = false) Long cat_id) {
+        List<UserAdsVO> userAds = userAdsService.getNewlyAddedAds(type, cat_id);
+        return new ResponseEntity<>(userAds, HttpStatus.OK);
+    }*/
+
     
 }
