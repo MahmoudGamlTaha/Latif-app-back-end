@@ -3,6 +3,7 @@ package com.commerce.backend.service;
 
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.constants.MessageType;
+import com.commerce.backend.constants.TrainningType;
 import com.commerce.backend.converter.UserAdsConverter;
 import com.commerce.backend.converter.UserAdsToVoConverter;
 import com.commerce.backend.dao.*;
@@ -12,6 +13,7 @@ import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
 import com.commerce.backend.model.request.userAds.LocationRequest;
 import com.commerce.backend.model.request.userAds.UserPetsAdsRequest;
 import com.commerce.backend.model.request.userAds.adTypeRequest;
+import com.commerce.backend.model.request.userAds.AdsFiltrationRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 
@@ -26,8 +28,6 @@ import java.util.*;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,12 +44,23 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import javax.xml.stream.Location;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import static java.lang.System.currentTimeMillis;
 
 @Service
 public class UserAdsServiceImpl implements UserAdsService {
+
+	@PersistenceContext
+	private EntityManager entityManager;
+
 	private UserPetsAdsRepository userPetsAdsRepository;
 	private UserServiceAdsRepository userServiceAdsRepository;
 	private UserItemsAdsRepository userItemsAdsRepository;
@@ -372,6 +383,49 @@ public class UserAdsServiceImpl implements UserAdsService {
 			}
 		}
 		return response;
+	}
+
+	@Override
+	public BasicResponse adsFiltration(AdsFiltrationRequest<String, Object> ads) {
+		Class<? extends UserAds> ud = userAdsConverter.getAdInstance(ads.getType()).getClass();
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<? extends UserAds> cq = cb.createQuery(ud);
+		Root<? extends UserAds> userAds = cq.from(ud);
+		HashMap<String, Object> data = ads.getUserAds().get(0);
+		List<Predicate> predicates = new ArrayList<>();
+		predicates.add(cb.equal(userAds.get("type"), AdsType.valueOf(ads.getType().getType())));
+		Query queryX = null;
+		Iterator it = data.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry)it.next();
+			String key = (String) pair.getKey();
+			System.out.println(pair.getValue().getClass().getSimpleName());
+			if(key != null)
+			{
+				if(key.equals("training")) {
+					predicates.add(cb.equal(userAds.get(key), TrainningType.valueOf((String) pair.getValue())));
+				}
+				else if(key.equals("longitude")|| key.equals("latitude")){
+					String sql = "SELECT user_ads.* from user_ads, (select ST_MakePoint(?,?) as poi) as poi  WHERE ST_DWithin(geom, poi, 100000) AND type=?";
+					queryX = entityManager.createNativeQuery(sql, ud)
+							.setParameter(1, data.get("longitude"))
+							.setParameter(2, data.get("latitude"))
+							.setParameter(3, ads.getType().getType());
+					//predicates.add((Predicate) queryX);
+				}
+				else if(key.equals("price")){
+					continue;
+				}
+				else {
+					predicates.add(cb.equal(userAds.get(key), pair.getValue()));
+				}
+			}
+			it.remove();
+		}
+		cq.where(predicates.toArray(new Predicate[0]));
+		TypedQuery<? extends UserAds> query = entityManager.createQuery(cq);
+		List<UserAds> collect = new ArrayList<>(query.getResultList());
+		return res(collect, true);
 	}
 
 	@Override

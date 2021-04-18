@@ -4,7 +4,7 @@ import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.constants.FoodType;
 import com.commerce.backend.constants.TrainningType;
 import com.commerce.backend.dao.UserRepository;
-import com.commerce.backend.model.dto.UserAdsVO;
+import com.commerce.backend.model.dto.*;
 import com.commerce.backend.model.entity.*;
 import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
 import com.commerce.backend.service.UserAdsServiceImpl;
@@ -165,6 +165,28 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
     private  class Valid{
        public boolean success;
        public String msg;
+    }
+
+    public UserAds getAdInstance(AdsType type){
+        try {
+            if(type.getType().equalsIgnoreCase(AdsType.ACCESSORIES.getType())) {
+                return new UserAccAds();
+            }
+            else if(type.getType().equalsIgnoreCase(AdsType.PET_CARE.getType())){
+                return new UserMedicalAds();
+            }
+            else if(type.getType().equalsIgnoreCase(AdsType.PETS.getType())) {
+                return new UserPetAds();
+            }
+            else if(type.getType().equalsIgnoreCase(AdsType.SERVICE.getType())) {
+                return new UserServiceAds();
+            }else
+            {
+                return new UserAds();
+            }
+        }catch(Exception ex) {
+            return null;
+        }
     }
     
 }

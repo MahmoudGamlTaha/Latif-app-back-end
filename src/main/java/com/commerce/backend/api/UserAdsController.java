@@ -5,13 +5,13 @@ import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.error.exception.InvalidArgumentException;
 import com.commerce.backend.model.dto.UserAdsVO;
 import com.commerce.backend.model.request.userAds.*;
+import com.commerce.backend.model.request.userAds.AdsFiltrationRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import com.commerce.backend.service.UserAdsService;
 import org.springframework.http.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -136,6 +136,19 @@ public class UserAdsController extends PublicApiController {
     	 return new ResponseEntity<BasicResponse>(response, status); 
     }
     
+
+    @PostMapping(value = "/ads/food/create")
+    public ResponseEntity<UserAdsVO> createFoodAds(@RequestBody UserPetsAdsRequest userPetsAdsRequest){
+    	
+    	return null;
+    }
+    @PostMapping(value = "/ads/service/create")
+    public ResponseEntity<UserAdsVO> createServiceAds(@RequestBody UserPetsAdsRequest userPetsAdsRequest){
+    	
+    	return null;
+    }
+
+
     @GetMapping(value = "/ads/get-create-form")
     @ResponseBody
     public ResponseEntity<BasicResponse> getCreateForm(@RequestParam(value = "adType",required = true) AdsType adType) throws Exception {
@@ -152,5 +165,12 @@ public class UserAdsController extends PublicApiController {
     	
     	return new ResponseEntity<BasicResponse>(userAdsService.getFilterForm(adRequest), HttpStatus.OK);
     }
+
+    @PostMapping(value = "/ads/ads-filtration")
+    public ResponseEntity<BasicResponse> adsFiltration(@RequestBody AdsFiltrationRequest<String, Object> request) {
+        return new ResponseEntity<BasicResponse>(userAdsService.adsFiltration(request), HttpStatus.OK);
+    }
+
+
     
 }
