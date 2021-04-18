@@ -34,15 +34,21 @@ public class UserAdsController extends PublicApiController {
     @GetMapping(value = "/ads")
     @ResponseBody
     public ResponseEntity<BasicResponse> getAll(@RequestParam(value ="page", required = false) Optional<Integer> page,
-                                                                                                            Optional<LocationRequest> location,
+    											@RequestParam(value ="longitude") double longitude,
+    											@RequestParam(value ="latitude") double latitude,
     		                                                   @RequestParam(value = "type", required= true) AdsType type,
                                                                @RequestParam(value ="size", required= false) Optional<Integer> pageSize,
                                                                @RequestParam(value = "sort", required = false) String sort,
                                                                @RequestParam(value = "category", required = false) Long category,
                                                                @RequestParam(value = "minPrice", required = false) Float minPrice,
                                                                @RequestParam(value = "maxPrice", required = false) Float maxPrice) {
-    	
-        BasicResponse response = userAdsService.getAll(type, location.orElse(null), page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), sort, category, minPrice, maxPrice);
+    	LocationRequest location = null; 
+    	if(longitude!= 0) {
+    		location = new LocationRequest();
+    		location.setLatitude(latitude);
+    		location.setLongitude(longitude);
+    	}
+        BasicResponse response = userAdsService.getAll(type, location, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), sort, category, minPrice, maxPrice);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
@@ -89,11 +95,16 @@ public class UserAdsController extends PublicApiController {
 
     @GetMapping(value = "/ads/nearest")
     @ResponseBody
-    public ResponseEntity<BasicResponse> getNearByAds(@RequestParam(value ="longitude") double longitude,
-                                                      @RequestParam(value ="latitude") double latitude,
-                                                      Optional<Integer> distance, Integer page, Integer size)
+    public ResponseEntity<BasicResponse> getNearByAds(@RequestParam(value ="longitude", required = true) double longitude,
+                                                      @RequestParam(value ="latitude", required = true) double latitude,
+                                                      @RequestParam(value ="distance", required = false) Optional<Integer> distance,
+                                                      @RequestParam(value ="page", required = false) Optional<Integer> page,
+                                                      @RequestParam(value ="pageSize", required= false) Optional<Integer> pageSize,
+                                                      @RequestParam(value = "sort", required = false) String sort,
+                                                      @RequestParam(value = "category", required = false) Optional<Long> category)
+                                                  
     {
-        BasicResponse res = userAdsService.findNearby(longitude, latitude, distance.orElse(SystemConstant.DISTANCE), page, size);
+        BasicResponse res = userAdsService.findNearby(longitude, latitude, distance.orElse(SystemConstant.DISTANCE), page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), category.orElse(null));
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
  
@@ -138,7 +149,7 @@ public class UserAdsController extends PublicApiController {
     
     @GetMapping(value = "/ads/get-create-form")
     @ResponseBody
-    public ResponseEntity<BasicResponse> getCreateForm(@RequestParam(value = "adType",required = true) AdsType adType) throws Exception {
+    public ResponseEntity<BasicResponse> getCreateForm(@RequestParam(value = "adType",required = true) AdsType adType, @RequestParam(value = "cat_id",required = false) Optional<Long> cat_id) throws Exception {
     	adTypeRequest adRequest = new adTypeRequest();
      	adRequest.setAdsType(adType);	
     	return new ResponseEntity<BasicResponse>(userAdsService.getCreateForm(adRequest), HttpStatus.OK);

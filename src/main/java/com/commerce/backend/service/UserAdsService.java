@@ -47,5 +47,5 @@ public interface UserAdsService {
 
     <T> UserAdsVO savePet(UserPetsAdsRequest userPetsAdsRequest);
 
-    BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size);
+    BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size, Long cat_id);
 }

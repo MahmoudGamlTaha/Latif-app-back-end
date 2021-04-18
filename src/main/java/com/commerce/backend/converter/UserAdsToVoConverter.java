@@ -186,7 +186,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 				 imgVo.setUserAdsId(source.getId());
 			     imageVos.add(imgVo);
 			 });
-  
+          
    	      destination.setImages(imageVos);
 		 }
 		User user = new User();
@@ -215,6 +215,12 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			((UserPetAdsVO)destination).setPlayWithKids(((UserPetAds)source).getPlayWithKids());
 			((UserPetAdsVO)destination).setPassport(((UserPetAds)source).getPassport());
 		    ((UserPetAdsVO)destination).setVaccinationCertificate(((UserPetAds)source).getVaccinationCertifcate());;
+		    ((UserPetAdsVO)destination).setWeaned(((UserPetAds)source).getWeaned());
+		    ((UserPetAdsVO)destination).setStock(((UserPetAdsVO)destination).getStock());
+		    if(((UserPetAdsVO)destination).getImages() != null){
+		    	((UserPetAdsVO)destination).setImage(((UserPetAdsVO)destination).getImages().stream().findFirst().get().getImage());
+		    
+		    }
 		    PetCategory category = ((UserPetAds)source).getCategory();
 		    String categoryName = category == null ?null:category.getName();
 		    if(categoryName != null) {
