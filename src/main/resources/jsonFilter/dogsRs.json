@@ -1,5 +1,4 @@
 {"form":[
-  {"name": "code", "type": "string","label": "Code", "required": true},
   {"name": "active", "type": "boolean","label": "Active", "required": true},
   {"name": "longitude", "type": "map","label": "Longitude", "required": true},
   {"name": "latitude", "type": "map","label": "Latitude", "required": true},
