@@ -1,6 +1,6 @@
 {"form":[
   {"name": "name","type": "string", "label": "Name", "required": true},
-  {"name": "category", "type": "url_option", "label": "type", "url":"/api/public/cat-by-adType/type=1" , "required": true},
+  {"name": "category", "type": "url_option", "label": "type", "url":"/api/public/cat-by-adType/type=4", "required": true},
   {"name": "description", "type": "string","label": "Description", "required": true},
   {"name": "short_description", "type": "string","label": "Short Description", "required": true},
   {"name": "active", "type": "boolean","label": "Active", "required": true},

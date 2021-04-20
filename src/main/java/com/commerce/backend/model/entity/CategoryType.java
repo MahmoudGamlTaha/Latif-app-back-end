@@ -18,6 +18,9 @@ public class CategoryType {
     @Column(name = "id")
     private Long id;
     
+    @Column(name = "code", unique = true)
+    private String code;
+    
     @Column(name = "name")
     private String name;
     

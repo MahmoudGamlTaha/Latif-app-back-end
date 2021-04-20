@@ -16,7 +16,7 @@ import java.util.List;
 
 public interface UserAdsService {
     ProductDetailsResponse findByUrl(String url);
-
+    @Deprecated
     BasicResponse getAll(AdsType type , LocationRequest location, Integer page, Integer size, String sort, Long category, Float minPrice, Float maxPrice);
    
     Long getAllCount(UserAdsVO userAdsVO, Float minPrice, Float maxPrice);
@@ -47,5 +47,5 @@ public interface UserAdsService {
 
     <T> UserAdsVO savePet(UserPetsAdsRequest userPetsAdsRequest);
 
-    BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size, Long cat_id);
+    BasicResponse findNearby(AdsType Type, double longitude, double latitude, Integer distance, Integer page, Integer size, Long cat_id);
 }

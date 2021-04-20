@@ -184,17 +184,16 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size, Long category)
+	public BasicResponse findNearby(AdsType type ,double longitude, double latitude, Integer distance, Integer page, Integer size, Long category)
 	{
 		try {
 			
 		Pageable pageable = PageRequest.of(page, size);
-		List<UserAds> ads = customUserAdsCriteriaHelper.findNearestByCategory(longitude, latitude, distance, pageable, category);
+		List<UserAds> ads = customUserAdsCriteriaHelper.findNearestByCategory(type, longitude, latitude, distance, pageable, category);
 		List<UserAdsVO> collect = new ArrayList<>();
 		ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 		return res(collect, true);
 		}catch(Exception ex) {
-			
 			return res(ex, false);
 		}
 	}
@@ -224,7 +223,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		HashMap<String, Object> map = new HashMap<>();
 
 		if( obj instanceof Exception) {
-		 map.put(MessageType.Data.getMessage(), ((Exception) obj).getMessage());
+		 map.put(MessageType.Data.getMessage(), ((Exception) obj).getStackTrace());
 		} else {
 			map.put(MessageType.Data.getMessage(),  obj);
 		}

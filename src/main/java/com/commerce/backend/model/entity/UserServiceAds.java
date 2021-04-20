@@ -7,6 +7,9 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import com.commerce.backend.constants.AdsType;
 
 import lombok.Getter;
@@ -21,6 +24,7 @@ public class UserServiceAds extends UserAds {
 	
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id")
+	@NotFound(action=NotFoundAction.IGNORE)
 	ServiceCategory serviceCategory;
 	
 	@Column(name = "allow_at_home")

@@ -5,9 +5,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.commerce.backend.model.request.userAds.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.commerce.backend.constants.AdsType;
+import com.commerce.backend.dao.ItemObjectCategoryRepository;
+import com.commerce.backend.dao.ServiceCategoryRepository;
 import com.commerce.backend.model.dto.ItemObjectCategoryVO;
 import com.commerce.backend.model.dto.UserAccVO;
 import com.commerce.backend.model.dto.UserAdsImageVO;
@@ -33,9 +37,10 @@ import java.util.function.Function;
 
 @Component
 public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
-
+    @Autowired
+	ItemObjectCategoryRepository itemObjectCategoryRepository;
+    
 	@Override
-
 	 public UserAdsVO apply( UserAds source) {
 		UserAdsVO userAdsVo = null;
       
@@ -231,6 +236,8 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		}
 		if(source.getType() == AdsType.SERVICE) {
 			ServiceCategory category = ((UserServiceAds)source).getServiceCategory();
+			 //ItemObjectCategory orgCategory = this.itemObjectCategoryRepository.findById(category.getId()).orElse(null);
+		
 			if(category != null) {
 			((UserServiceVO)destination).setAllowAtHome(((UserServiceAds)source).getAllowServiceAtHome());
 			((UserServiceVO)destination).setCategoryId(category.getId());

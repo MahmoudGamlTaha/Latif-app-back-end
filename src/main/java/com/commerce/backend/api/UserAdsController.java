@@ -72,16 +72,18 @@ public class UserAdsController extends PublicApiController {
        
     @GetMapping(value = "/ads/nearest")
     @ResponseBody
-    public ResponseEntity<BasicResponse> getNearByAds(@RequestParam(value ="longitude", required = true) double longitude,
+    public ResponseEntity<BasicResponse> getNearest(@RequestParam(value ="longitude", required = true) double longitude,
                                                       @RequestParam(value ="latitude", required = true) double latitude,
-                                                      @RequestParam(value ="distance", required = false) Optional<Integer> distance,
+                                                      @RequestParam(value ="distance", required = false) Integer distance,
                                                       @RequestParam(value ="page", required = false) Optional<Integer> page,
-                                                      @RequestParam(value ="pageSize", required= false) Optional<Integer> pageSize,
+                                                      @RequestParam(value ="pageSize", required= false) Optional<Integer>  pageSize,
                                                       @RequestParam(value = "sort", required = false) String sort,
-                                                      @RequestParam(value = "category", required = false) Optional<Long> category)
+                                                      @RequestParam(value = "category", required = false) Long category,
+                                                      @RequestParam(value = "type", required= false) Optional<AdsType> type)
                                                   
     {
-        BasicResponse res = userAdsService.findNearby(longitude, latitude, distance.orElse(SystemConstant.DISTANCE), page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), category.orElse(null));
+    	distance = distance == null? SystemConstant.DISTANCE: distance;
+        BasicResponse res = userAdsService.findNearby(type.orElse(null),longitude, latitude, distance, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), category);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
  
