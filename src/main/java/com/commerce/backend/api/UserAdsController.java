@@ -131,7 +131,7 @@ public class UserAdsController extends PublicApiController {
     public ResponseEntity<BasicResponse> getCreateForm(@RequestParam(value = "adType",required = true) AdsType adType, @RequestParam(value = "cat_id",required = false) Optional<Long> cat_id) throws Exception {
     	adTypeRequest adRequest = new adTypeRequest();
      	adRequest.setAdsType(adType);	
-    	return new ResponseEntity<BasicResponse>(userAdsService.getCreateForm(adRequest), HttpStatus.OK);
+    	return new ResponseEntity<BasicResponse>(userAdsService.getCreateForm(adRequest, cat_id.orElse(null)), HttpStatus.OK);
     }
     
     @GetMapping(value = "/ads/get-filter-form")

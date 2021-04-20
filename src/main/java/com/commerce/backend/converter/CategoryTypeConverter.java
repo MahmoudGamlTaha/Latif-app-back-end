@@ -18,6 +18,7 @@ public class CategoryTypeConverter implements Function<CategoryType, CategoryTyp
 			categoryTypeVO.setActive(categoryType.getActive());
 			categoryTypeVO.setName(categoryType.getName());
 			categoryTypeVO.setNameAr(categoryType.getNameAr());
+			
 			categoryTypeVO.setCreatedDate(categoryType.getCreated_at());
 		}
 		return categoryTypeVO;
