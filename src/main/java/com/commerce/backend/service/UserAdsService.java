@@ -41,9 +41,9 @@ public interface UserAdsService {
 
 	Long getAllCount(String category, Float minPrice, Float maxPrice, String color);
 
-    BasicResponse getCreateForm(adTypeRequest petType);
+    BasicResponse getCreateForm(adTypeRequest petType, Long category);
     
-    BasicResponse getFilterForm(adTypeRequest petType);
+    BasicResponse getFilterForm(adTypeRequest petType, Long category);
 
     <T> UserAdsVO savePet(UserPetsAdsRequest userPetsAdsRequest);
 

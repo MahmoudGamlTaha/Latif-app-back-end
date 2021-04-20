@@ -136,11 +136,11 @@ public class UserAdsController extends PublicApiController {
     
     @GetMapping(value = "/ads/get-filter-form")
     @ResponseBody
-    public ResponseEntity<BasicResponse> getFilterForm(@RequestParam(value = "adType",required = true) AdsType adType, @RequestParam(value = "category",required = false) Optional<Long> type_cat_id) throws Exception {
+    public ResponseEntity<BasicResponse> getFilterForm(@RequestParam(value = "adType",required = true) AdsType adType, @RequestParam(value = "category",required = false) Optional<Long> cat_id) throws Exception {
     	adTypeRequest adRequest = new adTypeRequest();
     	adRequest.setAdsType(adType);
     	
-    	return new ResponseEntity<BasicResponse>(userAdsService.getFilterForm(adRequest), HttpStatus.OK);
+    	return new ResponseEntity<BasicResponse>(userAdsService.getFilterForm(adRequest, cat_id.orElse(null)), HttpStatus.OK);
     }
     /* @GetMapping(value = "/ads/{url}")
     public ResponseEntity<ProductDetailsResponse> getByUrl(@PathVariable("url") String url) {

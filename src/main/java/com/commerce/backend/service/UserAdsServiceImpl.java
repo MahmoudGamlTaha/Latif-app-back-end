@@ -295,7 +295,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public BasicResponse getCreateForm(adTypeRequest adsType){
+	public BasicResponse getCreateForm(adTypeRequest adsType, Long category){
 
 		InputStream is = null;
 		BasicResponse response = new BasicResponse();
@@ -305,7 +305,8 @@ public class UserAdsServiceImpl implements UserAdsService {
 		if(adsType != null)
 		{
 			String adType = adsType.getAdsType().getType().toLowerCase();
-			is = new ClassPathResource("jsonFiles/"+adType+"Rs.json").getInputStream();
+			String path = "jsonFiles/"+adType+"Rs.json";
+			is = new ClassPathResource(path).getInputStream();
 		}
        
 		
@@ -336,7 +337,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 	
 	@Override
-	public BasicResponse getFilterForm(adTypeRequest adsType){
+	public BasicResponse getFilterForm(adTypeRequest adsType, Long category){
 
 		InputStream is = null;
 		BasicResponse response = new BasicResponse();
