@@ -9,6 +9,7 @@ import com.commerce.backend.model.request.userAds.AdsFiltrationRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import com.commerce.backend.service.UserAdsService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,8 +168,8 @@ public class UserAdsController extends PublicApiController {
     }
 
     @PostMapping(value = "/ads/ads-filtration")
-    public ResponseEntity<BasicResponse> adsFiltration(@RequestBody AdsFiltrationRequest<String, Object> request) {
-        return new ResponseEntity<BasicResponse>(userAdsService.adsFiltration(request), HttpStatus.OK);
+    public ResponseEntity<BasicResponse> adsFiltration(@RequestBody AdsFiltrationRequest<String, Object> request, Pageable pageable) {
+        return new ResponseEntity<BasicResponse>(userAdsService.adsFiltration(request, pageable), HttpStatus.OK);
     }
 
 

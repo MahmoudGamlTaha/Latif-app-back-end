@@ -6,6 +6,7 @@ import com.commerce.backend.constants.TrainningType;
 import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.model.dto.*;
 import com.commerce.backend.model.entity.*;
+import com.commerce.backend.model.request.userAds.AdsFiltrationRequest;
 import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
 import com.commerce.backend.service.UserAdsServiceImpl;
 
@@ -16,6 +17,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
+import javax.persistence.Query;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +33,10 @@ import java.util.function.Function;
 
 @Component
 public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
-   
+
+    @PersistenceContext(type  =  PersistenceContextType.EXTENDED)
+    private EntityManager entityManager;
+
 	@Autowired
 	private UserRepository user;
     @Override
@@ -167,26 +175,144 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
        public String msg;
     }
 
-    public UserAds getAdInstance(AdsType type){
-        try {
-            if(type.getType().equalsIgnoreCase(AdsType.ACCESSORIES.getType())) {
-                return new UserAccAds();
-            }
-            else if(type.getType().equalsIgnoreCase(AdsType.PET_CARE.getType())){
-                return new UserMedicalAds();
-            }
-            else if(type.getType().equalsIgnoreCase(AdsType.PETS.getType())) {
-                return new UserPetAds();
-            }
-            else if(type.getType().equalsIgnoreCase(AdsType.SERVICE.getType())) {
-                return new UserServiceAds();
-            }else
-            {
-                return new UserAds();
-            }
-        }catch(Exception ex) {
-            return null;
+    public Query getQuery (AdsFiltrationRequest<String, Object> ads)
+    {
+        HashMap<String, Object> data = ads.getUserAds().get(0);
+        String sql = "SELECT user_ads.*, ST_Distance(user_ads.geom, poi) / 1000 AS distance_km "
+                + "            FROM user_ads user_ads, "
+                + "            (select ST_MakePoint(:longitude, :latitude) as poi) as poi "
+                + "            WHERE ST_DWithin(user_ads.geom, poi, :distance) AND type = :type";
+
+        if(data.get("category") != null) {
+            sql += " AND category_id = :category ";
         }
+        if(data.get("name") != null)
+        {
+            sql += " AND name LIKE :name ";
+        }
+        if(data.get("code") != null)
+        {
+            sql += " AND code = :code ";
+        }
+        if(data.get("active") != null && data.get("active").equals(true))
+        {
+            sql += " AND active = true ";
+        }
+        if(data.get("allow_at_home") != null && data.get("allow_at_home").equals(true))
+        {
+            sql += " AND allow_at_home = true ";
+        }
+        if(data.get("description") != null)
+        {
+            sql += " AND description LIKE :description ";
+        }
+        if(data.get("short_description") != null)
+        {
+            sql += " AND short_description LIKE :short_description ";
+        }
+        if(data.get("price") != null)
+        {
+            sql += " AND price BETWEEN  :from AND :to";
+        }
+
+        if(ads.getType().getType().equals("ACCESSORIES"))
+        {
+            if(data.get("used") != null && data.get("used").equals(true))
+            {
+                sql += " AND used = true";
+            }
+        }
+
+        if(ads.getType().getType().equals("PETS"))
+        {
+            if(data.get("breed") != null)
+            {
+                sql += " AND breed LIKE :breed ";
+            }
+            if(data.get("weaned") != null && data.get("weaned").equals(true))
+            {
+                sql += " AND weaned = true";
+            }
+            if(data.get("neutering") != null && data.get("neutering").equals(true))
+            {
+                sql += " AND weaned = true";
+            }
+            if(data.get("vaccinationCertificate") != null && data.get("vaccinationCertificate").equals(true))
+            {
+                sql += " AND vaccination_certificate = true";
+            }
+            if(data.get("passport") != null && data.get("passport").equals(true))
+            {
+                sql += " AND passport = true";
+            }
+            if(data.get("playWithKids") != null && data.get("playWithKids").equals(true))
+            {
+                sql += " AND play_with_kids = true";
+            }
+            if(data.get("diseasesDisabilities") != null && data.get("diseasesDisabilities").equals(true))
+            {
+                sql += " AND diseases_disabilities = true";
+            }
+            if(data.get("barkingProblem") != null && data.get("barkingProblem").equals(true))
+            {
+                sql += " AND barking_problem = true";
+            }
+            if(data.get("training") != null)
+            {
+                sql += " AND training LIKE :training ";
+            }
+            if(data.get("food") != null)
+            {
+                sql += " AND food LIKE :food ";
+            }
+        }
+
+        sql += " ORDER BY ST_Distance(geom, poi) ";
+        Query query = entityManager.createNativeQuery(sql, UserAds.class)
+                .setParameter("longitude", data.get("longitude"))
+                .setParameter("latitude", data.get("latitude"))
+                .setParameter("distance", data.get("distance"))
+                .setParameter("type", ads.getType().getType());
+
+        if(data.get("category") != null) {
+            query.setParameter("category", data.get("category"));
+        }
+        if(data.get("name") != null)
+        {
+            query.setParameter("name", "%"+data.get("name")+"%");
+        }
+        if(data.get("code") != null)
+        {
+            query.setParameter("code", data.get("code"));
+        }
+        if(data.get("description") != null)
+        {
+            query.setParameter("description", "%"+data.get("description")+"%");
+        }
+        if(data.get("short_description") != null)
+        {
+            query.setParameter("short_description", "%"+data.get("short_description")+"%");
+        }
+        if(data.get("breed") != null)
+        {
+            query.setParameter("breed", "%"+data.get("breed")+"%");
+        }
+        if(data.get("training") != null)
+        {
+            query.setParameter("training", "%"+data.get("training")+"%");
+        }
+        if(data.get("food") != null)
+        {
+            query.setParameter("food", "%"+data.get("food")+"%");
+        }
+        if(data.get("price") != null)
+        {
+            Integer prFrom = (Integer) data.get("price") / 2;
+            Integer prTo = (Integer) data.get("price") / 2 + (Integer) data.get("price");
+            query.setParameter("from", prFrom);
+            query.setParameter("to", prTo);
+        }
+        return query;
     }
     
 }

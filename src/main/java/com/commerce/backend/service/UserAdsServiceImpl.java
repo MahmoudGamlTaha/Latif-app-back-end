@@ -44,10 +44,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -58,7 +55,7 @@ import static java.lang.System.currentTimeMillis;
 @Service
 public class UserAdsServiceImpl implements UserAdsService {
 
-	@PersistenceContext
+	@PersistenceContext(type  =  PersistenceContextType.EXTENDED)
 	private EntityManager entityManager;
 
 	private UserPetsAdsRepository userPetsAdsRepository;
@@ -386,47 +383,18 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public BasicResponse adsFiltration(AdsFiltrationRequest<String, Object> ads) {
-		Class<? extends UserAds> ud = userAdsConverter.getAdInstance(ads.getType()).getClass();
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<? extends UserAds> cq = cb.createQuery(ud);
-		Root<? extends UserAds> userAds = cq.from(ud);
-		HashMap<String, Object> data = ads.getUserAds().get(0);
-		List<Predicate> predicates = new ArrayList<>();
-		predicates.add(cb.equal(userAds.get("type"), AdsType.valueOf(ads.getType().getType())));
-		Query queryX = null;
-		Iterator it = data.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry pair = (Map.Entry)it.next();
-			String key = (String) pair.getKey();
-			System.out.println(pair.getValue().getClass().getSimpleName());
-			if(key != null)
-			{
-				if(key.equals("training")) {
-					predicates.add(cb.equal(userAds.get(key), TrainningType.valueOf((String) pair.getValue())));
-				}
-				else if(key.equals("longitude")|| key.equals("latitude")){
-					String sql = "SELECT user_ads.* from user_ads, (select ST_MakePoint(?,?) as poi) as poi  WHERE ST_DWithin(geom, poi, 100000) AND type=?";
-					queryX = entityManager.createNativeQuery(sql, ud)
-							.setParameter(1, data.get("longitude"))
-							.setParameter(2, data.get("latitude"))
-							.setParameter(3, ads.getType().getType());
-					//predicates.add((Predicate) queryX);
-				}
-				else if(key.equals("price")){
-					continue;
-				}
-				else {
-					predicates.add(cb.equal(userAds.get(key), pair.getValue()));
-				}
-			}
-			it.remove();
-		}
-		cq.where(predicates.toArray(new Predicate[0]));
-		TypedQuery<? extends UserAds> query = entityManager.createQuery(cq);
-		List<UserAds> collect = new ArrayList<>(query.getResultList());
+	@SuppressWarnings("unchecked")
+	public BasicResponse adsFiltration(AdsFiltrationRequest<String, Object> ads, Pageable pageable) {
+		Query query = userAdsConverter.getQuery(ads);
+		List<UserAds> userAds = query
+				.setFirstResult(pageable.getPageNumber())
+				.setMaxResults(pageable.getPageSize())
+				.getResultList();
+		List<UserAdsVO> collect = new ArrayList<>();
+		userAds.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 		return res(collect, true);
 	}
+
 
 	@Override
 	public <T> UserAdsVO savePet(UserPetsAdsRequest userPetsAdsRequest) {

@@ -216,12 +216,12 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			((UserPetAdsVO)destination).setPassport(((UserPetAds)source).getPassport());
 		    ((UserPetAdsVO)destination).setVaccinationCertificate(((UserPetAds)source).getVaccinationCertifcate());;
 		    PetCategory category = ((UserPetAds)source).getCategory();
-		    String categoryName = category == null ?null:category.getName();
-		    if(categoryName != null) {
-		    ((UserPetAdsVO)destination).setCategoryName(categoryName);
-		    ((UserPetAdsVO)destination).setCategoryNameAr(category.getNameAr());
-		    ((UserPetAdsVO)destination).setCategoryId(category.getId());
-		    }
+		    //String categoryName = category == null ?null:category.getName();
+		    //if(categoryName != null) {
+		    //((UserPetAdsVO)destination).setCategoryName(categoryName);
+		    //((UserPetAdsVO)destination).setCategoryNameAr(category.getNameAr());
+		    //((UserPetAdsVO)destination).setCategoryId(category.getId());
+		    //}
 		}
 		if(source.getType() == AdsType.SERVICE) {
 			ServiceCategory category = ((UserServiceAds)source).getServiceCategory();
