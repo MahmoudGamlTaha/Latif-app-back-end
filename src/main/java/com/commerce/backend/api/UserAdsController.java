@@ -35,15 +35,21 @@ public class UserAdsController extends PublicApiController {
     @GetMapping(value = "/ads")
     @ResponseBody
     public ResponseEntity<BasicResponse> getAll(@RequestParam(value ="page", required = false) Optional<Integer> page,
-                                                                                                            Optional<LocationRequest> location,
+    											@RequestParam(value ="longitude") double longitude,
+    											@RequestParam(value ="latitude") double latitude,
     		                                                   @RequestParam(value = "type", required= true) AdsType type,
                                                                @RequestParam(value ="size", required= false) Optional<Integer> pageSize,
                                                                @RequestParam(value = "sort", required = false) String sort,
                                                                @RequestParam(value = "category", required = false) Long category,
                                                                @RequestParam(value = "minPrice", required = false) Float minPrice,
                                                                @RequestParam(value = "maxPrice", required = false) Float maxPrice) {
-    	
-        BasicResponse response = userAdsService.getAll(type, location.orElse(null), page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), sort, category, minPrice, maxPrice);
+    	LocationRequest location = null; 
+    	if(longitude!= 0) {
+    		location = new LocationRequest();
+    		location.setLatitude(latitude);
+    		location.setLongitude(longitude);
+    	}
+        BasicResponse response = userAdsService.getAll(type, location, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), sort, category, minPrice, maxPrice);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
@@ -64,37 +70,21 @@ public class UserAdsController extends PublicApiController {
         return new ResponseEntity<>(productCount, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/ads/{url}")
-    public ResponseEntity<ProductDetailsResponse> getByUrl(@PathVariable("url") String url) {
-        if (url.isBlank()) {
-            throw new InvalidArgumentException("Invalid url params");
-        }
-        ProductDetailsResponse productDetailsResponse = userAdsService.findByUrl(url);
-        return new ResponseEntity<>(productDetailsResponse, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/ads/related/{url}")
-    public ResponseEntity<List<UserAdsVO>> getByRelated(UserAdsVO userAds) {
-        if (userAds == null) {
-            throw new InvalidArgumentException("Invalid  params");
-        }
-        List<UserAdsVO> userAdsVO = userAdsService.getRelatedAds(userAds);
-        return new ResponseEntity<>(userAdsVO, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/ads/recent")
-    public ResponseEntity<List<UserAdsVO>> getByNewlyAdded(@RequestParam(value ="ads_type", required = false)  AdsType type,  @RequestParam(value="cat_id", required = false) Long cat_id) {
-        List<UserAdsVO> userAds = userAdsService.getNewlyAddedAds(type, cat_id);
-        return new ResponseEntity<>(userAds, HttpStatus.OK);
-    }
-
+       
     @GetMapping(value = "/ads/nearest")
     @ResponseBody
-    public ResponseEntity<BasicResponse> getNearByAds(@RequestParam(value ="longitude") double longitude,
-                                                      @RequestParam(value ="latitude") double latitude,
-                                                      Optional<Integer> distance, Integer page, Integer size)
+    public ResponseEntity<BasicResponse> getNearest(@RequestParam(value ="longitude", required = true) double longitude,
+                                                      @RequestParam(value ="latitude", required = true) double latitude,
+                                                      @RequestParam(value ="distance", required = false) Integer distance,
+                                                      @RequestParam(value ="page", required = false) Optional<Integer> page,
+                                                      @RequestParam(value ="pageSize", required= false) Optional<Integer>  pageSize,
+                                                      @RequestParam(value = "sort", required = false) String sort,
+                                                      @RequestParam(value = "category", required = false) Long category,
+                                                      @RequestParam(value = "type", required= false) Optional<AdsType> type)
+                                                  
     {
-        BasicResponse res = userAdsService.findNearby(longitude, latitude, distance.orElse(SystemConstant.DISTANCE), page, size);
+    	distance = distance == null? SystemConstant.DISTANCE: distance;
+        BasicResponse res = userAdsService.findNearby(type.orElse(null),longitude, latitude, distance, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), category);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
  
@@ -152,26 +142,49 @@ public class UserAdsController extends PublicApiController {
 
     @GetMapping(value = "/ads/get-create-form")
     @ResponseBody
-    public ResponseEntity<BasicResponse> getCreateForm(@RequestParam(value = "adType",required = true) AdsType adType) throws Exception {
+    public ResponseEntity<BasicResponse> getCreateForm(@RequestParam(value = "adType",required = true) AdsType adType, @RequestParam(value = "cat_id",required = false) Optional<Long> cat_id) throws Exception {
     	adTypeRequest adRequest = new adTypeRequest();
      	adRequest.setAdsType(adType);	
-    	return new ResponseEntity<BasicResponse>(userAdsService.getCreateForm(adRequest), HttpStatus.OK);
+    	return new ResponseEntity<BasicResponse>(userAdsService.getCreateForm(adRequest, cat_id.orElse(null)), HttpStatus.OK);
     }
     
     @GetMapping(value = "/ads/get-filter-form")
     @ResponseBody
-    public ResponseEntity<BasicResponse> getFilterForm(@RequestParam(value = "adType",required = true) AdsType adType, @RequestParam(value = "adType",required = false) long type_cat_id) throws Exception {
+    public ResponseEntity<BasicResponse> getFilterForm(@RequestParam(value = "adType",required = true) AdsType adType, @RequestParam(value = "category",required = false) Optional<Long> cat_id) throws Exception {
     	adTypeRequest adRequest = new adTypeRequest();
     	adRequest.setAdsType(adType);
     	
-    	return new ResponseEntity<BasicResponse>(userAdsService.getFilterForm(adRequest), HttpStatus.OK);
+    	return new ResponseEntity<BasicResponse>(userAdsService.getFilterForm(adRequest, cat_id.orElse(null)), HttpStatus.OK);
     }
+    /* @GetMapping(value = "/ads/{url}")
+    public ResponseEntity<ProductDetailsResponse> getByUrl(@PathVariable("url") String url) {
+        if (url.isBlank()) {
+            throw new InvalidArgumentException("Invalid url params");
+        }
+        ProductDetailsResponse productDetailsResponse = userAdsService.findByUrl(url);
+        return new ResponseEntity<>(productDetailsResponse, HttpStatus.OK);
+    }
+
+   /* @GetMapping(value = "/ads/related/{url}")
+    public ResponseEntity<List<UserAdsVO>> getByRelated(UserAdsVO userAds) {
+        if (userAds == null) {
+            throw new InvalidArgumentException("Invalid  params");
+        }
+        List<UserAdsVO> userAdsVO = userAdsService.getRelatedAds(userAds);
+        return new ResponseEntity<>(userAdsVO, HttpStatus.OK);
+    }
+
 
     @PostMapping(value = "/ads/ads-filtration")
     public ResponseEntity<BasicResponse> adsFiltration(@RequestBody AdsFiltrationRequest<String, Object> request, Pageable pageable) {
         return new ResponseEntity<BasicResponse>(userAdsService.adsFiltration(request, pageable), HttpStatus.OK);
     }
 
+   /* @GetMapping(value = "/ads/recent")
+    public ResponseEntity<List<UserAdsVO>> getByNewlyAdded(@RequestParam(value ="ads_type", required = false)  AdsType type,  @RequestParam(value="cat_id", required = false) Long cat_id) {
+        List<UserAdsVO> userAds = userAdsService.getNewlyAddedAds(type, cat_id);
+        return new ResponseEntity<>(userAds, HttpStatus.OK);
+    }*/
 
     
 }

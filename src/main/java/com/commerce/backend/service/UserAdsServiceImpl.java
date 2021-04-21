@@ -67,6 +67,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	private UserAdsConverter userAdsConverter;
 	private UserAdsImageRepository userAdsImageRepository;
 	private CustomUserAdsRepo repo;
+	private CustomUserAdsCriteriaHelper customUserAdsCriteriaHelper;
 	private final Path rootLocation = Paths.get("upload");
 	@Value("${swagger.host.path}")
 	private String path;
@@ -75,7 +76,10 @@ public class UserAdsServiceImpl implements UserAdsService {
 	public UserAdsServiceImpl(UserAdsRepository userAdsRepository, UserPetsAdsRepository userPetsAdsRepository,
 							  UserServiceAdsRepository userServiceAdsRepository,
 							  UserItemsAdsRepository userItemsAdsRepository, UserMedicalAdsRepository userMedicalAdsRepository,
-							  UserAdsToVoConverter userAdsToVoConverter, UserAdsConverter userAdsConverter, UserAdsImageRepository userAdsImageRepository, CustomUserAdsRepo repo) {
+							  UserAdsToVoConverter userAdsToVoConverter, UserAdsConverter userAdsConverter,
+							  UserAdsImageRepository userAdsImageRepository,
+							  CustomUserAdsRepo repo,
+							  CustomUserAdsCriteriaHelper customUserAdsCriteriaHelper) {
 	
 
 	
@@ -88,6 +92,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		this.userAdsConverter = userAdsConverter;
 		this.userAdsImageRepository = userAdsImageRepository;
 		this.repo = repo;
+		this.customUserAdsCriteriaHelper = customUserAdsCriteriaHelper;
 	}
 
 	public UserAdsServiceImpl() {
@@ -187,23 +192,20 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size)
+	public BasicResponse findNearby(AdsType type ,double longitude, double latitude, Integer distance, Integer page, Integer size, Long category)
 	{
 		try {
-		Pageable pageable = Pageable.unpaged();
-		if(page != null && size != null)
-		{
-			pageable = PageRequest.of(page, size);
-		}
-		List<UserAds> ads = repo.findNearest(longitude, latitude, distance, pageable);
+			
+		Pageable pageable = PageRequest.of(page, size);
+		List<UserAds> ads = customUserAdsCriteriaHelper.findNearestByCategory(type, longitude, latitude, distance, pageable, category);
 		List<UserAdsVO> collect = new ArrayList<>();
 		ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 		return res(collect, true);
 		}catch(Exception ex) {
-			
 			return res(ex, false);
 		}
 	}
+	@Deprecated
 	@Override
 	public List<UserAdsVO> getNearByAdsByCategory(AdsType adsType, Long Category) {
 		// TODO Auto-generated method stub
@@ -229,7 +231,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		HashMap<String, Object> map = new HashMap<>();
 
 		if( obj instanceof Exception) {
-		 map.put(MessageType.Data.getMessage(), ((Exception) obj).getMessage());
+		 map.put(MessageType.Data.getMessage(), ((Exception) obj).getStackTrace());
 		} else {
 			map.put(MessageType.Data.getMessage(),  obj);
 		}
@@ -301,7 +303,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public BasicResponse getCreateForm(adTypeRequest adsType){
+	public BasicResponse getCreateForm(adTypeRequest adsType, Long category){
 
 		InputStream is = null;
 		BasicResponse response = new BasicResponse();
@@ -311,7 +313,8 @@ public class UserAdsServiceImpl implements UserAdsService {
 		if(adsType != null)
 		{
 			String adType = adsType.getAdsType().getType().toLowerCase();
-			is = new ClassPathResource("jsonFiles/"+adType+"Rs.json").getInputStream();
+			String path = "jsonFiles/"+adType+"Rs.json";
+			is = new ClassPathResource(path).getInputStream();
 		}
        
 		
@@ -342,7 +345,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 	
 	@Override
-	public BasicResponse getFilterForm(adTypeRequest adsType){
+	public BasicResponse getFilterForm(adTypeRequest adsType, Long category){
 
 		InputStream is = null;
 		BasicResponse response = new BasicResponse();

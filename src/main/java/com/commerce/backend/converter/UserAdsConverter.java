@@ -2,19 +2,25 @@ package com.commerce.backend.converter;
 
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.constants.FoodType;
+import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.constants.TrainningType;
 import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.model.dto.*;
 import com.commerce.backend.model.entity.*;
 import com.commerce.backend.model.request.userAds.AdsFiltrationRequest;
 import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
-import com.commerce.backend.service.UserAdsServiceImpl;
 
-import org.checkerframework.common.value.qual.ArrayLen;
 import org.json.JSONArray;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -22,14 +28,15 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
 import java.lang.reflect.Array;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import com.vividsolutions.jts.geom.PrecisionModel;
 
 @Component
 public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
@@ -39,12 +46,14 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
 
 	@Autowired
 	private UserRepository user;
+	
+	private final static GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), SystemConstant.COORDINATE_SYSTEM); 
     @Override
     public UserAdsVO apply(UserAds userAds) {
         return null;
     }
     private static final Logger loggerS = LoggerFactory.getLogger(UserAdsConverter.class);
-    public UserAds convertRequestToEntity(DynamicAdsRequest<String, Object> request)
+    public UserAds convertRequestToEntity(DynamicAdsRequest<String, Object> request)  throws ParseException
     {
         UserAds entity = null;
         if(request.getType() == AdsType.ACCESSORIES) {
@@ -66,7 +75,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
      * url option link should return name, nameAr, id at least
      * 
      */
-    private UserAds convertToEntity(DynamicAdsRequest<String, Object> request, UserAds entity) {
+    private UserAds convertToEntity(DynamicAdsRequest<String, Object> request, UserAds entity)  throws ParseException {
         List<HashMap<String, Object>> data = request.getUserAds();
        
         HashMap<String, Object> hashedData = new HashMap<String, Object>();
@@ -85,7 +94,15 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         entity.setLongitude(Double.parseDouble(String.valueOf(getHashMapKeyWithCheck(hashedData,"longitude", 0))));
         entity.setLatitude(Double.parseDouble(String.valueOf(getHashMapKeyWithCheck(hashedData,"latitude", 0))));
         entity.setCreatedAt((new Date()));
-        entity.setUpdatedAt((new Date()));
+        //entity.setUpdatedAt((new Date()));
+        
+        Coordinate coordinate = new Coordinate();
+        
+        coordinate.x = entity.getLongitude();
+        coordinate.y = entity.getLatitude();
+        
+        String pointStr = String.format("POINT (%s %s)",entity.getLongitude(), entity.getLatitude());
+        entity.setCoordinates(wktToGeometry(pointStr));
         Object itemImage = getHashMapKeyWithCheck(hashedData,"image", 2);
         if(itemImage != null) {
         	if(itemImage instanceof ArrayList) {
@@ -131,6 +148,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             ((UserPetAds)entity).setPlayWithKids(hashedData.get("playwithkids").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setPassport(hashedData.get("passport").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setVaccinationCertifcate(hashedData.get("vaccinationcertificate").toString().equalsIgnoreCase(String.valueOf(true)));
+            ((UserPetAds)entity).setCategory(category);
         }
        
         if(request.getType() == AdsType.ACCESSORIES) {
@@ -138,10 +156,13 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             ((UserAccAds)entity).setUsed((Boolean) hashedData.get("used"));
 			ItemCategory category = new ItemCategory();
 			category.setId(Long.parseLong(String.valueOf(hashedData.get("category"))));
-			//((UserAccAds)entity).setItemCategoryId(category);
+			((UserAccAds)entity).setItemCategoryId(category);
         }
         else if(request.getType() == AdsType.PET_CARE) {
             ((UserMedicalAds)entity).setAllowServiceAtHome((Boolean) hashedData.get("allow_at_home"));
+            MedicalCategory medCategory = new MedicalCategory();
+            medCategory.setId(Long.parseLong(String.valueOf(getHashMapKeyWithCheck(hashedData,"category", 0))));
+            ((UserMedicalAds)entity).setMedicalCategoryType(medCategory);
         }
         else if(request.getType() == AdsType.SERVICE) {
 			((UserServiceAds)entity).setAllowServiceAtHome(Boolean.parseBoolean(String.valueOf(getHashMapKeyWithCheck(hashedData,"allow_at_home", 1))));
@@ -151,6 +172,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
 			 ((UserServiceAds)entity).setServiceCategory(serviceCategory);
 			 this.loggerS.info("Passss create");
         }
+        
         return entity;
     }
     
@@ -170,6 +192,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
     	return null;
     return "N/A";
     }
+    
     private  class Valid{
        public boolean success;
        public String msg;
@@ -339,5 +362,9 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         }
         return query;
     }
+    
+    public Geometry wktToGeometry(String wellKnownText) throws ParseException {
+    		    return new WKTReader().read(wellKnownText);
+    		}
     
 }

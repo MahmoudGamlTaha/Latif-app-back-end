@@ -16,7 +16,7 @@ import java.util.List;
 
 public interface UserAdsService {
     ProductDetailsResponse findByUrl(String url);
-
+    @Deprecated
     BasicResponse getAll(AdsType type , LocationRequest location, Integer page, Integer size, String sort, Long category, Float minPrice, Float maxPrice);
    
     Long getAllCount(UserAdsVO userAdsVO, Float minPrice, Float maxPrice);
@@ -41,13 +41,15 @@ public interface UserAdsService {
 
 	Long getAllCount(String category, Float minPrice, Float maxPrice, String color);
 
-    BasicResponse getCreateForm(adTypeRequest petType);
+    BasicResponse getCreateForm(adTypeRequest petType, Long category);
     
-    BasicResponse getFilterForm(adTypeRequest petType);
+    BasicResponse getFilterForm(adTypeRequest petType, Long category);
 
     <T> UserAdsVO savePet(UserPetsAdsRequest userPetsAdsRequest);
 
     BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size);
 
     BasicResponse adsFiltration(AdsFiltrationRequest<String, Object> request, Pageable pageable);
+
+    BasicResponse findNearby(AdsType Type, double longitude, double latitude, Integer distance, Integer page, Integer size, Long cat_id);
 }
