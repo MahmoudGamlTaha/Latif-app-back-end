@@ -229,33 +229,33 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             {
                 sql += " AND breed LIKE :breed ";
             }
-            if(data.get("weaned") != null && data.get("weaned").equals(true))
+            if(data.get("weaned") != null )
             {
-                sql += " AND weaned = true";
+                sql += " AND weaned = :weaned";
             }
-            if(data.get("neutering") != null && data.get("neutering").equals(true))
+            if(data.get("neutering") != null)
             {
-                sql += " AND weaned = true";
+                sql += " AND neutering = :neutering";
             }
-            if(data.get("vaccinationCertificate") != null && data.get("vaccinationCertificate").equals(true))
+            if(data.get("vaccinationCertificate") != null)
             {
-                sql += " AND vaccination_certificate = true";
+                sql += " AND vaccination_certificate = :vC";
             }
-            if(data.get("passport") != null && data.get("passport").equals(true))
+            if(data.get("passport") != null)
             {
-                sql += " AND passport = true";
+                sql += " AND passport = :passport";
             }
-            if(data.get("playWithKids") != null && data.get("playWithKids").equals(true))
+            if(data.get("playWithKids") != null)
             {
-                sql += " AND play_with_kids = true";
+                sql += " AND play_with_kids = :playWithKids";
             }
-            if(data.get("diseasesDisabilities") != null && data.get("diseasesDisabilities").equals(true))
+            if(data.get("diseasesDisabilities") != null)
             {
-                sql += " AND diseases_disabilities = true";
+                sql += " AND diseases_disabilities = :diseasesDisabilities";
             }
-            if(data.get("barkingProblem") != null && data.get("barkingProblem").equals(true))
+            if(data.get("barkingProblem") != null)
             {
-                sql += " AND barking_problem = true";
+                sql += " AND barking_problem = :barkingProblem";
             }
             if(data.get("training") != null)
             {
@@ -304,6 +304,34 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         if(data.get("food") != null)
         {
             query.setParameter("food", "%"+data.get("food")+"%");
+        }
+        if(data.get("weaned") != null)
+        {
+            query.setParameter("weaned", data.get("weaned"));
+        }
+        if(data.get("neutering") != null)
+        {
+            query.setParameter("neutering", data.get("neutering"));
+        }
+        if(data.get("vaccinationCertificate") != null)
+        {
+            query.setParameter("vC", data.get("vaccinationCertificate"));
+        }
+        if(data.get("passport") != null)
+        {
+            query.setParameter("passport", data.get("passport"));
+        }
+        if(data.get("playWithKids") != null)
+        {
+            query.setParameter("playWithKids", data.get("playWithKids"));
+        }
+        if(data.get("diseasesDisabilities") != null)
+        {
+            query.setParameter("diseasesDisabilities", data.get("diseasesDisabilities"));
+        }
+        if(data.get("barkingProblem") != null)
+        {
+            query.setParameter("barkingProblem", data.get("barkingProblem"));
         }
         if(data.get("price") != null)
         {
