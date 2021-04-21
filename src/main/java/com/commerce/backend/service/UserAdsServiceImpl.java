@@ -3,6 +3,7 @@ package com.commerce.backend.service;
 
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.constants.MessageType;
+import com.commerce.backend.constants.TrainningType;
 import com.commerce.backend.converter.UserAdsConverter;
 import com.commerce.backend.converter.UserAdsToVoConverter;
 import com.commerce.backend.dao.*;
@@ -12,6 +13,7 @@ import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
 import com.commerce.backend.model.request.userAds.LocationRequest;
 import com.commerce.backend.model.request.userAds.UserPetsAdsRequest;
 import com.commerce.backend.model.request.userAds.adTypeRequest;
+import com.commerce.backend.model.request.userAds.AdsFiltrationRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 
@@ -26,8 +28,6 @@ import java.util.*;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,12 +44,20 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import javax.xml.stream.Location;
+import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import static java.lang.System.currentTimeMillis;
 
 @Service
 public class UserAdsServiceImpl implements UserAdsService {
+
+	@PersistenceContext(type  =  PersistenceContextType.EXTENDED)
+	private EntityManager entityManager;
+
 	private UserPetsAdsRepository userPetsAdsRepository;
 	private UserServiceAdsRepository userServiceAdsRepository;
 	private UserItemsAdsRepository userItemsAdsRepository;
@@ -376,6 +384,20 @@ public class UserAdsServiceImpl implements UserAdsService {
 		}
 		return response;
 	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public BasicResponse adsFiltration(AdsFiltrationRequest<String, Object> ads, Pageable pageable) {
+		Query query = userAdsConverter.getQuery(ads);
+		List<UserAds> userAds = query
+				.setFirstResult(pageable.getPageNumber())
+				.setMaxResults(pageable.getPageSize())
+				.getResultList();
+		List<UserAdsVO> collect = new ArrayList<>();
+		userAds.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
+		return res(collect, true);
+	}
+
 
 	@Override
 	public <T> UserAdsVO savePet(UserPetsAdsRequest userPetsAdsRequest) {

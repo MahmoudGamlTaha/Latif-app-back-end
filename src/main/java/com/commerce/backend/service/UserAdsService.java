@@ -6,9 +6,9 @@ import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
 import com.commerce.backend.model.request.userAds.LocationRequest;
 import com.commerce.backend.model.request.userAds.UserPetsAdsRequest;
 import com.commerce.backend.model.request.userAds.adTypeRequest;
+import com.commerce.backend.model.request.userAds.AdsFiltrationRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
-import org.json.simple.JSONObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,6 +46,10 @@ public interface UserAdsService {
     BasicResponse getFilterForm(adTypeRequest petType, Long category);
 
     <T> UserAdsVO savePet(UserPetsAdsRequest userPetsAdsRequest);
+
+    BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size);
+
+    BasicResponse adsFiltration(AdsFiltrationRequest<String, Object> request, Pageable pageable);
 
     BasicResponse findNearby(AdsType Type, double longitude, double latitude, Integer distance, Integer page, Integer size, Long cat_id);
 }
