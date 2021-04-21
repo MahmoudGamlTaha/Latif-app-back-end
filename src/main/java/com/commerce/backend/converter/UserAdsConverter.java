@@ -188,7 +188,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         }
         if(data.get("name") != null)
         {
-            sql += " AND name LIKE :name ";
+            sql += " AND name LIKE :name % ";
         }
         if(data.get("code") != null)
         {
@@ -202,10 +202,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         {
             sql += " AND allow_at_home = true ";
         }
-        if(data.get("description") != null)
-        {
-            sql += " AND description LIKE :description ";
-        }
+       
         if(data.get("short_description") != null)
         {
             sql += " AND short_description LIKE :short_description ";
