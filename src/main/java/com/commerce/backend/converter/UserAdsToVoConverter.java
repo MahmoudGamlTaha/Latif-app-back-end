@@ -139,15 +139,15 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			((UserPetAds)destination).setPetCategoryType(category);*/
 			((UserPetAds)destination).setBreed(((UserPetsAdsRequest)source.getUserAdsRequest()).getBreed());
 			((UserPetAds)destination).setBarkingProblem(((UserPetsAdsRequest)source.getUserAdsRequest()).getBarkingProblem());
-			//((UserPetAds)destination).setFood(((UserPetsAdsRequest)source.getUserAdsRequest()).getFood());
+		//	((UserPetAds)destination).setFood(((UserPetsAdsRequest)source.getUserAdsRequest()).getFood());
 			((UserPetAds)destination).setDiseasesDisabilities(((UserPetsAdsRequest)source.getUserAdsRequest()).getDiseasesDisabilities());;
 			((UserPetAds)destination).setDiseasesDisabilitiesDesc(((UserPetsAdsRequest)source.getUserAdsRequest()).getDiseasesDisabilitiesDesc());
 			((UserPetAds)destination).setNeutering(((UserPetsAdsRequest)source.getUserAdsRequest()).getNeutering());
-			//((UserPetAds)destination).setTraining(UserPetsAdsRequest.getTraining());
+		///	((UserPetAds)destination).setTraining(UserPetsAdsRequest.getTraining());
 			((UserPetAds)destination).setPlayWithKids(UserPetsAdsRequest.getPlayWithKids());
 			((UserPetAds)destination).setPassport(UserPetsAdsRequest.getPassport());
 		    ((UserPetAds)destination).setVaccinationCertifcate((UserPetsAdsRequest.getVaccinationCertificate()));;
-			//((UserPetAds)destination).setImage(UserPetsAdsRequest.getImage().getName());
+			((UserPetAds)destination).setImage(UserPetsAdsRequest.getImage().getName());
 
 
 		}
@@ -155,14 +155,13 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			((UserMedicalAds)destination).setAllowServiceAtHome(((UserMedicalAdsRequest) source.getUserAdsRequest()).getAvaliable_at_home());
 		}
 		else if(source.getType() == AdsType.SERVICE) {
-		/*	UserServiceAdsRequest UserServiceAdsRequest = (UserServiceAdsRequest) source.getUserAdsRequest();
+			UserServiceAdsRequest UserServiceAdsRequest = (UserServiceAdsRequest) source.getUserAdsRequest();
 			((UserServiceAds)destination).setAllowServiceAtHome(UserServiceAdsRequest.getAvaliable_at_home());
 			ServiceCategory serviceCategory = new ServiceCategory();
 			serviceCategory.setId((UserServiceAdsRequest.getCategory_id()));
 				((UserServiceAds)destination).setServiceCategory(serviceCategory);
-			UserServiceAdsRequest.setCategory_type_id(UserServiceAdsRequest.getCategory_type_id());*/
-		//	((UserServiceAds)destination).setServiceCategory(serviceCategory);
-	//		source.getUserServiceAdsRequest().setCategory_type_id(source.getUserServiceAdsRequest().getCategory_type_id());
+			UserServiceAdsRequest.setCategory_type_id(UserServiceAdsRequest.getCategory_type_id());
+		   ((UserServiceAds)destination).setServiceCategory(serviceCategory);
 
 		}
 		return destination;
