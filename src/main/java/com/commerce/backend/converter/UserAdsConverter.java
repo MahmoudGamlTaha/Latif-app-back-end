@@ -1,7 +1,6 @@
 package com.commerce.backend.converter;
 
 import com.commerce.backend.constants.AdsType;
-import com.commerce.backend.constants.FoodType;
 import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.constants.TrainningType;
 import com.commerce.backend.dao.UserRepository;
@@ -10,7 +9,6 @@ import com.commerce.backend.model.entity.*;
 import com.commerce.backend.model.request.userAds.AdsFiltrationRequest;
 import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
 
-import org.json.JSONArray;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
@@ -20,14 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
-import java.lang.reflect.Array;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -203,15 +199,15 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         HashMap<String, Object> data = ads.getUserAds().get(0);
         String sql = "SELECT user_ads.*, ST_Distance(user_ads.geom, poi) / 1000 AS distance_km "
                 + "            FROM user_ads user_ads, "
-                + "            (select ST_MakePoint(:longitude, :latitude) as poi) as poi "
-                + "            WHERE ST_DWithin(user_ads.geom, poi, :distance) AND type = :type";
+                + "            (SELECT ST_MakePoint(?1, ?2) as poi) as poi "
+                + "            WHERE ST_DWithin(user_ads.geom, poi, ?3) AND type = ?4";
 
-        if(data.get("category") != null) {
-            sql += " AND category_id = :category ";
+    /*    if(data.get("category") != null) {
+            sql += " AND category_id = ?5 ";
         }
         if(data.get("name") != null)
         {
-            sql += " AND name LIKE :name % ";
+            sql += " AND name LIKE :name ";
         }
         if(data.get("code") != null)
         {
@@ -251,31 +247,31 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             }
             if(data.get("weaned") != null )
             {
-                sql += " AND weaned = :weaned";
+                sql += " AND weaned = :weaned ";
             }
             if(data.get("neutering") != null)
             {
-                sql += " AND neutering = :neutering";
+                sql += " AND neutering = :neutering ";
             }
             if(data.get("vaccinationCertificate") != null)
             {
-                sql += " AND vaccination_certificate = :vC";
+                sql += " AND vaccination_certificate = :vC ";
             }
             if(data.get("passport") != null)
             {
-                sql += " AND passport = :passport";
+                sql += " AND passport = :passport ";
             }
             if(data.get("playWithKids") != null)
             {
-                sql += " AND play_with_kids = :playWithKids";
+                sql += " AND play_with_kids = :playWithKids ";
             }
             if(data.get("diseasesDisabilities") != null)
             {
-                sql += " AND diseases_disabilities = :diseasesDisabilities";
+                sql += " AND diseases_disabilities = :diseasesDisabilities ";
             }
             if(data.get("barkingProblem") != null)
             {
-                sql += " AND barking_problem = :barkingProblem";
+                sql += " AND barking_problem = :barkingProblem ";
             }
             if(data.get("training") != null)
             {
@@ -285,21 +281,25 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             {
                 sql += " AND food LIKE :food ";
             }
-        }
+        }*/
 
         sql += " ORDER BY ST_Distance(geom, poi) ";
-        Query query = entityManager.createNativeQuery(sql, UserAds.class)
-                .setParameter("longitude", data.get("longitude"))
-                .setParameter("latitude", data.get("latitude"))
-                .setParameter("distance", data.get("distance"))
-                .setParameter("type", ads.getType().getType());
-
-        if(data.get("category") != null) {
+        Double distance = Double.parseDouble(this.getHashMapKeyWithCheck(data, "distance", 0).toString()) ;
+        distance =  distance == 0 ? SystemConstant.DISTANCE: distance;
+        Query query = entityManager.createNativeQuery(sql, UserAds.class)              
+                .setParameter(1, Double.parseDouble(this.getHashMapKeyWithCheck(data, "longitude", 0).toString()))
+                .setParameter(2,  Double.parseDouble(this.getHashMapKeyWithCheck(data, "latitude", 0).toString()))
+                .setParameter(3, distance)
+                .setParameter(4, ads.getType().getType());
+        this.loggerS.info("dataxx: "+ query.getParameterValue(1));
+        this.loggerS.info("dataxx: "+ query.getParameterValue(2));
+        this.loggerS.info("dataxx: "+ query.getParameterValue(3));
+      /*  if(data.get("category") != null) {
             query.setParameter("category", data.get("category"));
         }
         if(data.get("name") != null)
         {
-            query.setParameter("name", "%"+data.get("name")+"%");
+            query.setParameter("name", data.get("name")+"%");
         }
         if(data.get("code") != null)
         {
@@ -307,23 +307,23 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         }
         if(data.get("description") != null)
         {
-            query.setParameter("description", "%"+data.get("description")+"%");
+            query.setParameter("description", data.get("description")+"%");
         }
         if(data.get("short_description") != null)
         {
-            query.setParameter("short_description", "%"+data.get("short_description")+"%");
+            query.setParameter("short_description", data.get("short_description")+"%");
         }
         if(data.get("breed") != null)
         {
-            query.setParameter("breed", "%"+data.get("breed")+"%");
+            query.setParameter("breed", data.get("breed")+"%");
         }
         if(data.get("training") != null)
         {
-            query.setParameter("training", "%"+data.get("training")+"%");
+            query.setParameter("training", data.get("training")+"%");
         }
         if(data.get("food") != null)
         {
-            query.setParameter("food", "%"+data.get("food")+"%");
+            query.setParameter("food", data.get("food")+"%");
         }
         if(data.get("weaned") != null)
         {
@@ -359,12 +359,13 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             Integer prTo = (Integer) data.get("price") / 2 + (Integer) data.get("price");
             query.setParameter("from", prFrom);
             query.setParameter("to", prTo);
-        }
+        }*/
+   //    this.loggerS.info("dataxx: "+ query.getParameterValue("longitude"));
         return query;
     }
     
     public Geometry wktToGeometry(String wellKnownText) throws ParseException {
     		    return new WKTReader().read(wellKnownText);
-    		}
+    }
     
 }

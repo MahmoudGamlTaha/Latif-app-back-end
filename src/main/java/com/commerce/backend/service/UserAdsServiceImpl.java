@@ -442,6 +442,11 @@ public class UserAdsServiceImpl implements UserAdsService {
 		}
 		return true;
 	}
+    @Deprecated
+	@Override
+	public BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size) {
+		return null;
+	}
 
 
 }

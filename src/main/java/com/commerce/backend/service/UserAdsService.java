@@ -32,7 +32,6 @@ public interface UserAdsService {
 
     List<UserAdsVO> getNearByAdsByCategory(AdsType adsType, Long Category);
     
-    
     List<UserAdsVO> getInterested(Long userId, String token);
   
     BasicResponse createUserAds(DynamicAdsRequest<String, Object> ads,List<String> xfiles ,List<MultipartFile> file, boolean external);

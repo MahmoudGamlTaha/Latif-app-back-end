@@ -28,11 +28,11 @@ public class CustomUserAdsCriteriaHelper {
 		 		+ "            WHERE ST_DWithin(user_ads.geom, poi, ?3) ";
 		 
 		 if(category != null) {
-			 sql += " AND category_id = ?4 ";
+			 sql += " AND category_id = ?5 ";
 		 }
 		 
 		 if(type != null) {
-			 sql += " AND type = '"+type.getType()+"' ";
+			 sql += " AND type = ?4 ";
 		 }
 		 sql += " ORDER BY ST_Distance(geom, poi) ";
 		 this.loggerS.info("query:" + sql);
@@ -40,8 +40,11 @@ public class CustomUserAdsCriteriaHelper {
 		  query.setParameter(1, longitude);
 		  query.setParameter(2, latitude);
 		  query.setParameter(3, distance);
+		  if(type.getType() != null) {
+			  query.setParameter(4, type.getType());
+		  }
 		  if(category != null) {
-			  query.setParameter(4, category);
+			  query.setParameter(5, category);
 		  }
 		  
 		  this.loggerS.warn("page number %i", pageable.getPageNumber());

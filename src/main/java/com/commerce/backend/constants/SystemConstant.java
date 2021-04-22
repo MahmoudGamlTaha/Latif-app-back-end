@@ -2,7 +2,7 @@ package com.commerce.backend.constants;
 
 public class SystemConstant {
   public final static Integer MOBILE_PAGE_SIZE = 20;
-  public final static Integer DISTANCE = 100000;
+  public final static Integer DISTANCE = 115*1000;
   public final static Integer COORDINATE_SYSTEM = 4326;
   public final static String USER_ADS_SELECTION = "user_ads.id, user_ads.category_id,user_ads.code,"
   		+ " user_ads.price, user_ads.date_of_birth, user_ads.breed,"

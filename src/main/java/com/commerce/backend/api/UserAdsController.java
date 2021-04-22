@@ -30,7 +30,7 @@ public class UserAdsController extends PublicApiController {
     public UserAdsController(UserAdsService userAdsService) {
         this.userAdsService = userAdsService;
     }
-
+    
 
     @GetMapping(value = "/ads")
     @ResponseBody
@@ -69,7 +69,11 @@ public class UserAdsController extends PublicApiController {
         Long productCount = userAdsService.getAllCount(category, minPrice, maxPrice, color);
         return new ResponseEntity<>(productCount, HttpStatus.OK);
     }
-
+    
+    @PostMapping(value = "/ads/ads-filtration")
+    public ResponseEntity<BasicResponse> adsFiltration(@RequestBody AdsFiltrationRequest<String, Object> request, Pageable pageable) {
+        return new ResponseEntity<BasicResponse>(userAdsService.adsFiltration(request, pageable), HttpStatus.OK);
+    }
        
     @GetMapping(value = "/ads/nearest")
     @ResponseBody
@@ -172,12 +176,6 @@ public class UserAdsController extends PublicApiController {
         }
         List<UserAdsVO> userAdsVO = userAdsService.getRelatedAds(userAds);
         return new ResponseEntity<>(userAdsVO, HttpStatus.OK);
-    }
-
-
-    @PostMapping(value = "/ads/ads-filtration")
-    public ResponseEntity<BasicResponse> adsFiltration(@RequestBody AdsFiltrationRequest<String, Object> request, Pageable pageable) {
-        return new ResponseEntity<BasicResponse>(userAdsService.adsFiltration(request, pageable), HttpStatus.OK);
     }
 
    /* @GetMapping(value = "/ads/recent")
