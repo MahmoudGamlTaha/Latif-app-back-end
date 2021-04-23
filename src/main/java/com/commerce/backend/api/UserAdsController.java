@@ -9,6 +9,8 @@ import com.commerce.backend.model.request.userAds.AdsFiltrationRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 import com.commerce.backend.service.UserAdsService;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 
@@ -71,8 +73,9 @@ public class UserAdsController extends PublicApiController {
     }
     
     @PostMapping(value = "/ads/ads-filtration")
-    public ResponseEntity<BasicResponse> adsFiltration(@RequestBody AdsFiltrationRequest<String, Object> request, Pageable pageable) {
-        return new ResponseEntity<BasicResponse>(userAdsService.adsFiltration(request, pageable), HttpStatus.OK);
+    public ResponseEntity<BasicResponse> adsFiltration(@RequestBody AdsFiltrationRequest<String, Object> filterRequest) {
+    	Pageable pageable = PageRequest.of(0, SystemConstant.MOBILE_PAGE_SIZE);
+        return new ResponseEntity<BasicResponse>(userAdsService.adsFiltration(filterRequest, pageable), HttpStatus.OK);
     }
        
     @GetMapping(value = "/ads/nearest")
@@ -131,19 +134,6 @@ public class UserAdsController extends PublicApiController {
     	 return new ResponseEntity<BasicResponse>(response, status); 
     }
     
-
-    @PostMapping(value = "/ads/food/create")
-    public ResponseEntity<UserAdsVO> createFoodAds(@RequestBody UserPetsAdsRequest userPetsAdsRequest){
-    	
-    	return null;
-    }
-    @PostMapping(value = "/ads/service/create")
-    public ResponseEntity<UserAdsVO> createServiceAds(@RequestBody UserPetsAdsRequest userPetsAdsRequest){
-    	
-    	return null;
-    }
-
-
     @GetMapping(value = "/ads/get-create-form")
     @ResponseBody
     public ResponseEntity<BasicResponse> getCreateForm(@RequestParam(value = "adType",required = true) AdsType adType, @RequestParam(value = "cat_id",required = false) Optional<Long> cat_id) throws Exception {

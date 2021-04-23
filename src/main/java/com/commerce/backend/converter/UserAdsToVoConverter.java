@@ -2,6 +2,7 @@ package com.commerce.backend.converter;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import com.commerce.backend.model.request.userAds.*;
@@ -223,16 +224,19 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		    ((UserPetAdsVO)destination).setWeaned(((UserPetAds)source).getWeaned());
 		    ((UserPetAdsVO)destination).setStock(((UserPetAdsVO)destination).getStock());
 		    if(((UserPetAdsVO)destination).getImages() != null){
-		    	((UserPetAdsVO)destination).setImage(((UserPetAdsVO)destination).getImages().stream().findFirst().get().getImage());
+		    	Optional<UserAdsImageVO> adsImage = ((UserPetAdsVO)destination).getImages().stream().findFirst();
+		    	if(adsImage.isPresent()) {
+		    	((UserPetAdsVO)destination).setImage(adsImage.get().getImage());
+		    	}
 		    
 		    }
 		    PetCategory category = ((UserPetAds)source).getCategory();
-		    //String categoryName = category == null ?null:category.getName();
-		    //if(categoryName != null) {
-		    //((UserPetAdsVO)destination).setCategoryName(categoryName);
-		    //((UserPetAdsVO)destination).setCategoryNameAr(category.getNameAr());
-		    //((UserPetAdsVO)destination).setCategoryId(category.getId());
-		    //}
+		    String categoryName = category == null ?null:category.getName();
+		    if(categoryName != null) {
+		    ((UserPetAdsVO)destination).setCategoryName(categoryName);
+		    ((UserPetAdsVO)destination).setCategoryNameAr(category.getNameAr());
+		    ((UserPetAdsVO)destination).setCategoryId(category.getId());
+		    }
 		}
 		if(source.getType() == AdsType.SERVICE) {
 			ServiceCategory category = ((UserServiceAds)source).getServiceCategory();

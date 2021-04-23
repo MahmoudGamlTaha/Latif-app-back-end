@@ -76,8 +76,6 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
        
         HashMap<String, Object> hashedData = new HashMap<String, Object>();
         for(HashMap<String, Object> d: data){
-        	this.loggerS.info(String.valueOf(d.get("value")));
-        	this.loggerS.info("XXXXXXXXXXXXXXXXXXX");
         	hashedData.put(d.get("id").toString().toLowerCase(), d.get("value"));
         }
      
@@ -196,26 +194,29 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
 
     public Query getQuery (AdsFiltrationRequest<String, Object> ads)
     {
-        HashMap<String, Object> data = ads.getUserAds().get(0);
+        List<HashMap<String, Object>> filterRequest = ads.getUserAds();
+        HashMap<String, Object> data = new HashMap<String, Object>();
+     //   HashMap<String, Integer> keyVariable = new HashMap<String, Integer>();
+        
         String sql = "SELECT user_ads.*, ST_Distance(user_ads.geom, poi) / 1000 AS distance_km "
                 + "            FROM user_ads user_ads, "
-                + "            (SELECT ST_MakePoint(?1, ?2) as poi) as poi "
-                + "            WHERE ST_DWithin(user_ads.geom, poi, ?3) AND type = ?4";
-
-    /*    if(data.get("category") != null) {
-            sql += " AND category_id = ?5 ";
+                + "            (SELECT ST_MakePoint(:long, :lat) as poi) as poi "
+                + "            WHERE ST_DWithin(user_ads.geom, poi, :dist) AND type = :type";
+        for(HashMap<String, Object> d: filterRequest){
+        	data.put(d.get("id").toString().toLowerCase(), d.get("value"));
+        }
+        
+        if(data.get("category") != null) {
+            sql += " AND category_id = :cat";
         }
         if(data.get("name") != null)
         {
-            sql += " AND name LIKE :name ";
+            sql += " AND name LIKE :name";
         }
-        if(data.get("code") != null)
+     
+        if(data.get("active") != null)
         {
-            sql += " AND code = :code ";
-        }
-        if(data.get("active") != null && data.get("active").equals(true))
-        {
-            sql += " AND active = true ";
+            sql += " AND active = :active";//+variable++;
         }
         if(data.get("allow_at_home") != null && data.get("allow_at_home").equals(true))
         {
@@ -253,7 +254,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             {
                 sql += " AND neutering = :neutering ";
             }
-            if(data.get("vaccinationCertificate") != null)
+            if(data.get("vaccinationcertificate") != null)
             {
                 sql += " AND vaccination_certificate = :vC ";
             }
@@ -261,17 +262,17 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             {
                 sql += " AND passport = :passport ";
             }
-            if(data.get("playWithKids") != null)
+            if(data.get("playwithkids") != null)
             {
                 sql += " AND play_with_kids = :playWithKids ";
             }
             if(data.get("diseasesDisabilities") != null)
             {
-                sql += " AND diseases_disabilities = :diseasesDisabilities ";
+                sql += " AND diseases_disabilities = :diseasesdisabilities ";
             }
             if(data.get("barkingProblem") != null)
             {
-                sql += " AND barking_problem = :barkingProblem ";
+                sql += " AND barking_problem = :barkingproblem ";
             }
             if(data.get("training") != null)
             {
@@ -281,29 +282,29 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             {
                 sql += " AND food LIKE :food ";
             }
-        }*/
+        }
 
         sql += " ORDER BY ST_Distance(geom, poi) ";
         Double distance = Double.parseDouble(this.getHashMapKeyWithCheck(data, "distance", 0).toString()) ;
         distance =  distance == 0 ? SystemConstant.DISTANCE: distance;
         Query query = entityManager.createNativeQuery(sql, UserAds.class)              
-                .setParameter(1, Double.parseDouble(this.getHashMapKeyWithCheck(data, "longitude", 0).toString()))
-                .setParameter(2,  Double.parseDouble(this.getHashMapKeyWithCheck(data, "latitude", 0).toString()))
-                .setParameter(3, distance)
-                .setParameter(4, ads.getType().getType());
-        this.loggerS.info("dataxx: "+ query.getParameterValue(1));
-        this.loggerS.info("dataxx: "+ query.getParameterValue(2));
-        this.loggerS.info("dataxx: "+ query.getParameterValue(3));
-      /*  if(data.get("category") != null) {
-            query.setParameter("category", data.get("category"));
+                .setParameter("long", Double.parseDouble(this.getHashMapKeyWithCheck(data, "longitude", 0).toString()))
+                .setParameter("lat",  Double.parseDouble(this.getHashMapKeyWithCheck(data, "latitude", 0).toString()))
+                .setParameter("dist", distance)
+                .setParameter("type", ads.getType().getType());
+        this.loggerS.info("dataxxtude: "+data.get("longitude"));
+       
+        if(data.get("category") != null) {
+            query.setParameter("cat", data.get("category"));
         }
         if(data.get("name") != null)
         {
             query.setParameter("name", data.get("name")+"%");
         }
-        if(data.get("code") != null)
+        
+        if(data.get("active") != null)
         {
-            query.setParameter("code", data.get("code"));
+        	 query.setParameter("active", Boolean.parseBoolean(data.get("active").toString()));
         }
         if(data.get("description") != null)
         {
@@ -335,7 +336,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         }
         if(data.get("vaccinationCertificate") != null)
         {
-            query.setParameter("vC", data.get("vaccinationCertificate"));
+            query.setParameter("vC", data.get("vaccinationcertificate"));
         }
         if(data.get("passport") != null)
         {
@@ -343,15 +344,15 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         }
         if(data.get("playWithKids") != null)
         {
-            query.setParameter("playWithKids", data.get("playWithKids"));
+            query.setParameter("playWithKids", data.get("playwithkids"));
         }
         if(data.get("diseasesDisabilities") != null)
         {
-            query.setParameter("diseasesDisabilities", data.get("diseasesDisabilities"));
+            query.setParameter("diseasesDisabilities", data.get("diseasesdisabilities"));
         }
         if(data.get("barkingProblem") != null)
         {
-            query.setParameter("barkingProblem", data.get("barkingProblem"));
+            query.setParameter("barkingProblem", data.get("barkingproblem"));
         }
         if(data.get("price") != null)
         {
@@ -359,8 +360,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             Integer prTo = (Integer) data.get("price") / 2 + (Integer) data.get("price");
             query.setParameter("from", prFrom);
             query.setParameter("to", prTo);
-        }*/
-   //    this.loggerS.info("dataxx: "+ query.getParameterValue("longitude"));
+        }
         return query;
     }
     

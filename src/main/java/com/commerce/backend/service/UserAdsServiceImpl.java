@@ -309,11 +309,13 @@ public class UserAdsServiceImpl implements UserAdsService {
 		BasicResponse response = new BasicResponse();
 		HashMap<String, Object> mapResponse = new HashMap<String, Object>(); 
 		try {
+			
 		is = new ClassPathResource("jsonFiles/basicResponse.json").getInputStream();
 		if(adsType != null)
 		{
 			String adType = adsType.getAdsType().getType().toLowerCase();
 			String path = "jsonFiles/"+adType+"Rs.json";
+			
 			is = new ClassPathResource(path).getInputStream();
 		}
        
