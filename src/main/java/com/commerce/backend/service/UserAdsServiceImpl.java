@@ -62,7 +62,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	private UserServiceAdsRepository userServiceAdsRepository;
 	private UserItemsAdsRepository userItemsAdsRepository;
 	private UserMedicalAdsRepository userMedicalAdsRepository;
-	
+	private ItemObjectCategoryService itemCategory;
 	private UserAdsToVoConverter userAdsToVoConverter;
 	private UserAdsConverter userAdsConverter;
 	private UserAdsImageRepository userAdsImageRepository;
@@ -79,7 +79,8 @@ public class UserAdsServiceImpl implements UserAdsService {
 							  UserAdsToVoConverter userAdsToVoConverter, UserAdsConverter userAdsConverter,
 							  UserAdsImageRepository userAdsImageRepository,
 							  CustomUserAdsRepo repo,
-							  CustomUserAdsCriteriaHelper customUserAdsCriteriaHelper) {
+							  CustomUserAdsCriteriaHelper customUserAdsCriteriaHelper,
+							  ItemObjectCategoryService itemCategory) {
 	
 
 	
@@ -93,6 +94,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		this.userAdsImageRepository = userAdsImageRepository;
 		this.repo = repo;
 		this.customUserAdsCriteriaHelper = customUserAdsCriteriaHelper;
+		this.itemCategory = itemCategory;
 	}
 
 	public UserAdsServiceImpl() {
@@ -305,19 +307,22 @@ public class UserAdsServiceImpl implements UserAdsService {
 	public BasicResponse getCreateForm(adTypeRequest adsType, Long category){
 
 		InputStream is = null;
+		String adType = null;
+		ClassPathResource filePath = null;
 		BasicResponse response = new BasicResponse();
 		HashMap<String, Object> mapResponse = new HashMap<String, Object>(); 
 		try {
-			
-		is = new ClassPathResource("jsonFiles/basicResponse.json").getInputStream();
-		if(adsType != null)
-		{
-			String adType = adsType.getAdsType().getType().toLowerCase();
-			String path = "jsonFiles/"+adType+"Rs.json";
-			
-			is = new ClassPathResource(path).getInputStream();
-		}
-       
+			if(category != null)
+			{
+				adType = itemCategory.findById(category).getName().toLowerCase();
+				filePath = new ClassPathResource("jsonFiles/"+adType+"Rs.json");
+			}
+			if (filePath == null || !filePath.exists())
+			{
+				adType = adsType.getAdsType().getType().toLowerCase();
+				filePath = new ClassPathResource("jsonFiles/"+adType+"Rs.json");
+			}
+			is = filePath.getInputStream();
 		
 			JSONParser jsonParser = new JSONParser();
 			JSONObject jsonObject = (JSONObject)jsonParser.parse(
@@ -349,17 +354,22 @@ public class UserAdsServiceImpl implements UserAdsService {
 	public BasicResponse getFilterForm(adTypeRequest adsType, Long category){
 
 		InputStream is = null;
+		String adType = null;
+		ClassPathResource filePath = null;
 		BasicResponse response = new BasicResponse();
 		HashMap<String, Object> mapResponse = new HashMap<String, Object>(); 
 		try {
-		is = new ClassPathResource("jsonFilter/basicResponse.json").getInputStream();
-		if(adsType != null)
-		{
-			String adType = adsType.getAdsType().getType().toLowerCase();
-			is = new ClassPathResource("jsonFilter/"+adType+"Rs.json").getInputStream();
-		}
-       
-		
+			if(category != null)
+			{
+				adType = itemCategory.findById(category).getName().toLowerCase();
+				filePath = new ClassPathResource("jsonFilter/"+adType+"Rs.json");
+			}
+			if (filePath == null || !filePath.exists())
+			{
+				adType = adsType.getAdsType().getType().toLowerCase();
+				filePath = new ClassPathResource("jsonFilter/"+adType+"Rs.json");
+			}
+			is = filePath.getInputStream();
 			JSONParser jsonParser = new JSONParser();
 			JSONObject jsonObject = (JSONObject)jsonParser.parse(
 					new InputStreamReader(is, StandardCharsets.UTF_8));

@@ -142,6 +142,12 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 	}
 
 	@Override
+	@Cacheable(key = "#id")
+	public ItemObjectCategory findById(Long id) {
+		return itemObjectRepository.findById(id).orElse(null);
+	}
+
+	@Override
 	public BasicResponse findAllByTypeId(Integer id, Integer page) {
 		BasicResponse categoryByType = new BasicResponse();
 		HashMap<String, Object> response = new HashMap<String, Object>();
