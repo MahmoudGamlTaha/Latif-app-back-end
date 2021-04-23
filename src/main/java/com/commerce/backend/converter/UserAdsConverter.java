@@ -200,22 +200,22 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         String sql = "SELECT user_ads.*, ST_Distance(user_ads.geom, poi) / 1000 AS distance_km "
                 + "            FROM user_ads user_ads, "
                 + "            (SELECT ST_MakePoint(:long, :lat) as poi) as poi "
-                + "            WHERE ST_DWithin(user_ads.geom, poi, :dist) AND type = :type";
+                + "            WHERE ST_DWithin(user_ads.geom, poi, :dist) AND type = :type ";
         for(HashMap<String, Object> d: filterRequest){
         	data.put(d.get("id").toString().toLowerCase(), d.get("value"));
         }
         
         if(data.get("category") != null) {
-            sql += " AND category_id = :cat";
+            sql += " AND category_id = :cat ";
         }
         if(data.get("name") != null)
         {
-            sql += " AND name LIKE :name";
+            sql += " AND name LIKE :name ";
         }
      
         if(data.get("active") != null)
         {
-            sql += " AND active = :active";//+variable++;
+            sql += " AND active = :active ";//+variable++;
         }
         if(data.get("allow_at_home") != null && data.get("allow_at_home").equals(true))
         {
@@ -228,7 +228,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         }
         if(data.get("price") != null)
         {
-            sql += " AND price BETWEEN  :from AND :to";
+            sql += " AND price BETWEEN  :from AND :to ";
         }
 
         if(ads.getType().getType().equals("ACCESSORIES"))
