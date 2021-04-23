@@ -2,12 +2,17 @@ package com.commerce.backend.converter;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import com.commerce.backend.model.request.userAds.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.commerce.backend.constants.AdsType;
+import com.commerce.backend.dao.ItemObjectCategoryRepository;
+import com.commerce.backend.dao.ServiceCategoryRepository;
 import com.commerce.backend.model.dto.ItemObjectCategoryVO;
 import com.commerce.backend.model.dto.UserAccVO;
 import com.commerce.backend.model.dto.UserAdsImageVO;
@@ -33,9 +38,10 @@ import java.util.function.Function;
 
 @Component
 public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
-
+    @Autowired
+	ItemObjectCategoryRepository itemObjectCategoryRepository;
+    
 	@Override
-
 	 public UserAdsVO apply( UserAds source) {
 		UserAdsVO userAdsVo = null;
       
@@ -186,7 +192,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 				 imgVo.setUserAdsId(source.getId());
 			     imageVos.add(imgVo);
 			 });
-  
+          
    	      destination.setImages(imageVos);
 		 }
 		User user = new User();
@@ -215,6 +221,15 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			((UserPetAdsVO)destination).setPlayWithKids(((UserPetAds)source).getPlayWithKids());
 			((UserPetAdsVO)destination).setPassport(((UserPetAds)source).getPassport());
 		    ((UserPetAdsVO)destination).setVaccinationCertificate(((UserPetAds)source).getVaccinationCertifcate());;
+		    ((UserPetAdsVO)destination).setWeaned(((UserPetAds)source).getWeaned());
+		    ((UserPetAdsVO)destination).setStock(((UserPetAdsVO)destination).getStock());
+		    if(((UserPetAdsVO)destination).getImages() != null){
+		    	Optional<UserAdsImageVO> adsImage = ((UserPetAdsVO)destination).getImages().stream().findFirst();
+		    	if(adsImage.isPresent()) {
+		    	((UserPetAdsVO)destination).setImage(adsImage.get().getImage());
+		    	}
+		    
+		    }
 		    PetCategory category = ((UserPetAds)source).getCategory();
 		    String categoryName = category == null ?null:category.getName();
 		    if(categoryName != null) {
@@ -225,6 +240,8 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		}
 		if(source.getType() == AdsType.SERVICE) {
 			ServiceCategory category = ((UserServiceAds)source).getServiceCategory();
+			 //ItemObjectCategory orgCategory = this.itemObjectCategoryRepository.findById(category.getId()).orElse(null);
+		
 			if(category != null) {
 			((UserServiceVO)destination).setAllowAtHome(((UserServiceAds)source).getAllowServiceAtHome());
 			((UserServiceVO)destination).setCategoryId(category.getId());

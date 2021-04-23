@@ -77,6 +77,7 @@ public class UserPetAds extends UserAds {
 
 	@ManyToOne
 	@JoinColumn(name ="category_id")
+	@NotFound(action = NotFoundAction.IGNORE)
 	private PetCategory category;
 	
 }

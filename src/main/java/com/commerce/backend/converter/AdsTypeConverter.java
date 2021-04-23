@@ -21,7 +21,6 @@ public class AdsTypeConverter implements AttributeConverter<AdsType, String> {
 
 	@Override
 	public AdsType convertToEntityAttribute(String dbData) {
-		System.out.println("tttt:"+dbData);
 		 if(dbData == null) {
 			 return AdsType.ALL;
 		 }

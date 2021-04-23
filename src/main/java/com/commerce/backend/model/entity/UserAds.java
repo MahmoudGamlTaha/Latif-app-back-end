@@ -8,9 +8,16 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.hibernate.annotations.Type;
+import org.locationtech.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 
 import com.commerce.backend.constants.AdsType;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.commerce.backend.helper.JsonToPointDeserializer;
+import com.commerce.backend.helper.PointToJsonSerializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -31,7 +38,7 @@ public class UserAds {
 	//@Column(name = "id")
     private long id;
 	
-	@Column(name = "code", length = 250, unique = true)
+	@Column(name = "code", length = 250, unique = true, nullable = true)
 	private String code;
 	
 	@Column(name = "city", length = 100)
@@ -74,6 +81,11 @@ public class UserAds {
 	
 	@Column(name = "external_link")
 	private Boolean externalLink;  
+	@Setter(onMethod_ = {@JsonSerialize(using = PointToJsonSerializer.class)})
+	@Getter(onMethod_ = {@JsonDeserialize(contentUsing = JsonToPointDeserializer.class)} )
+	@Column(columnDefinition = "Geometry", name = "geom", nullable = true)
+	private Geometry coordinates;
+	
 	
 	@OneToMany(mappedBy="userAdsImage", cascade = CascadeType.ALL)
 	//@OneToMany(cascade = CascadeType.ALL)

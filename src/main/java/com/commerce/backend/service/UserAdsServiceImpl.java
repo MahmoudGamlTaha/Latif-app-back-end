@@ -3,6 +3,7 @@ package com.commerce.backend.service;
 
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.constants.MessageType;
+import com.commerce.backend.constants.TrainningType;
 import com.commerce.backend.converter.UserAdsConverter;
 import com.commerce.backend.converter.UserAdsToVoConverter;
 import com.commerce.backend.dao.*;
@@ -12,6 +13,7 @@ import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
 import com.commerce.backend.model.request.userAds.LocationRequest;
 import com.commerce.backend.model.request.userAds.UserPetsAdsRequest;
 import com.commerce.backend.model.request.userAds.adTypeRequest;
+import com.commerce.backend.model.request.userAds.AdsFiltrationRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 
@@ -26,8 +28,6 @@ import java.util.*;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,12 +44,20 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import javax.xml.stream.Location;
+import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import static java.lang.System.currentTimeMillis;
 
 @Service
 public class UserAdsServiceImpl implements UserAdsService {
+
+	@PersistenceContext(type  =  PersistenceContextType.EXTENDED)
+	private EntityManager entityManager;
+
 	private UserPetsAdsRepository userPetsAdsRepository;
 	private UserServiceAdsRepository userServiceAdsRepository;
 	private UserItemsAdsRepository userItemsAdsRepository;
@@ -59,6 +67,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	private UserAdsConverter userAdsConverter;
 	private UserAdsImageRepository userAdsImageRepository;
 	private CustomUserAdsRepo repo;
+	private CustomUserAdsCriteriaHelper customUserAdsCriteriaHelper;
 	private final Path rootLocation = Paths.get("upload");
 	@Value("${swagger.host.path}")
 	private String path;
@@ -67,7 +76,10 @@ public class UserAdsServiceImpl implements UserAdsService {
 	public UserAdsServiceImpl(UserAdsRepository userAdsRepository, UserPetsAdsRepository userPetsAdsRepository,
 							  UserServiceAdsRepository userServiceAdsRepository,
 							  UserItemsAdsRepository userItemsAdsRepository, UserMedicalAdsRepository userMedicalAdsRepository,
-							  UserAdsToVoConverter userAdsToVoConverter, UserAdsConverter userAdsConverter, UserAdsImageRepository userAdsImageRepository, CustomUserAdsRepo repo) {
+							  UserAdsToVoConverter userAdsToVoConverter, UserAdsConverter userAdsConverter,
+							  UserAdsImageRepository userAdsImageRepository,
+							  CustomUserAdsRepo repo,
+							  CustomUserAdsCriteriaHelper customUserAdsCriteriaHelper) {
 	
 
 	
@@ -80,6 +92,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		this.userAdsConverter = userAdsConverter;
 		this.userAdsImageRepository = userAdsImageRepository;
 		this.repo = repo;
+		this.customUserAdsCriteriaHelper = customUserAdsCriteriaHelper;
 	}
 
 	public UserAdsServiceImpl() {
@@ -179,23 +192,20 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size)
+	public BasicResponse findNearby(AdsType type ,double longitude, double latitude, Integer distance, Integer page, Integer size, Long category)
 	{
 		try {
-		Pageable pageable = Pageable.unpaged();
-		if(page != null && size != null)
-		{
-			pageable = PageRequest.of(page, size);
-		}
-		List<UserAds> ads = repo.findNearest(longitude, latitude, distance, pageable);
+			
+		Pageable pageable = PageRequest.of(page, size);
+		List<UserAds> ads = customUserAdsCriteriaHelper.findNearestByCategory(type, longitude, latitude, distance, pageable, category);
 		List<UserAdsVO> collect = new ArrayList<>();
 		ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 		return res(collect, true);
 		}catch(Exception ex) {
-			
 			return res(ex, false);
 		}
 	}
+	@Deprecated
 	@Override
 	public List<UserAdsVO> getNearByAdsByCategory(AdsType adsType, Long Category) {
 		// TODO Auto-generated method stub
@@ -221,7 +231,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		HashMap<String, Object> map = new HashMap<>();
 
 		if( obj instanceof Exception) {
-		 map.put(MessageType.Data.getMessage(), ((Exception) obj).getMessage());
+		 map.put(MessageType.Data.getMessage(), ((Exception) obj).getStackTrace());
 		} else {
 			map.put(MessageType.Data.getMessage(),  obj);
 		}
@@ -260,7 +270,6 @@ public class UserAdsServiceImpl implements UserAdsService {
 		}
 		else if(ads.getType() == AdsType.PETS || ads.getType() == AdsType.Dogs) {
 			//((UserPetAds) entity).setImage("upload/"+ ads.getType() + file.get(0).getName());	
-			
 	    	this.userPetsAdsRepository.save((UserPetAds)entity);
 		}
 		else if(ads.getType() == AdsType.SERVICE) {
@@ -293,17 +302,20 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public BasicResponse getCreateForm(adTypeRequest adsType){
+	public BasicResponse getCreateForm(adTypeRequest adsType, Long category){
 
 		InputStream is = null;
 		BasicResponse response = new BasicResponse();
 		HashMap<String, Object> mapResponse = new HashMap<String, Object>(); 
 		try {
+			
 		is = new ClassPathResource("jsonFiles/basicResponse.json").getInputStream();
 		if(adsType != null)
 		{
 			String adType = adsType.getAdsType().getType().toLowerCase();
-			is = new ClassPathResource("jsonFiles/"+adType+"Rs.json").getInputStream();
+			String path = "jsonFiles/"+adType+"Rs.json";
+			
+			is = new ClassPathResource(path).getInputStream();
 		}
        
 		
@@ -334,7 +346,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 	
 	@Override
-	public BasicResponse getFilterForm(adTypeRequest adsType){
+	public BasicResponse getFilterForm(adTypeRequest adsType, Long category){
 
 		InputStream is = null;
 		BasicResponse response = new BasicResponse();
@@ -373,6 +385,20 @@ public class UserAdsServiceImpl implements UserAdsService {
 		}
 		return response;
 	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public BasicResponse adsFiltration(AdsFiltrationRequest<String, Object> ads, Pageable pageable) {
+		Query query = userAdsConverter.getQuery(ads);
+		List<UserAds> userAds = query
+				.setFirstResult(pageable.getPageNumber())
+				.setMaxResults(pageable.getPageSize())
+				.getResultList();
+		List<UserAdsVO> collect = new ArrayList<>();
+		userAds.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
+		return res(collect, true);
+	}
+
 
 	@Override
 	public <T> UserAdsVO savePet(UserPetsAdsRequest userPetsAdsRequest) {
@@ -416,6 +442,11 @@ public class UserAdsServiceImpl implements UserAdsService {
 			return false;
 		}
 		return true;
+	}
+    @Deprecated
+	@Override
+	public BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size) {
+		return null;
 	}
 
 

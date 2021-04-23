@@ -5,10 +5,13 @@ import com.commerce.backend.model.entity.UserPetAds;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-
+// criteria bulider 
+// check this link https://stackoverflow.com/questions/29604734/how-to-use-native-sql-as-a-fragment-where-clause-of-a-bigger-query-made-with-c
+@Repository
 public interface CustomUserAdsRepo extends JpaRepository<UserAds, Long> {
 
     @Query(value="SELECT user_ads.*, ST_Distance(geom, poi)/1000 AS distance_km " +
@@ -28,6 +31,7 @@ public interface CustomUserAdsRepo extends JpaRepository<UserAds, Long> {
             countQuery = "SELECT count(*) from user_ads, (select ST_MakePoint(?1,?2) as poi) as poi  WHERE ST_DWithin(geom, poi, ?3)",
             nativeQuery = true)
     List<UserAds> findNearest(double longitude, double latitude, Integer distance, Pageable pageable);
+
 
     Page<UserAds> findUserAdsByType(String type, Pageable pageable);
 }

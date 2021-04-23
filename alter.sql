@@ -1,3 +1,9 @@
+insert into item_category(id,name,name_ar, is_external_link,active,"type")values(nextval('item_category_sequence'), 'Vertenary', 'بيطري',true,true,4);
+insert into item_category(id,name,name_ar, is_external_link,active,"type")values(nextval('item_category_sequence'), 'Pharmacy&Medicine', 'صيدلية',true,true,4);
+--_________________________________________
+ALTER TABLE public.category_type ADD code varchar(250);
+update category_type set code = name;
+--________________________________________________________________________________
 insert into item_category(id,name,name_ar, is_external_link,active,"type")values(nextval('item_category_sequence'), 'Housing', 'فندقة',true,true,3);
 insert into item_category(id,name,name_ar, is_external_link,active,"type")values(nextval('item_category_sequence'), 'Hostly', 'ايواء',true,true,3);
 insert into item_category(id,name,name_ar, is_external_link,active,"type")values(nextval('item_category_sequence'), 'Delivery', 'توصيل',true,true,2);
