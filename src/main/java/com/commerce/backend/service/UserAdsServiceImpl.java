@@ -270,7 +270,6 @@ public class UserAdsServiceImpl implements UserAdsService {
 		}
 		else if(ads.getType() == AdsType.PETS || ads.getType() == AdsType.Dogs) {
 			//((UserPetAds) entity).setImage("upload/"+ ads.getType() + file.get(0).getName());	
-			
 	    	this.userPetsAdsRepository.save((UserPetAds)entity);
 		}
 		else if(ads.getType() == AdsType.SERVICE) {
