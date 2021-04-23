@@ -196,7 +196,6 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
     {
         List<HashMap<String, Object>> filterRequest = ads.getUserAds();
         HashMap<String, Object> data = new HashMap<String, Object>();
-     //   HashMap<String, Integer> keyVariable = new HashMap<String, Integer>();
         
         String sql = "SELECT user_ads.*, ST_Distance(user_ads.geom, poi) / 1000 AS distance_km "
                 + "            FROM user_ads user_ads, "
@@ -292,7 +291,6 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
                 .setParameter("lat",  Double.parseDouble(this.getHashMapKeyWithCheck(data, "latitude", 0).toString()))
                 .setParameter("dist", distance)
                 .setParameter("type", ads.getType().getType());
-        this.loggerS.info("dataxxtude: "+data.get("longitude"));
        
         if(data.get("category") != null) {
             query.setParameter("cat", data.get("category"));
