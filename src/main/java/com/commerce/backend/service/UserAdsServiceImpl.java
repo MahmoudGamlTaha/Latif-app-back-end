@@ -9,11 +9,7 @@ import com.commerce.backend.converter.UserAdsToVoConverter;
 import com.commerce.backend.dao.*;
 import com.commerce.backend.model.dto.*;
 import com.commerce.backend.model.entity.*;
-import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
-import com.commerce.backend.model.request.userAds.LocationRequest;
-import com.commerce.backend.model.request.userAds.UserPetsAdsRequest;
-import com.commerce.backend.model.request.userAds.adTypeRequest;
-import com.commerce.backend.model.request.userAds.AdsFiltrationRequest;
+import com.commerce.backend.model.request.userAds.*;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 
@@ -37,6 +33,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -155,7 +152,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 				Page<UserAds> ads = repo.findUserAdsByType(type.getType(), pageable);
 				ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 			}
-			return res(collect, true);
+			return res(collect, true, "Success");
 		 
 		}catch(Exception ex) {
 			
@@ -202,9 +199,9 @@ public class UserAdsServiceImpl implements UserAdsService {
 		List<UserAds> ads = customUserAdsCriteriaHelper.findNearestByCategory(type, longitude, latitude, distance, pageable, category);
 		List<UserAdsVO> collect = new ArrayList<>();
 		ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
-		return res(collect, true);
+		return res(collect, true, "Success");
 		}catch(Exception ex) {
-			return res(ex, false);
+			return res(ex, false, "Failed");
 		}
 	}
 	@Deprecated
@@ -219,15 +216,15 @@ public class UserAdsServiceImpl implements UserAdsService {
 		try{
 			UserAds ad = (UserAds) repo.findById(id).orElse(null);
 			UserAdsVO vo = userAdsToVoConverter.apply(ad);
-			return res(vo, true);
+			return res(vo, true, "Failed");
 		}
 		catch (Exception e)
 		{
-			return res(e, false);
+			return res(e, false, "Failed");
 		}
 	}
 
-	public BasicResponse res(Object obj, boolean sucess )
+	public BasicResponse res(Object obj, boolean sucess , String msg)
 	{
 		BasicResponse res = new BasicResponse();
 		HashMap<String, Object> map = new HashMap<>();
@@ -237,6 +234,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		} else {
 			map.put(MessageType.Data.getMessage(),  obj);
 		}
+		res.setMsg(msg);
 		res.setSuccess(sucess);
 		res.setResponse(map);
 		return res;
@@ -295,6 +293,31 @@ public class UserAdsServiceImpl implements UserAdsService {
 		
 	}
 	return response;
+	}
+
+	@Override
+	public BasicResponse updateUserAds(UpdateAdRequest<String, Object> request, List<String> fileList, List<MultipartFile> files) {
+		if(request.getId() == null)
+		{
+			return res("null value", false, "Failed");
+		}
+		try {
+			UserAds ad = repo.findById(request.getId()).orElse(null);
+			if(ad == null)
+			{
+				return res("Not Found", false, "Failed");
+			}
+			if(fileList != null || files != null)
+			{
+				this.saveEntityFiles(ad, fileList, files, ad.getType(), ad.getExternalLink());
+			}
+			UserAds dd = userAdsConverter.updateAd(request, ad);
+			UserAdsVO updatedAd = userAdsToVoConverter.apply(repo.save(dd));
+			return res(updatedAd, true, "success");
+		}catch (Exception ex)
+		{
+			return res(ex, false, "Failed");
+		}
 	}
 
 	@Override
@@ -406,7 +429,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 				.getResultList();
 		List<UserAdsVO> collect = new ArrayList<>();
 		userAds.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
-		return res(collect, true);
+		return res(collect, true, "Success");
 	}
 
 

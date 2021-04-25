@@ -133,6 +133,11 @@ public class UserAdsController extends PublicApiController {
     	}
     	 return new ResponseEntity<BasicResponse>(response, status); 
     }
+
+    @PostMapping(value = "/ads/update")
+    public ResponseEntity<BasicResponse> updateUserAds(@RequestBody UpdateAdRequest<String, Object> request, @RequestParam(required = false) List<String> fileList, @RequestParam(required = false) List<MultipartFile> files) {
+        return new ResponseEntity<BasicResponse>(userAdsService.updateUserAds(request, fileList, files), HttpStatus.OK);
+    }
     
     @GetMapping(value = "/ads/get-create-form")
     @ResponseBody

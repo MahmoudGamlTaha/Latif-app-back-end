@@ -9,6 +9,7 @@ import com.commerce.backend.model.entity.*;
 import com.commerce.backend.model.request.userAds.AdsFiltrationRequest;
 import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
 
+import com.commerce.backend.model.request.userAds.UpdateAdRequest;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
@@ -186,7 +187,166 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
     	return null;
     return "N/A";
     }
-    
+
+    public UserAds updateAd(UpdateAdRequest<String, Object> request, UserAds ad) throws ParseException {
+        HashMap<String, Object> data = new HashMap<String, Object>();
+        for(HashMap<String, Object> d: request.getUserAds()){
+            data.put(d.get("id").toString().toLowerCase(), d.get("value"));
+        }
+        if(data.get("name") != null)
+        {
+            ad.setName(String.valueOf(data.get("name")));
+        }
+        if(data.get("code") != null)
+        {
+            ad.setCode(String.valueOf(data.get("code")));
+        }
+        if(data.get("active") != null)
+        {
+            ad.setActive(Boolean.parseBoolean(String.valueOf(data.get("active"))));
+        }
+        if(data.get("short_description") != null)
+        {
+            ad.setShortDescription(String.valueOf(data.get("short_description")));
+        }
+        if(data.get("description") != null)
+        {
+            ad.setDescription(String.valueOf(data.get("description")));
+        }
+        if(data.get("price") != null)
+        {
+            ad.setPrice(Float.parseFloat(String.valueOf(data.get("price"))));
+        }
+        ad.setUpdatedAt(new Date());
+        if(data.get("longitude") != null && data.get("latitude") != null)
+        {
+            ad.setLongitude(Double.parseDouble(String.valueOf(getHashMapKeyWithCheck(data,"longitude", 0))));
+            ad.setLatitude(Double.parseDouble(String.valueOf(getHashMapKeyWithCheck(data,"latitude", 0))));
+
+            Coordinate coordinate = new Coordinate();
+
+            coordinate.x = ad.getLongitude();
+            coordinate.y = ad.getLatitude();
+
+            String pointStr = String.format("POINT (%s %s)",ad.getLongitude(), ad.getLatitude());
+            ad.setCoordinates(wktToGeometry(pointStr));
+        }
+        if(data.get("image") != null)
+        {
+            Object itemImage = getHashMapKeyWithCheck(data,"image", 2);
+            if(itemImage != null) {
+                if(itemImage instanceof ArrayList) {
+                    List<?> imgList = (List<?>)itemImage;
+                    Set<UserAdsImage> images = new HashSet<UserAdsImage>();
+                    imgList.forEach(item -> {
+                        UserAdsImage image = new UserAdsImage();
+                        image.setImage(item.toString());
+                        image.setIsExternalLink(ad.getExternalLink());
+                        image.setUserAdsImage(ad);
+                        images.add(image);
+                        ad.getUserAdsImage().add(image);
+                       });
+                }
+            }
+        }
+        if(ad.getType().equals(AdsType.PET_CARE))
+        {
+            if(data.get("allow_at_home") != null)
+            {
+                ((UserServiceAds) ad).setAllowServiceAtHome(Boolean.parseBoolean(String.valueOf(data.get("allow_at_home"))));
+            }
+            if(data.get("category") != null)
+            {
+                MedicalCategory medCategory = new MedicalCategory();
+                medCategory.setId(Long.parseLong(String.valueOf(getHashMapKeyWithCheck(data,"category", 0))));
+                ((UserMedicalAds)ad).setMedicalCategoryType(medCategory);
+            }
+        }
+        else if(ad.getType().equals(AdsType.SERVICE))
+        {
+            if(data.get("allow_at_home") != null)
+            {
+                ((UserServiceAds) ad).setAllowServiceAtHome(Boolean.parseBoolean(String.valueOf(data.get("allow_at_home"))));
+            }
+            if(data.get("category") != null)
+            {
+                ServiceCategory serviceCategory = new ServiceCategory();
+                serviceCategory.setId(Long.parseLong(String.valueOf(getHashMapKeyWithCheck(data,"category", 1))));
+                ((UserServiceAds)ad).setServiceCategory(serviceCategory);
+            }
+        }else if(ad.getType().equals(AdsType.ACCESSORIES))
+        {
+            if(data.get("used") != null)
+            {
+                ((UserAccAds)ad).setUsed(Boolean.parseBoolean(String.valueOf(data.get("used"))));
+            }
+            if(data.get("category") != null) {
+                ItemCategory category = new ItemCategory();
+                category.setId(Long.parseLong(String.valueOf(data.get("category"))));
+                ((UserAccAds) ad).setItemCategoryId(category);
+            }
+        }else if(ad.getType().equals(AdsType.PETS))
+        {
+            if(data.get("category") != null)
+            {
+                PetCategory category = new PetCategory();
+                category.setId(Long.parseLong(String.valueOf(getHashMapKeyWithCheck(data,"category", 0))));
+                ((UserPetAds)ad).setCategory(category);
+            }
+            if(ad.getType() == AdsType.Dogs) {
+                if(data.get("barkingProblem") != null)
+                {
+                    ((UserPetAds)ad).setBarkingProblem(Boolean.parseBoolean(String.valueOf(data.get("barkingProblem"))));
+                }
+            }
+            if(data.get("breed") != null)
+            {
+                ((UserPetAds)ad).setBreed(String.valueOf(data.get("breed")));
+            }
+            if(data.get("weaned") != null )
+            {
+                ((UserPetAds)ad).setWeaned(Boolean.parseBoolean(String.valueOf(data.get("weaned"))));
+            }
+            if(data.get("neutering") != null)
+            {
+                ((UserPetAds)ad).setNeutering(Boolean.parseBoolean(String.valueOf(data.get("neutering"))));
+            }
+            if(data.get("vaccinationCertificate") != null)
+            {
+                ((UserPetAds)ad).setVaccinationCertifcate(Boolean.parseBoolean(String.valueOf(data.get("vaccinationCertificate"))));
+            }
+            if(data.get("passport") != null)
+            {
+                ((UserPetAds)ad).setPassport(Boolean.parseBoolean(String.valueOf(data.get("passport"))));
+            }
+            if(data.get("playWithKids") != null)
+            {
+                ((UserPetAds)ad).setPlayWithKids(Boolean.parseBoolean(String.valueOf(data.get("playWithKids"))));
+            }
+            if(data.get("diseasesDisabilities") != null)
+            {
+                ((UserPetAds)ad).setDiseasesDisabilities(Boolean.parseBoolean(String.valueOf(data.get("diseasesDisabilities"))));
+            }
+            if(data.get("diseasesDisabilitiesDesc") != null)
+            {
+                ((UserPetAds)ad).setDiseasesDisabilitiesDesc(String.valueOf(data.get("diseasesDisabilitiesDesc")));
+            }
+            if(data.get("training") != null)
+            {
+                ((UserPetAds)ad).setTraining(TrainningType.valueOf(String.valueOf(data.get("training"))));
+            }
+            if(data.get("food") != null)
+            {
+                ((UserPetAds)ad).setFood(String.valueOf(data.get("name")));
+            }
+            if(data.get("stock") != null)
+            {
+                ((UserPetAds)ad).setStock((Integer) data.get("stock"));
+            }
+        }
+        return ad;
+    }
+
     private  class Valid{
        public boolean success;
        public String msg;
