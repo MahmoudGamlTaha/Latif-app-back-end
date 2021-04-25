@@ -91,7 +91,8 @@ public class UserAdsController extends PublicApiController {
                                                   
     {
     	distance = distance == null? SystemConstant.DISTANCE: distance;
-        BasicResponse res = userAdsService.findNearby(type.orElse(null),longitude, latitude, distance, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), category);
+    	
+        BasicResponse res = userAdsService.findNearby(type.orElse(AdsType.ALL),longitude, latitude, distance, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), category);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
  
@@ -136,19 +137,19 @@ public class UserAdsController extends PublicApiController {
     
     @GetMapping(value = "/ads/get-create-form")
     @ResponseBody
-    public ResponseEntity<BasicResponse> getCreateForm(@RequestParam(value = "adType",required = true) AdsType adType, @RequestParam(value = "cat_id",required = false) Optional<Long> cat_id) throws Exception {
+    public ResponseEntity<BasicResponse> getCreateForm(@RequestParam(value = "adType",required = true) AdsType adType, @RequestParam(value = "category",required = false) Optional<Long> category) throws Exception {
     	adTypeRequest adRequest = new adTypeRequest();
      	adRequest.setAdsType(adType);	
-    	return new ResponseEntity<BasicResponse>(userAdsService.getCreateForm(adRequest, cat_id.orElse(null)), HttpStatus.OK);
+    	return new ResponseEntity<BasicResponse>(userAdsService.getCreateForm(adRequest, category.orElse(null)), HttpStatus.OK);
     }
     
     @GetMapping(value = "/ads/get-filter-form")
     @ResponseBody
-    public ResponseEntity<BasicResponse> getFilterForm(@RequestParam(value = "adType",required = true) AdsType adType, @RequestParam(value = "category",required = false) Optional<Long> cat_id) throws Exception {
+    public ResponseEntity<BasicResponse> getFilterForm(@RequestParam(value = "adType",required = true) AdsType adType, @RequestParam(value = "category",required = false) Optional<Long> category) throws Exception {
     	adTypeRequest adRequest = new adTypeRequest();
     	adRequest.setAdsType(adType);
     	
-    	return new ResponseEntity<BasicResponse>(userAdsService.getFilterForm(adRequest, cat_id.orElse(null)), HttpStatus.OK);
+    	return new ResponseEntity<BasicResponse>(userAdsService.getFilterForm(adRequest, category.orElse(null)), HttpStatus.OK);
     }
     /* @GetMapping(value = "/ads/{url}")
     public ResponseEntity<ProductDetailsResponse> getByUrl(@PathVariable("url") String url) {

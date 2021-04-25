@@ -57,7 +57,12 @@ public class BlogCategoryCacheService {
     {
         BlogCategory cat = BlogCategory.builder()
                 .name(category.getName())
+                .nameAr(category.getNameAr())
                 .description(category.getDescription())
+                .externalLink(category.getExternal_link())
+                .active(category.isActive())
+                .icon(category.getIcon())
+                .iconSelect(category.getIcon_select())
                 .created_at(new Date())
                 .build();
         BlogCategory category1 = repo.save(cat);

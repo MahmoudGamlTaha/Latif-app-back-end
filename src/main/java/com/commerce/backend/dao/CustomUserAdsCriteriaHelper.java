@@ -22,40 +22,51 @@ public class CustomUserAdsCriteriaHelper {
 	private static final Logger loggerS = LoggerFactory.getLogger(CustomUserAdsCriteriaHelper.class);
 	@SuppressWarnings("unchecked")
 	public List<UserAds> findNearestByCategory(AdsType type, double longitude, double latitude, Integer distance, Pageable pageable, Long category){
-		 String sql = "SELECT user_ads.*, ST_Distance(user_ads.geom, poi) / 1000 AS distance_km "
+		 String sql = "SELECT page_info.* ,user_ads.*, ST_Distance(user_ads.geom, poi) / 1000 AS distance_km "
 		 		+ "            FROM user_ads user_ads, "
-		 		+ "            (select ST_MakePoint(?1, ?2) as poi) as poi "
-		 		+ "            WHERE ST_DWithin(user_ads.geom, poi, ?3) ";
-		 
+		 		+ "            (select ST_MakePoint(:long, :lat) as poi) as poi, page_quey "
+		 		+ "            WHERE ST_DWithin(user_ads.geom, poi, :dist) ";
+	     
+		 String paging = "(select count(*) total_item, count(*)/:size total_page from user_ads  WHERE ST_DWithin(user_ads.geom,  ST_MakePoint(:long, :lat), :dist)";
+		 if(type != AdsType.ALL) {
+			 sql += " AND type = :type ";
+			 paging+=" AND type = :type ";
+		 }
 		 if(category != null) {
-			 sql += " AND category_id = ?5 ";
+			 sql += " AND category_id = :cat ";
+			 paging+=" AND category_id = :cat ";
 		 }
-		 
-		 if(type != null) {
-			 sql += " AND type = ?4 ";
-		 }
+		
 		 sql += " ORDER BY ST_Distance(geom, poi) ";
+		
+		 paging +=") as page_info";
+		 sql = sql.replace("page_quey", paging);
 		 this.loggerS.info("query:" + sql);
 		 Query query = this.entityManager.createNativeQuery(sql, UserAds.class);
-		  query.setParameter(1, longitude);
-		  query.setParameter(2, latitude);
-		  query.setParameter(3, distance);
-		  if(type.getType() != null) {
-			  query.setParameter(4, type.getType());
+		  query.setParameter("long", longitude);
+		  query.setParameter("lat", latitude);
+		  query.setParameter("dist", distance);
+		  query.setParameter("size", pageable.getPageSize());
+		  if(type !=  AdsType.ALL) {
+			  query.setParameter("type", type.getType());
 		  }
 		  if(category != null) {
-			  query.setParameter(5, category);
+			  query.setParameter("cat", category);
 		  }
-		  
-		  this.loggerS.warn("page number %i", pageable.getPageNumber());
-		
+		    	
 		  List<UserAds> userAds = query.
-				                       setFirstResult(pageable.getPageNumber())
+				                       setFirstResult((int) pageable.getOffset())
 				                     //  .unwrap(org.hibernate.query.NativeQuery.class)
 				                    //   .addScalar("geom", new GeolatteGeometryType(PGGeometryTypeDescriptor.INSTANCE))
 				                         .setMaxResults(pageable.getPageSize())
-	     			                     .getResultList();
-	
+				                       
+	     			                     .getResultList();	
+		userAds.stream().forEach(arg0 ->
+		{
+			this.loggerS.info("VV"+String.valueOf(arg0.getTotalPage()));
+			this.loggerS.info("TT"+String.valueOf(arg0.getTotalItem()));
+		});
+		
 		 return userAds;
 	 }
 }

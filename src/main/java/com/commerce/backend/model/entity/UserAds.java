@@ -23,7 +23,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+@SqlResultSetMapping( //
+	    name = "user_ads", //
+	    classes = @ConstructorResult(targetClass = UserAds.class, //
+	        columns = { //
+	            @ColumnResult(name = "total_item", type = long.class), //
+	            @ColumnResult(name = "total_page", type = long.class) //
+	        }))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -81,16 +87,23 @@ public class UserAds {
 	
 	@Column(name = "external_link")
 	private Boolean externalLink;  
+	
 	@Setter(onMethod_ = {@JsonSerialize(using = PointToJsonSerializer.class)})
 	@Getter(onMethod_ = {@JsonDeserialize(contentUsing = JsonToPointDeserializer.class)} )
 	@Column(columnDefinition = "Geometry", name = "geom", nullable = true)
 	private Geometry coordinates;
 	
 	
-	@OneToMany(mappedBy="userAdsImage", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="userAdsImage", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	//@OneToMany(cascade = CascadeType.ALL)
 	@NotFound(action = NotFoundAction.IGNORE)
-	@Setter(AccessLevel.PRIVATE)
 	private Set<UserAdsImage> userAdsImage = new HashSet<UserAdsImage>();
-  
+	@Transient
+	@Setter(AccessLevel.PRIVATE)
+	@Column(name = "total_page", insertable = false, updatable = false)
+	 private long totalPage;
+	@Transient
+	@Setter(AccessLevel.PRIVATE)
+	@Column(name = "total_item", insertable = false, updatable = false)
+	private long totalItem;
 }

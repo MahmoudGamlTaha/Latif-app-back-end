@@ -47,7 +47,7 @@ public class BlogCategoriesController extends PublicApiController{
     }
 
     @PostMapping("/blogCategory/create")
-    public BlogCategoryResponse createCategory(@RequestBody @Valid BlogCategoryRequest category)
+    public BasicResponse createCategory(@RequestBody @Valid BlogCategoryRequest category)
     {
         return blogCategoryService.createCategory(category);
     }
