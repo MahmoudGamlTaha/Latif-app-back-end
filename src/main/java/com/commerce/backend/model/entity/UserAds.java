@@ -94,14 +94,15 @@ public class UserAds {
 	private Geometry coordinates;
 	
 	
-	@OneToMany(mappedBy="userAdsImage", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="userAdsImage", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	//@OneToMany(cascade = CascadeType.ALL)
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Set<UserAdsImage> userAdsImage = new HashSet<UserAdsImage>();
-	
+	@Transient
 	@Setter(AccessLevel.PRIVATE)
 	@Column(name = "total_page", insertable = false, updatable = false)
 	 private long totalPage;
+	@Transient
 	@Setter(AccessLevel.PRIVATE)
 	@Column(name = "total_item", insertable = false, updatable = false)
 	private long totalItem;

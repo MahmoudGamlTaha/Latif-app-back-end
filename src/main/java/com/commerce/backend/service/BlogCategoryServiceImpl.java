@@ -110,9 +110,15 @@ public class BlogCategoryServiceImpl {
 
     }
 
-    public BlogCategoryResponse createCategory(@Valid BlogCategoryRequest blog)
+    public BasicResponse createCategory(@Valid BlogCategoryRequest blog)
     {
-        return cacheService.createCategory(blog);
+    	BlogCategoryResponse response = cacheService.createCategory(blog);
+    	BasicResponse res = new BasicResponse();
+    	HashMap<String, Object> keyResponse = new HashMap<String, Object>();
+    	res.setMsg(MessageType.Success.getMessage());
+    	res.setSuccess(true);
+    	keyResponse.put(MessageType.Data.getMessage(), response);
+        return res;
     }
     public BasicResponse deleteById(Long id)
     {
@@ -120,7 +126,7 @@ public class BlogCategoryServiceImpl {
         try {
             repo.deleteById(id);
             response.setSuccess(true);
-            response.setMsg("Removed");
+            response.setMsg(MessageType.Success.getMessage());
         }catch (Exception e){
             response.setSuccess(false);
             response.setMsg(e.getMessage());
