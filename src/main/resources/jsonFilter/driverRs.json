@@ -10,6 +10,6 @@
   {"name": "longitude", "type": "map","label": "Longitude", "required": true},
   {"name": "latitude", "type": "map","label": "Latitude", "required": true}
 ],
-"url": "/api/public/ads/create?type=DRIVER"
+ "url": "api/public/ads/ads-filtration"
 }
 

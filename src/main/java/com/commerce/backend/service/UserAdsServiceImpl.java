@@ -40,13 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import static java.lang.System.currentTimeMillis;
 
 @Service
@@ -63,14 +57,14 @@ public class UserAdsServiceImpl implements UserAdsService {
 	private UserAdsToVoConverter userAdsToVoConverter;
 	private UserAdsConverter userAdsConverter;
 	private UserAdsImageRepository userAdsImageRepository;
-	private CustomUserAdsRepo repo;
+	private CustomUserAdsRepo customUserAdsRepo;
 	private CustomUserAdsCriteriaHelper customUserAdsCriteriaHelper;
 	private final Path rootLocation = Paths.get("upload");
 	@Value("${swagger.host.path}")
 	private String path;
 	private static final Logger loggerS = LoggerFactory.getLogger(UserAdsServiceImpl.class);
 	@Autowired
-	public UserAdsServiceImpl(UserAdsRepository userAdsRepository, UserPetsAdsRepository userPetsAdsRepository,
+	public UserAdsServiceImpl(UserPetsAdsRepository userPetsAdsRepository,
 							  UserServiceAdsRepository userServiceAdsRepository,
 							  UserItemsAdsRepository userItemsAdsRepository, UserMedicalAdsRepository userMedicalAdsRepository,
 							  UserAdsToVoConverter userAdsToVoConverter, UserAdsConverter userAdsConverter,
@@ -89,7 +83,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		this.userAdsToVoConverter = userAdsToVoConverter;
 		this.userAdsConverter = userAdsConverter;
 		this.userAdsImageRepository = userAdsImageRepository;
-		this.repo = repo;
+		this.customUserAdsRepo = repo;
 		this.customUserAdsCriteriaHelper = customUserAdsCriteriaHelper;
 		this.itemCategory = itemCategory;
 	}
@@ -146,14 +140,14 @@ public class UserAdsServiceImpl implements UserAdsService {
 			List<UserAdsVO> collect = new ArrayList<>();
 			if(location != null)
 			{
-				Page<UserAds> ads = repo.findAll(location.getLongitude(), location.getLatitude(), type.getType(), pageable);
+				Page<UserAds> ads = customUserAdsRepo.findAll(location.getLongitude(), location.getLatitude(), type.getType(), pageable);
 				ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 			}else if(type != null){
-				Page<UserAds> ads = repo.findUserAdsByType(type.getType(), pageable);
+				Page<UserAds> ads = customUserAdsRepo.findUserAdsByType(type.getType(), pageable);
 				ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 			}
-			return res(collect, true, "Success");
-		 
+
+			return res(collect, true, null);
 		}catch(Exception ex) {
 			
 			 BasicResponse response = new BasicResponse();
@@ -197,11 +191,20 @@ public class UserAdsServiceImpl implements UserAdsService {
 			
 		Pageable pageable = PageRequest.of(page, size);
 		List<UserAds> ads = customUserAdsCriteriaHelper.findNearestByCategory(type, longitude, latitude, distance, pageable, category);
+		UserAds single = ads.stream().findFirst().orElse(null);
+		
 		List<UserAdsVO> collect = new ArrayList<>();
 		ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
-		return res(collect, true, "Success");
+
+		BasicResponse response = res(collect, true, pageable); 
+		if(single != null) {
+		 response.getResponse().put(MessageType.TotalItems.getMessage(), single.getTotalItem());
+		 response.getResponse().put(MessageType.TotalPages.getMessage(), single.getTotalPage() + 1);
+		}
+		 return response;
 		}catch(Exception ex) {
-			return res(ex, false, "Failed");
+			ex.printStackTrace();
+			return res(ex, false, null);
 		}
 	}
 	@Deprecated
@@ -214,33 +217,16 @@ public class UserAdsServiceImpl implements UserAdsService {
 	@Override
 	public BasicResponse findAdsById(Long id) {
 		try{
-			UserAds ad = (UserAds) repo.findById(id).orElse(null);
+			UserAds ad = (UserAds) customUserAdsRepo.findById(id).orElse(null);
 			UserAdsVO vo = userAdsToVoConverter.apply(ad);
-			return res(vo, true, "Failed");
+
+			return res(vo, true, null);
 		}
 		catch (Exception e)
 		{
-			return res(e, false, "Failed");
+			return res(e, false, null);
 		}
 	}
-
-	public BasicResponse res(Object obj, boolean sucess , String msg)
-	{
-		BasicResponse res = new BasicResponse();
-		HashMap<String, Object> map = new HashMap<>();
-
-		if( obj instanceof Exception) {
-		 map.put(MessageType.Data.getMessage(), ((Exception) obj).getStackTrace());
-		} else {
-			map.put(MessageType.Data.getMessage(),  obj);
-		}
-		res.setMsg(msg);
-		res.setSuccess(sucess);
-		res.setResponse(map);
-		return res;
-	}
-
-
 	@Override
 	public List<UserAdsVO> searchItemDisplay(String keyword, Integer page, Integer size) {
 		// TODO Auto-generated method stub
@@ -429,7 +415,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 				.getResultList();
 		List<UserAdsVO> collect = new ArrayList<>();
 		userAds.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
-		return res(collect, true, "Success");
+		return res(collect, true, pageable);
 	}
 
 
@@ -480,6 +466,24 @@ public class UserAdsServiceImpl implements UserAdsService {
 	@Override
 	public BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size) {
 		return null;
+	}
+    
+    public BasicResponse res(Object obj, boolean sucess, Pageable pageable  )
+	{
+		BasicResponse res = new BasicResponse();
+		HashMap<String, Object> map = new HashMap<>();
+
+		if( obj instanceof Exception) {
+		 map.put(MessageType.Data.getMessage(), ((Exception) obj).getStackTrace());
+		} else {
+			map.put(MessageType.Data.getMessage(),  obj);
+			if(pageable != null) {
+		    	map.put(MessageType.CurrentPage.getMessage(), pageable.getPageNumber());
+			}
+		}
+		res.setSuccess(sucess);
+		res.setResponse(map);
+		return res;
 	}
 
 

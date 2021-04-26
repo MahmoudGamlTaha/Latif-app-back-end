@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.commerce.backend.model.request.userAds.*;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +37,8 @@ import com.commerce.backend.model.request.userAds.UserAdsGeneralAdsRequest;
 
 import java.util.function.Function;
 
+import javax.transaction.Transactional;
+
 @Component
 public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
     @Autowired
@@ -44,7 +47,9 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 	@Override
 	 public UserAdsVO apply( UserAds source) {
 		UserAdsVO userAdsVo = null;
-      
+       if(source == null) {
+    	   return userAdsVo;
+       }
 		if(UserAds.class.cast(source).getType() == AdsType.ACCESSORIES) {
 			userAdsVo = new UserAccVO();
 		}
@@ -168,7 +173,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		}
 		return destination;
 	}
-
+ 
 	public UserAdsVO copyUserAdsEntityToVo(UserAds source, UserAdsVO destination) {
 		//assert(source.getType() == destination.getType());
 		destination.setId(source.getId());
@@ -183,6 +188,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		destination.setExternal_link(source.getExternalLink());
 		 Set<UserAdsImage> images = source.getUserAdsImage();
 		if(images != null) {
+			//Hibernate.initialize(images);
 			 Set<UserAdsImageVO> imageVos = new HashSet<UserAdsImageVO>();
 			 images.stream().forEach(img ->{
 				 UserAdsImageVO imgVo = new UserAdsImageVO();
