@@ -1,6 +1,6 @@
 {"form":[
   {"name": "name","type": "string", "label": "name", "label_ar": "اسم الخدمة", "required": true},
-  {"name": "category","type": "url_option", "label": "service type","label_ar": "نوع الخدمة", "url":"/api/public/cat-by-adType/type=2", "required": true},
+  {"name": "category","type": "url_option", "label": "service type","label_ar": "نوع الخدمة", "url":"/api/public/cat-by-adType/type=3", "required": true},
   {"name": "description", "type": "string","label": "Description", "required": true},
   {"name": "short_description", "type": "string","label": "Short Description", "required": true},
   {"name": "allow_at_home", "type": "boolean","label": "delivery at home", "required": true},
