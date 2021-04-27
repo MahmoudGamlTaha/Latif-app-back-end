@@ -285,24 +285,24 @@ public class UserAdsServiceImpl implements UserAdsService {
 	public BasicResponse updateUserAds(UpdateAdRequest<String, Object> request, List<String> fileList, List<MultipartFile> files) {
 		if(request.getId() == null)
 		{
-			return res("null value", false, "Failed");
+			return res(MessageType.Missing.getMessage(), false, null);
 		}
 		try {
-			UserAds ad = repo.findById(request.getId()).orElse(null);
+			UserAds ad = customUserAdsRepo.findById(request.getId()).orElse(null);
 			if(ad == null)
 			{
-				return res("Not Found", false, "Failed");
+				return res("Not Found", false, null);
 			}
 			if(fileList != null || files != null)
 			{
 				this.saveEntityFiles(ad, fileList, files, ad.getType(), ad.getExternalLink());
 			}
 			UserAds dd = userAdsConverter.updateAd(request, ad);
-			UserAdsVO updatedAd = userAdsToVoConverter.apply(repo.save(dd));
-			return res(updatedAd, true, "success");
+			UserAdsVO updatedAd = userAdsToVoConverter.apply(customUserAdsRepo.save(dd));
+			return res(updatedAd, true, null);
 		}catch (Exception ex)
 		{
-			return res(ex, false, "Failed");
+			return res(ex, false, null);
 		}
 	}
 
