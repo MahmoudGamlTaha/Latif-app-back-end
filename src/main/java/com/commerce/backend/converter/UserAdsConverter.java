@@ -355,28 +355,27 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
     public Query getQuery (AdsFiltrationRequest<String, Object> ads)
     {
         List<HashMap<String, Object>> filterRequest = ads.getUserAds();
-        AdsType type = ads.getType();
+        AdsType type =  ads.getType();
         HashMap<String, Object> data = new HashMap<String, Object>();
         
         String sql = "SELECT user_ads.*, ST_Distance(user_ads.geom, poi) / 1000 AS distance_km "
                 + "            FROM user_ads user_ads, "
                 + "            (SELECT ST_MakePoint(:long, :lat) as poi) as poi "
-                + "            WHERE ST_DWithin(user_ads.geom, poi, :dist)  ";
+                + "            WHERE ST_DWithin(user_ads.geom, poi, :dist)";
         for(HashMap<String, Object> d: filterRequest){
         	data.put(d.get("id").toString().toLowerCase(), d.get("value"));
         }
-        
         if(type != null) {
         	sql += " AND type = :type ";
         }
         if(data.get("category") != null) {
             sql += " AND category_id = :cat ";
         }
-        
-        if(data.get("name") != null){
+        if(data.get("name") != null)
+        {
             sql += " AND name LIKE :name ";
         }
-        
+     
         if(data.get("active") != null)
         {
             sql += " AND active = :active ";//+variable++;
@@ -390,9 +389,10 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         {
             sql += " AND short_description LIKE :short_description ";
         }
+        
         if(data.get("price") != null)
         {
-            sql += " AND price BETWEEN  :from AND :to ";
+            sql += " AND NULLIF(price, 0) BETWEEN  :from AND :to ";
         }
 
         if(type != null && type.getType().equals("ACCESSORIES"))
@@ -402,7 +402,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
                 sql += " AND used = true";
             }
         }
-       
+
         if(type != null && type.getType().equals("PETS"))
         {
             if(data.get("breed") != null)
@@ -429,11 +429,11 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             {
                 sql += " AND play_with_kids = :playWithKids ";
             }
-            if(data.get("diseasesDisabilities") != null)
+            if(data.get("diseasesdisabilities") != null)
             {
                 sql += " AND diseases_disabilities = :diseasesdisabilities ";
             }
-            if(data.get("barkingProblem") != null)
+            if(data.get("barkingproblem") != null)
             {
                 sql += " AND barking_problem = :barkingproblem ";
             }
@@ -454,13 +454,14 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
                 .setParameter("long", Double.parseDouble(this.getHashMapKeyWithCheck(data, "longitude", 0).toString()))
                 .setParameter("lat",  Double.parseDouble(this.getHashMapKeyWithCheck(data, "latitude", 0).toString()))
                 .setParameter("dist", distance);
-       
-       
+      
+       System.out.println("--------------------");
+        if(type != null) {
+        	System.out.println(type);
+        	query.setParameter("type", type.getType());
+        }
         if(data.get("category") != null) {
             query.setParameter("cat", data.get("category"));
-        }
-        if(type != null) {
-        	query.setParameter("type", type);
         }
         if(data.get("name") != null)
         {
@@ -499,7 +500,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         {
             query.setParameter("neutering", data.get("neutering"));
         }
-        if(data.get("vaccinationCertificate") != null)
+        if(data.get("vaccinationcertificate") != null)
         {
             query.setParameter("vC", data.get("vaccinationcertificate"));
         }
@@ -507,22 +508,22 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         {
             query.setParameter("passport", data.get("passport"));
         }
-        if(data.get("playWithKids") != null)
+        if(data.get("playwithkids") != null)
         {
             query.setParameter("playWithKids", data.get("playwithkids"));
         }
-        if(data.get("diseasesDisabilities") != null)
+        if(data.get("diseasesdisabilities") != null)
         {
             query.setParameter("diseasesDisabilities", data.get("diseasesdisabilities"));
         }
-        if(data.get("barkingProblem") != null)
+        if(data.get("barkingproblem") != null)
         {
-            query.setParameter("barkingProblem", data.get("barkingproblem"));
+            query.setParameter("barkingproblem", data.get("barkingproblem"));
         }
         if(data.get("price") != null)
         {
-            Integer prFrom = (Integer) data.get("price") / 2;
-            Integer prTo = (Integer) data.get("price") / 2 + (Integer) data.get("price");
+            Double prFrom = 0d; //Double.parseDouble(String.valueOf(data.get("price"))) / 2;
+            Double prTo = Double.parseDouble(String.valueOf(data.get("price"))) + 1;
             query.setParameter("from", prFrom);
             query.setParameter("to", prTo);
         }
