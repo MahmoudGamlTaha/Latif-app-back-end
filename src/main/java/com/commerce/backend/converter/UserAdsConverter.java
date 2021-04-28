@@ -355,24 +355,28 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
     public Query getQuery (AdsFiltrationRequest<String, Object> ads)
     {
         List<HashMap<String, Object>> filterRequest = ads.getUserAds();
+        AdsType type = ads.getType();
         HashMap<String, Object> data = new HashMap<String, Object>();
         
         String sql = "SELECT user_ads.*, ST_Distance(user_ads.geom, poi) / 1000 AS distance_km "
                 + "            FROM user_ads user_ads, "
                 + "            (SELECT ST_MakePoint(:long, :lat) as poi) as poi "
-                + "            WHERE ST_DWithin(user_ads.geom, poi, :dist) AND type = :type ";
+                + "            WHERE ST_DWithin(user_ads.geom, poi, :dist)  ";
         for(HashMap<String, Object> d: filterRequest){
         	data.put(d.get("id").toString().toLowerCase(), d.get("value"));
         }
         
+        if(type != null) {
+        	sql += " AND type = :type ";
+        }
         if(data.get("category") != null) {
             sql += " AND category_id = :cat ";
         }
-        if(data.get("name") != null)
-        {
+        
+        if(data.get("name") != null){
             sql += " AND name LIKE :name ";
         }
-     
+        
         if(data.get("active") != null)
         {
             sql += " AND active = :active ";//+variable++;
@@ -391,15 +395,15 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             sql += " AND price BETWEEN  :from AND :to ";
         }
 
-        if(ads.getType().getType().equals("ACCESSORIES"))
+        if(type != null && type.getType().equals("ACCESSORIES"))
         {
             if(data.get("used") != null && data.get("used").equals(true))
             {
                 sql += " AND used = true";
             }
         }
-
-        if(ads.getType().getType().equals("PETS"))
+       
+        if(type != null && type.getType().equals("PETS"))
         {
             if(data.get("breed") != null)
             {
@@ -449,11 +453,14 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         Query query = entityManager.createNativeQuery(sql, UserAds.class)              
                 .setParameter("long", Double.parseDouble(this.getHashMapKeyWithCheck(data, "longitude", 0).toString()))
                 .setParameter("lat",  Double.parseDouble(this.getHashMapKeyWithCheck(data, "latitude", 0).toString()))
-                .setParameter("dist", distance)
-                .setParameter("type", ads.getType().getType());
+                .setParameter("dist", distance);
+       
        
         if(data.get("category") != null) {
             query.setParameter("cat", data.get("category"));
+        }
+        if(type != null) {
+        	query.setParameter("type", type);
         }
         if(data.get("name") != null)
         {
