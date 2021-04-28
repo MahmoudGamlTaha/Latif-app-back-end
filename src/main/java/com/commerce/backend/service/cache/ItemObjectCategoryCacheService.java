@@ -10,6 +10,7 @@ import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 import java.util.List;
 
 public interface ItemObjectCategoryCacheService {
+    ItemObjectCategory findById(Long id);
     List<ItemObjectCategory> findAllByOrderByName();
     BasicResponse findAllByTypeId(Integer id, Integer page);
     List<PetCategory> findPetsCategories();

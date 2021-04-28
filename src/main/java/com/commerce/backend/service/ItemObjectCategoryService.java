@@ -1,5 +1,7 @@
 package com.commerce.backend.service;
 
+import com.commerce.backend.model.entity.ItemCategory;
+import com.commerce.backend.model.entity.ItemObjectCategory;
 import com.commerce.backend.model.request.category.CategoryRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
@@ -7,6 +9,7 @@ import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 import java.util.List;
 
 public interface ItemObjectCategoryService {
+    ItemObjectCategory findById(Long id);
     BasicResponse findAllByTypeId(Integer id, Integer page);
     List<ItemObjectCategoryResponse> findAllByOrderByName();
     List<ItemObjectCategoryResponse> findPetsCategories();

@@ -30,8 +30,12 @@ public class ItemObjectCategoryServiceImpl implements ItemObjectCategoryService 
         this.itemObjectCategoryResponseConverter = itemObjectCategoryResponseConverter;
     }
 
+	@Override
+	public ItemObjectCategory findById(Long id) {
+		return itemObjectCategoryCacheService.findById(id);
+	}
 
-    @Override
+	@Override
     public List<ItemObjectCategoryResponse> findAllByOrderByName() {
         List<ItemObjectCategory> productCategories = itemObjectCategoryCacheService.findAllByOrderByName();
         if (productCategories.isEmpty()) {

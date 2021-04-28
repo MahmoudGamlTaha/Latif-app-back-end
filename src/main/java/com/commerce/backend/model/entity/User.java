@@ -29,8 +29,11 @@ public class User {
   @JsonIgnore
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
   private Cart cart;
-
-  @Column(name = "email")
+  
+ // @OneToMany(mappedBy = "created_by")
+  //private UserAds ads;
+  
+  @Column(name = "email", unique = true)
   private String email;
 
   @Column(name = "password")
@@ -66,7 +69,7 @@ public class User {
   @Column(name = "address1")
   private String address;
   
-  @Column(name = "created_at", insertable = false)
+  @Column(name = "created_at", updatable = false)
    @Type(type = "timestamp")
    private Date registrationDate;
    

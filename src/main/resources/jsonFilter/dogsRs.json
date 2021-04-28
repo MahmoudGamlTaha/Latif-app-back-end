@@ -22,5 +22,5 @@
   {"name": "petsImages", "type": "files","label": "Dog Images", "required": true},
   {"name": "barkingProblem", "type": "boolean", "label": "Barking Problem", "required": true}
 ],
-  "url": "/api/public/ads/create?type=Dogs"
+  "url": "api/public/ads/ads-filtration"
 }

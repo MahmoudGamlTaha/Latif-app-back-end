@@ -9,11 +9,7 @@ import com.commerce.backend.converter.UserAdsToVoConverter;
 import com.commerce.backend.dao.*;
 import com.commerce.backend.model.dto.*;
 import com.commerce.backend.model.entity.*;
-import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
-import com.commerce.backend.model.request.userAds.LocationRequest;
-import com.commerce.backend.model.request.userAds.UserPetsAdsRequest;
-import com.commerce.backend.model.request.userAds.adTypeRequest;
-import com.commerce.backend.model.request.userAds.AdsFiltrationRequest;
+import com.commerce.backend.model.request.userAds.*;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.product.ProductDetailsResponse;
 
@@ -37,6 +33,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,7 +53,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	private UserServiceAdsRepository userServiceAdsRepository;
 	private UserItemsAdsRepository userItemsAdsRepository;
 	private UserMedicalAdsRepository userMedicalAdsRepository;
-	
+	private ItemObjectCategoryService itemCategory;
 	private UserAdsToVoConverter userAdsToVoConverter;
 	private UserAdsConverter userAdsConverter;
 	private UserAdsImageRepository userAdsImageRepository;
@@ -73,7 +70,8 @@ public class UserAdsServiceImpl implements UserAdsService {
 							  UserAdsToVoConverter userAdsToVoConverter, UserAdsConverter userAdsConverter,
 							  UserAdsImageRepository userAdsImageRepository,
 							  CustomUserAdsRepo repo,
-							  CustomUserAdsCriteriaHelper customUserAdsCriteriaHelper) {
+							  CustomUserAdsCriteriaHelper customUserAdsCriteriaHelper,
+							  ItemObjectCategoryService itemCategory) {
 	
 
 	
@@ -87,6 +85,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		this.userAdsImageRepository = userAdsImageRepository;
 		this.customUserAdsRepo = repo;
 		this.customUserAdsCriteriaHelper = customUserAdsCriteriaHelper;
+		this.itemCategory = itemCategory;
 	}
 
 	public UserAdsServiceImpl() {
@@ -147,8 +146,8 @@ public class UserAdsServiceImpl implements UserAdsService {
 				Page<UserAds> ads = customUserAdsRepo.findUserAdsByType(type.getType(), pageable);
 				ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 			}
+
 			return res(collect, true, null);
-		 
 		}catch(Exception ex) {
 			
 			 BasicResponse response = new BasicResponse();
@@ -196,6 +195,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		
 		List<UserAdsVO> collect = new ArrayList<>();
 		ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
+
 		BasicResponse response = res(collect, true, pageable); 
 		if(single != null) {
 		 response.getResponse().put(MessageType.TotalItems.getMessage(), single.getTotalItem());
@@ -219,6 +219,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		try{
 			UserAds ad = (UserAds) customUserAdsRepo.findById(id).orElse(null);
 			UserAdsVO vo = userAdsToVoConverter.apply(ad);
+
 			return res(vo, true, null);
 		}
 		catch (Exception e)
@@ -226,7 +227,6 @@ public class UserAdsServiceImpl implements UserAdsService {
 			return res(e, false, null);
 		}
 	}
-
 	@Override
 	public List<UserAdsVO> searchItemDisplay(String keyword, Integer page, Integer size) {
 		// TODO Auto-generated method stub
@@ -282,6 +282,31 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
+	public BasicResponse updateUserAds(UpdateAdRequest<String, Object> request, List<String> fileList, List<MultipartFile> files) {
+		if(request.getId() == null)
+		{
+			return res(MessageType.Missing.getMessage(), false, null);
+		}
+		try {
+			UserAds ad = customUserAdsRepo.findById(request.getId()).orElse(null);
+			if(ad == null)
+			{
+				return res("Not Found", false, null);
+			}
+			if(fileList != null || files != null)
+			{
+				this.saveEntityFiles(ad, fileList, files, ad.getType(), ad.getExternalLink());
+			}
+			UserAds dd = userAdsConverter.updateAd(request, ad);
+			UserAdsVO updatedAd = userAdsToVoConverter.apply(customUserAdsRepo.save(dd));
+			return res(updatedAd, true, null);
+		}catch (Exception ex)
+		{
+			return res(ex, false, null);
+		}
+	}
+
+	@Override
 	public Long getAllCount(String category, Float minPrice, Float maxPrice, String color) {
 		// TODO Auto-generated method stub
 		return null;
@@ -291,19 +316,22 @@ public class UserAdsServiceImpl implements UserAdsService {
 	public BasicResponse getCreateForm(adTypeRequest adsType, Long category){
 
 		InputStream is = null;
+		String adType = null;
+		ClassPathResource filePath = null;
 		BasicResponse response = new BasicResponse();
 		HashMap<String, Object> mapResponse = new HashMap<String, Object>(); 
 		try {
-			
-		is = new ClassPathResource("jsonFiles/basicResponse.json").getInputStream();
-		if(adsType != null)
-		{
-			String adType = adsType.getAdsType().getType().toLowerCase();
-			String path = "jsonFiles/"+adType+"Rs.json";
-			
-			is = new ClassPathResource(path).getInputStream();
-		}
-       
+			if(category != null)
+			{
+				adType = itemCategory.findById(category).getName().toLowerCase();
+				filePath = new ClassPathResource("jsonFiles/"+adType+"Rs.json");
+			}
+			if (filePath == null || !filePath.exists())
+			{
+				adType = adsType.getAdsType().getType().toLowerCase();
+				filePath = new ClassPathResource("jsonFiles/"+adType+"Rs.json");
+			}
+			is = filePath.getInputStream();
 		
 			JSONParser jsonParser = new JSONParser();
 			JSONObject jsonObject = (JSONObject)jsonParser.parse(
@@ -335,17 +363,22 @@ public class UserAdsServiceImpl implements UserAdsService {
 	public BasicResponse getFilterForm(adTypeRequest adsType, Long category){
 
 		InputStream is = null;
+		String adType = null;
+		ClassPathResource filePath = null;
 		BasicResponse response = new BasicResponse();
 		HashMap<String, Object> mapResponse = new HashMap<String, Object>(); 
 		try {
-		is = new ClassPathResource("jsonFilter/basicResponse.json").getInputStream();
-		if(adsType != null)
-		{
-			String adType = adsType.getAdsType().getType().toLowerCase();
-			is = new ClassPathResource("jsonFilter/"+adType+"Rs.json").getInputStream();
-		}
-       
-		
+			if(category != null)
+			{
+				adType = itemCategory.findById(category).getName().toLowerCase();
+				filePath = new ClassPathResource("jsonFilter/"+adType+"Rs.json");
+			}
+			if (filePath == null || !filePath.exists())
+			{
+				adType = adsType.getAdsType().getType().toLowerCase();
+				filePath = new ClassPathResource("jsonFilter/"+adType+"Rs.json");
+			}
+			is = filePath.getInputStream();
 			JSONParser jsonParser = new JSONParser();
 			JSONObject jsonObject = (JSONObject)jsonParser.parse(
 					new InputStreamReader(is, StandardCharsets.UTF_8));
