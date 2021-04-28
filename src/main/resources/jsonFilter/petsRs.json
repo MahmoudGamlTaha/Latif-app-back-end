@@ -13,7 +13,7 @@
   {"name": "playWithKids", "type": "boolean","label": "Play with kids", "required": true},
   {"name": "diseasesDisabilities", "type": "boolean","label": "Diseases or Disabilities", "required": true},
   {"name": "food", "type": "dropdown","label": "Food", "required": true, "options":[{"label" : "Dry", "code":"DRY"}, {"label" : "Wet", "code":"WET"}, {"label" : "Home cooked", "code":"HOME_COOKED"}], "multi":true},
-  {"name": "category_id", "type": "radiobutton","label": "category", "options":[{"label":"DOG", "code":"1"}, {"label":"CAT", "code":"2"}], "required": true},
+  {"name": "category_id", "type": "radiobutton","label": "test radio", "options":[{"label":"DOG", "code":"1"}, {"label":"CAT", "code":"2"}], "required": true},
   {"name": "longitude", "type": "map","label": "Longitude", "required": true},
   {"name": "latitude", "type": "map","label": "Latitude", "required": true}
 ],
