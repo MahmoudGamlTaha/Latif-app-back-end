@@ -431,7 +431,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             }
             if(data.get("diseasesdisabilities") != null)
             {
-                sql += " AND diseases_disabilities = :diseasesdisabilities ";
+                sql += " AND diseases_disabilities = :diseasesDisabilities ";
             }
             if(data.get("barkingproblem") != null)
             {
@@ -465,7 +465,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         }
         if(data.get("name") != null)
         {
-            query.setParameter("name", data.get("name")+"%");
+            query.setParameter("name", data.get("name"));
         }
         
         if(data.get("active") != null)
