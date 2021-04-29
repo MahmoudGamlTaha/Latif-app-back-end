@@ -470,55 +470,55 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         
         if(data.get("active") != null)
         {
-        	 query.setParameter("active", Boolean.parseBoolean(data.get("active").toString()));
+        	 query.setParameter("active", Boolean.parseBoolean(String.valueOf(data.get("active"))));
         }
         if(data.get("description") != null)
         {
-            query.setParameter("description", data.get("description")+"%");
+            query.setParameter("description", data.get("description"));
         }
         if(data.get("short_description") != null)
         {
-            query.setParameter("short_description", data.get("short_description")+"%");
+            query.setParameter("short_description", data.get("short_description"));
         }
         if(data.get("breed") != null)
         {
-            query.setParameter("breed", data.get("breed")+"%");
+            query.setParameter("breed", data.get("breed"));
         }
         if(data.get("training") != null)
         {
-            query.setParameter("training", data.get("training")+"%");
+            query.setParameter("training", data.get("training"));
         }
         if(data.get("food") != null)
         {
-            query.setParameter("food", data.get("food")+"%");
+            query.setParameter("food", data.get("food"));
         }
         if(data.get("weaned") != null)
         {
-            query.setParameter("weaned", data.get("weaned"));
+            query.setParameter("weaned", Boolean.parseBoolean(String.valueOf(data.get("weaned"))));
         }
         if(data.get("neutering") != null)
         {
-            query.setParameter("neutering", data.get("neutering"));
+            query.setParameter("neutering",Boolean.parseBoolean(String.valueOf( data.get("neutering"))));
         }
         if(data.get("vaccinationcertificate") != null)
         {
-            query.setParameter("vC", data.get("vaccinationcertificate"));
+            query.setParameter("vC", Boolean.parseBoolean(String.valueOf(data.get("vaccinationcertificate"))));
         }
         if(data.get("passport") != null)
         {
-            query.setParameter("passport", data.get("passport"));
+            query.setParameter("passport", Boolean.parseBoolean(String.valueOf(data.get("passport"))));
         }
         if(data.get("playwithkids") != null)
         {
-            query.setParameter("playWithKids", data.get("playwithkids"));
+            query.setParameter("playWithKids", Boolean.parseBoolean(String.valueOf(data.get("playwithkids"))));
         }
         if(data.get("diseasesdisabilities") != null)
         {
-            query.setParameter("diseasesDisabilities", data.get("diseasesdisabilities"));
+            query.setParameter("diseasesDisabilities", Boolean.parseBoolean(String.valueOf(data.get("diseasesdisabilities"))));
         }
         if(data.get("barkingproblem") != null)
         {
-            query.setParameter("barkingproblem", data.get("barkingproblem"));
+            query.setParameter("barkingproblem", Boolean.parseBoolean(String.valueOf(data.get("barkingproblem"))));
         }
         if(data.get("price") != null)
         {

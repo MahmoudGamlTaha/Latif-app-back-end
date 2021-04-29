@@ -40,6 +40,7 @@ public class UserPetAds extends UserAds {
 	private Integer stock;
 	
 	@Column(name = "weaned")
+	
 	private Boolean weaned;
 	
 	@Column(name = "neutering")
