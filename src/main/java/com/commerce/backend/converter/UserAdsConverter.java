@@ -81,6 +81,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         }
      
         entity.setName(String.valueOf( getHashMapKeyWithCheck(hashedData,"name", -1)));
+        entity.setCode(String.valueOf(hashedData.get("code")));
         entity.setDescription(String.valueOf( getHashMapKeyWithCheck(hashedData,"description", -1)));
         entity.setShortDescription(String.valueOf( getHashMapKeyWithCheck(hashedData,"short_description", -1)));
         entity.setActive(Boolean.parseBoolean(String.valueOf(getHashMapKeyWithCheck(hashedData,"active", 1))));

@@ -259,7 +259,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			((UserMedicalVO)destination).setAllowServiceAtHome(((UserMedicalAds)source).getAllowServiceAtHome());
 			MedicalCategory category = ((UserMedicalAds)source).getMedicalCategoryType();
 			if(category != null) {
-			((UserMedicalVO)destination).setAllowServiceAtHome(((UserServiceAds)source).getAllowServiceAtHome());
+			((UserMedicalVO)destination).setAllowServiceAtHome(((UserMedicalAds)source).getAllowServiceAtHome());
 			((UserMedicalVO)destination).setCategoryId(category.getId());
 			((UserMedicalVO)destination).setCategoryName(category.getName());
 			((UserMedicalVO)destination).setCategoryNameAr(category.getNameAr());
@@ -271,11 +271,11 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			((UserAccVO)destination).setStock(((UserAccAds)source).getStock());
 			
 			ItemCategory category = ((UserAccAds)source).getItemCategoryId();
+			((UserAccVO)destination).setAllowServiceAtHome(((UserAccAds)source).getAllowServiceAtHome());
 			if(category != null) {
-			((UserMedicalVO)destination).setAllowServiceAtHome(((UserServiceAds)source).getAllowServiceAtHome());
-			((UserMedicalVO)destination).setCategoryId(category.getId());
-			((UserMedicalVO)destination).setCategoryName(category.getName());
-			((UserMedicalVO)destination).setCategoryNameAr(category.getNameAr());
+			((UserAccVO)destination).setCategoryId(category.getId());
+			((UserAccVO)destination).setCategoryName(category.getName());
+			((UserAccVO)destination).setCategoryNameAr(category.getNameAr());
 			}
 		}
 		else if(source.getType() == AdsType.DELIVERY) {

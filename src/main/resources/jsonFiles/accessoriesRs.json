@@ -1,5 +1,6 @@
 {"form":[
   {"name": "name","type": "string", "label": "Category", "required": true},
+  {"name": "stock","type": "Integer", "label": "Stock", "required": false},
   {"name": "code", "type": "string","label": "Code", "required": true},
   {"name": "description", "type": "string","label": "Description", "required": true},
   {"name": "short_description", "type": "string","label": "Short Description", "required": true},
@@ -11,6 +12,6 @@
   {"name": "longitude", "type": "map","label": "Longitude", "required": true},
   {"name": "latitude", "type": "map","label": "Latitude", "required": true}
 ],
-"url": "/api/public/ads/create?type=SERVICE"
+"url": "/api/public/ads/create?type=ACCESSORIES"
 }
 
