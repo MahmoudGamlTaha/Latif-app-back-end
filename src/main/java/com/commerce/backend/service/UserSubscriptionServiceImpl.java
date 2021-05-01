@@ -17,7 +17,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -90,9 +92,21 @@ public class UserSubscriptionServiceImpl implements UserSubscriptionService{
     @Override
     public BasicResponse create(UserSubscriptionRequest request) {
         try {
-            UserSubscription entity = converter.requestToEntity(request);
-            UserSubscription repo = repository.save(entity);
-            return res(converter.apply(repo), true, "Success", null);
+            User user = userRepository.findById(request.getUserId()).orElse(null);
+            Date currentDate = new Date();
+            SimpleDateFormat DateFor = new SimpleDateFormat("MM/dd/dd-M-yyyy hh:mm:ss");
+            UserSubscription userSubscriptions = repository.findByUserId(user, currentDate);
+           if(userSubscriptions != null)
+           {
+               String msg = "Dear customer you are already on '"+
+                       userSubscriptions.getSubscriptionId().getName()+
+                       "' that will end in date "+ DateFor.format(userSubscriptions.getEndDate());
+               return res(null, false, msg, null);
+           }else {
+               UserSubscription entity = converter.requestToEntity(request);
+               UserSubscription repo = repository.save(entity);
+               return res(converter.apply(repo), true, "Success", null);
+           }
         }catch(Exception ex){
             return res(ex, false, "Failed", null);
         }
