@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+import com.commerce.backend.model.composite.UserRoleKey;
+
 import java.util.Date;
 
 @Entity
@@ -17,16 +20,23 @@ import java.util.Date;
 public class UserRole {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq-gen")
-    @SequenceGenerator(name = "seq-gen", sequenceName = "user_roles_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_roles_id_seq")
+    @SequenceGenerator(name = "user_roles_id_seq", sequenceName = "user_roles_id_seq", allocationSize = 1)
     private Long id;
 
-    @Column(name = "role_id")
-    private Long roleId;
+    @EmbeddedId
+    UserRoleKey userRoleKey;
 
-    @Column(name = "user_id")
-    private Long userId;
-
+    @ManyToOne
+    @MapsId("userId")
+    @JoinColumn(name = "user_id")
+    User user;
+  
+    @ManyToOne
+    @MapsId("roleId")
+    @JoinColumn(name = "role_id")
+    Role role;
+    
     @Column(name = "created_at")
     private Date created_at;
 

@@ -14,7 +14,7 @@ public class SecurityConstants {
     @Value("${security.auth.username}")
     private String authUsername;
 
-    @Value("${security.auth.url}")
+    @Value("${security.auth.auth-url}")
     private String authUrl;
 
     @Value("${security.auth.client_id}")
@@ -29,6 +29,7 @@ public class SecurityConstants {
     @Value("${security.auth.read_timeout}")
     private String readTimeout;
 
-    @Value("${security.auth.whitelist}")
-    private String[] whitelist;
+    @Value("${security.auth.public-url}")
+    private String[] publicUrl;
+    
 }

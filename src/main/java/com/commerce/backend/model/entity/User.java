@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -30,13 +31,13 @@ public class User {
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
   private Cart cart;
   
- // @OneToMany(mappedBy = "created_by")
-  //private UserAds ads;
+  @OneToMany(mappedBy = "createdBy")
+   private UserAds ads;
   
   @Column(name = "email", unique = true)
   private String email;
 
-  @Column(name = "password")
+  @Column(name = "password", nullable = false)
   private String password;
 
   @Column(name = "fname")
@@ -72,5 +73,11 @@ public class User {
   @Column(name = "created_at", updatable = false)
    @Type(type = "timestamp")
    private Date registrationDate;
+ 
+  @OneToMany(mappedBy = "user")
+  private Set<UserRole> roles;
+  
+  @Column(name = "active")
+  private Boolean active;
    
 }

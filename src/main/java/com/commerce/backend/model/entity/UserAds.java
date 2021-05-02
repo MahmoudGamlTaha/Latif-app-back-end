@@ -54,7 +54,7 @@ public class UserAds {
 	@Column(name = "type", insertable = false, updatable = false, nullable = false)
 	private AdsType type;        
 	
-   @ManyToOne(cascade = {CascadeType.MERGE})
+   @ManyToOne(cascade = {CascadeType.ALL})
 	 @JoinColumn(name = "created_by")
 	 private User createdBy;
 	

@@ -1,10 +1,16 @@
 package com.commerce.backend.security;
 
 import com.commerce.backend.constants.SecurityConstants;
+import com.commerce.backend.dao.userAuth.UserPrincipalDetails;
+import com.commerce.backend.dao.userAuth.UserPrincipalDetailsService;
+
+import sun.net.www.protocol.http.AuthenticatorKeys.AuthenticatorKeyAccess;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,8 +18,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 import org.springframework.context.annotation.Bean;
-
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -22,10 +30,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private RestTemplateBuilder restTemplateBuilder;
+    private RestTemplateBuilder restTemplateBuilder; // for SSO
 
     @Autowired
     private SecurityConstants securityConstants;
+    
+    @Autowired
+    private UserPrincipalDetailsService userPrincipalDetailsService;
 
     @Bean
     public OpaqueTokenIntrospector introspector() {
@@ -40,34 +51,42 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         );
     }
 
-    @Override
+   @Override
     public void configure(final HttpSecurity http) throws Exception {
-        http.cors()
+         http.cors()
                 .and()
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers(securityConstants.getWhitelist()).permitAll()
+                .antMatchers(securityConstants.getPublicUrl()).permitAll()
+                .antMatchers(securityConstants.getPublicUrl()).authenticated()
                 .anyRequest()
                 .authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .oauth2ResourceServer(oauth2 -> oauth2
+                .and().httpBasic();
+            /*   .and()
+               .oauth2ResourceServer(oauth2 -> oauth2
                         .opaqueToken(opaqueToken -> opaqueToken
                                 .introspector(introspector())
                         )
-                ).oauth2ResourceServer();
+                ).oauth2ResourceServer();*/
     }
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth.inMemoryAuthentication()
-                .withUser("springuser").password(passwordEncoder().encode("spring123")).roles("USER")
-                .and()
-                .withUser("springadmin").password(passwordEncoder().encode("admin123")).roles("ADMIN", "USER");
-    }
-    
+  
+   
+   @Bean
+   DaoAuthenticationProvider authenticationProvider() {
+	   DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+	   provider.setPasswordEncoder(this.passwordEncoder());
+	   provider.setUserDetailsService(this.userPrincipalDetailsService);
+	   return provider;
+   }
+   
+   protected void configure(AuthenticationManagerBuilder auth) {
+	   auth.authenticationProvider(this.authenticationProvider());
+   }
+   
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
