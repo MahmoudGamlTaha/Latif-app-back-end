@@ -461,7 +461,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         	query.setParameter("type", type.getType());
         }
         if(data.get("category") != null) {
-            query.setParameter("cat", data.get("category"));
+            query.setParameter("cat", Long.parseLong(this.getHashMapKeyWithCheck(data, "category", 0).toString() ));
         }
         if(data.get("name") != null)
         {
