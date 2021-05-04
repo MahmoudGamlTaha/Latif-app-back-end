@@ -22,7 +22,10 @@ public class UserAccAds  extends UserAds{
   //@ManyToOne
   //@JoinColumn(name ="category_type")
   //ItemCategory itemCategoryType;
-  
+
+  @Column(name = "allow_at_home")
+  Boolean allowServiceAtHome;
+
   @ManyToOne
   @JoinColumn(name ="category_id")
    private ItemCategory itemCategoryId;

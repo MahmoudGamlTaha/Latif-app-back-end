@@ -323,7 +323,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		try {
 			if(category != null)
 			{
-				adType = itemCategory.findById(category).getName().toLowerCase();
+				adType = itemCategory.findById(category).getCode().toLowerCase();
 				filePath = new ClassPathResource("jsonFiles/"+adType+"Rs.json");
 			}
 			if (filePath == null || !filePath.exists())
@@ -370,7 +370,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		try {
 			if(category != null)
 			{
-				adType = itemCategory.findById(category).getName().toLowerCase();
+				adType = itemCategory.findById(category).getCode().toLowerCase();
 				filePath = new ClassPathResource("jsonFilter/"+adType+"Rs.json");
 			}
 			if (filePath == null || !filePath.exists())

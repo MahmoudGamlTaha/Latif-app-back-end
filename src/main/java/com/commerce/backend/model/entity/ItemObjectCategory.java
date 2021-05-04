@@ -36,7 +36,10 @@ public class ItemObjectCategory {
     
     @Column(name = "name_ar", length = 250)
     private String nameAr;
-    
+
+    @Column(name = "code", length = 40)
+    private String code;
+
     @ManyToOne(optional = true)
     @JoinColumn(name = "parent_id")
     @NotFound(action = NotFoundAction.IGNORE)
