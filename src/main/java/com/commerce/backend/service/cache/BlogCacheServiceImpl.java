@@ -2,16 +2,20 @@ package com.commerce.backend.service.cache;
 
 import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.constants.SystemConstant;
+import com.commerce.backend.converter.blog.BlogResponseConverter;
 import com.commerce.backend.dao.BlogCategoryRepository;
+import com.commerce.backend.dao.BlogImageRepository;
 import com.commerce.backend.dao.BlogRepository;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.entity.Blog;
 import com.commerce.backend.model.entity.BlogCategory;
+import com.commerce.backend.model.entity.BlogImage;
 import com.commerce.backend.model.request.blog.BlogRequest;
 import com.commerce.backend.model.request.blog.UpdateBlogRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.blog.BlogResponse;
 
+import com.commerce.backend.service.FilesStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
@@ -19,23 +23,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-
-import static java.lang.System.currentTimeMillis;
+import java.util.*;
 
 @Service
 @CacheConfig(cacheNames = "blog")
@@ -43,14 +35,19 @@ public class BlogCacheServiceImpl implements BlogCacheService{
 
     private final BlogRepository blogRepository;
     private final BlogCategoryRepository blogCategoryRepository;
-    private final Path rootLocation = Paths.get("upload");
+    private final FilesStorageService storageService;
+    private final BlogImageRepository blogImageRepository;
+    private final BlogResponseConverter converter;
     @Value("${swagger.host.path}")
     private String path;
 
     @Autowired
-    public BlogCacheServiceImpl(BlogRepository blogRepository, BlogCategoryRepository blogCategoryRepository) {
+    public BlogCacheServiceImpl(BlogRepository blogRepository, BlogCategoryRepository blogCategoryRepository, FilesStorageService storageService, BlogImageRepository blogImageRepository, BlogResponseConverter converter) {
         this.blogRepository = blogRepository;
         this.blogCategoryRepository = blogCategoryRepository;
+        this.storageService = storageService;
+        this.blogImageRepository = blogImageRepository;
+        this.converter = converter;
     }
 
     /**
@@ -109,38 +106,47 @@ public class BlogCacheServiceImpl implements BlogCacheService{
     {
     	BasicResponse response = new BasicResponse();
     	HashMap<String, Object> hashMap = new HashMap<String, Object>();
-    	for(MultipartFile file : files) {
-	    String filename = currentTimeMillis() + "-" + StringUtils.cleanPath(file.getOriginalFilename());
-	    filename = filename.toLowerCase().replaceAll(" ",  "-");
-	    try{
-	        Files.copy(file.getInputStream(), rootLocation.resolve(filename));
-	    }catch (Exception e) {
-	      response.setMsg(e.getMessage());
-	      response.setSuccess(false);
-	      return response;
-	    }
         BlogCategory category = blogCategoryRepository.findById(blog.getCategory()).orElse(null);
         Blog entity = Blog.builder()
                 .title(blog.getTitle())
                 .description(blog.getDescription())
                 .category(category)
                 .path(path + "blogs")
-                .image("upload/" + filename)
                 .date(new Date())
                 .created_at(new Date())
                 .build();
-        Blog test = blogRepository.save(entity);
-        hashMap.put(MessageType.Data.getMessage(), test);
+        if(external){
+            entity.setPath(paths.toString());
+        }
+        if(files != null) {
+            String fileName = storageService.save(files.get(0));
+            entity.setImage(fileName);
+        }
+        Blog blogEntity = blogRepository.save(entity);
+        BlogResponse basicResponse = converter.apply(blogEntity);
+        if(files != null) {
+            if (files.size() > 1) {
+                List<BlogImage> ImagesList = new ArrayList<>();
+                for (int i = 1; i < files.size(); i++) {
+                    String fName = storageService.save(files.get(i));
+                    ImagesList.add(BlogImage.builder()
+                            .blog(blogEntity)
+                            .image(fName)
+                            .createdAt(new Date())
+                            .build());
+                }
+                blogImageRepository.saveAll(ImagesList);
+            }
+        }
+        hashMap.put(MessageType.Data.getMessage(), basicResponse);
         response.setResponse(hashMap);
-    	}
         return response ;
     }
 
     @Override
     public BlogResponse update(UpdateBlogRequest blogRequest, MultipartFile file) throws IOException {
-
-        if(blogRequest.getId() != null) {
-            Blog blog = blogRepository.findById(blogRequest.getId()).orElse(null);
+        Blog blog = blogRepository.findById(blogRequest.getId()).orElse(null);
+        if(blog != null) {
             if (blogRequest.getTitle() != null) {
                 blog.setTitle(blogRequest.getTitle());
             }
@@ -148,18 +154,12 @@ public class BlogCacheServiceImpl implements BlogCacheService{
                 blog.setDescription(blogRequest.getDescription());
             }
             if (file != null) {
-                Path imagesPath = Paths.get(path + blog.getImage());
-                Files.delete(imagesPath);
-                String filename = currentTimeMillis() + "-" + StringUtils.cleanPath(file.getOriginalFilename());
-                filename = filename.toLowerCase().replaceAll(" ", "-");
-                try {
-                    Files.copy(file.getInputStream(), rootLocation.resolve(filename));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if(blog.getImage() != null){
+                    storageService.delete(blog.getImage());
                 }
-                blog.setImage("upload/" + filename);
+                String fileName = storageService.save(file);
+                blog.setImage(fileName);
             }
-            assert blog != null;
             blog.setUpdated_at(new Date());
             blogRepository.save(blog);
             return new BlogResponse(blog);

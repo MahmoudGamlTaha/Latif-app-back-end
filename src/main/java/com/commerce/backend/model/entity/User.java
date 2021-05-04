@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -11,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -72,5 +76,13 @@ public class User {
   @Column(name = "created_at", updatable = false)
    @Type(type = "timestamp")
    private Date registrationDate;
-   
+
+  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+  @JoinTable(
+          name = "user_subscription",
+          joinColumns = {@JoinColumn(name = "user_id")},
+          inverseJoinColumns = {@JoinColumn(name = "subscription_id")}
+  )
+  @NotFound(action = NotFoundAction.IGNORE)
+  private Set<SubscriptionTypes> subscriptions = new HashSet<>();
 }

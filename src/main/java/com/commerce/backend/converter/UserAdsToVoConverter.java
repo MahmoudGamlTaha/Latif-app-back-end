@@ -277,6 +277,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			((UserAccVO)destination).setStock(((UserAccAds)source).getStock());
 			
 			ItemCategory category = ((UserAccAds)source).getItemCategoryId();
+			((UserAccVO)destination).setAllowServiceAtHome(((UserAccAds)source).getAllowServiceAtHome());
 			if(category != null) {
 			((UserAccVO)destination).setCategoryId(category.getId());
 			((UserAccVO)destination).setCategoryName(category.getName());
