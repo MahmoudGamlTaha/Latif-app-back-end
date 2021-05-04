@@ -273,7 +273,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		response.setResponse(map);
 		return response;
 	}catch(Exception ex) {
-		this.loggerS.info("errr", ex.getMessage());
+		this.loggerS.info("error", ex.getMessage());
 		ex.printStackTrace();
 		response.setMsg(ex.getMessage());
 		

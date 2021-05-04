@@ -125,7 +125,6 @@ public class UserAdsController extends PublicApiController {
     	HttpStatus status = HttpStatus.OK;
     	try {
     	     response = this.userAdsService.createUserAds(userAdsRequest, null, null, userAdsRequest.getExternal());
-       
     	}catch(Exception ex) {
     		response = new BasicResponse();
     		response.setMsg(ex.getMessage());
@@ -156,6 +155,7 @@ public class UserAdsController extends PublicApiController {
     	
     	return new ResponseEntity<BasicResponse>(userAdsService.getFilterForm(adRequest, category.orElse(null)), HttpStatus.OK);
     }
+    
     /* @GetMapping(value = "/ads/{url}")
     public ResponseEntity<ProductDetailsResponse> getByUrl(@PathVariable("url") String url) {
         if (url.isBlank()) {

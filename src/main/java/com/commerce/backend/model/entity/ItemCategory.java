@@ -6,5 +6,5 @@ import javax.persistence.Entity;
 @DiscriminatorValue("2")
 @Entity
 public class ItemCategory extends ItemObjectCategory{
-
+   
 }
