@@ -1,5 +1,6 @@
 package com.commerce.backend.dao;
 
+import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.model.entity.UserAds;
 import com.commerce.backend.model.entity.UserPetAds;
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigInteger;
 import java.util.List;
 // criteria bulider 
 // check this link https://stackoverflow.com/questions/29604734/how-to-use-native-sql-as-a-fragment-where-clause-of-a-bigger-query-made-with-c
@@ -34,4 +36,7 @@ public interface CustomUserAdsRepo extends JpaRepository<UserAds, Long> {
 
 
     Page<UserAds> findUserAdsByType(String type, Pageable pageable);
+
+    Long countByActiveTrue();
+    Long countByActiveTrueAndType(AdsType adsType);
 }

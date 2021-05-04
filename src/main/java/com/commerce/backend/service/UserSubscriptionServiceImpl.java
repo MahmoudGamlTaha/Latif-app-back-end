@@ -4,6 +4,7 @@ import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.converter.subscription.UserSubscriptionConverter;
 import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.dao.UserSubscriptionRepository;
+import com.commerce.backend.helper.resHelper;
 import com.commerce.backend.model.dto.SubscriptionTypeVO;
 import com.commerce.backend.model.dto.UserSubscriptionVO;
 import com.commerce.backend.model.entity.SubscriptionTypes;
@@ -45,10 +46,10 @@ public class UserSubscriptionServiceImpl implements UserSubscriptionService{
                 Page<UserSubscription> sub = repository.findUserSubscriptionByUserId(user, pageable);
                 sub.forEach(sb -> collect.add(converter.apply(sb)));
             }
-            return res(collect, true, "Success", pageable);
+            return resHelper.res(collect, true, MessageType.Success.getMessage(), pageable);
         }catch (Exception ex)
         {
-            return res(ex, false, "Error", null);
+            return resHelper.res(ex, false, MessageType.Fail.getMessage(), null);
         }
     }
 
@@ -59,16 +60,16 @@ public class UserSubscriptionServiceImpl implements UserSubscriptionService{
                 UserSubscription sub = repository.findById(id).orElse(null);
                 if(sub != null) {
                     UserSubscriptionVO vo = converter.apply(sub);
-                    return res(vo, true, "Success", null);
+                    return resHelper.res(vo, true, MessageType.Success.getMessage(), null);
                 }else{
-                    return res(null, true, "Not Found", null);
+                    return resHelper.res(null, true, MessageType.Missing.getMessage(), null);
                 }
             }else{
-                return res(null, true, "Not Found", null);
+                return resHelper.res(null, true, MessageType.Missing.getMessage(), null);
             }
         }catch (Exception ex)
         {
-            return res(ex, false, "Error", null);
+            return resHelper.res(ex, false, MessageType.Fail.getMessage(), null);
         }
     }
 
@@ -82,10 +83,10 @@ public class UserSubscriptionServiceImpl implements UserSubscriptionService{
                 Page<UserSubscription> sub = repository.findUserSubscriptionByUserId(user, pageable);
                 sub.forEach(sb -> collect.add(converter.apply(sb)));
             }
-            return res(collect, true, "Success", pageable);
+            return resHelper.res(collect, true, MessageType.Success.getMessage(), pageable);
         }catch (Exception ex)
         {
-            return res(ex, false, "Error", null);
+            return resHelper.res(ex, false, MessageType.Fail.getMessage(), null);
         }
     }
 
@@ -98,32 +99,29 @@ public class UserSubscriptionServiceImpl implements UserSubscriptionService{
             UserSubscription userSubscriptions = repository.findByUserId(user, currentDate);
            if(userSubscriptions != null)
            {
-               String msg = "Dear customer you are already on '"+
-                       userSubscriptions.getSubscriptionId().getName()+
-                       "' that will end in date "+ DateFor.format(userSubscriptions.getEndDate());
-               return res(null, false, msg, null);
+               return resHelper.res(null, false, MessageType.Fail.getMessage(), null);
            }else {
                UserSubscription entity = converter.requestToEntity(request);
                UserSubscription repo = repository.save(entity);
-               return res(converter.apply(repo), true, "Success", null);
+               return resHelper.res(converter.apply(repo), true, MessageType.Success.getMessage(), null);
            }
         }catch(Exception ex){
-            return res(ex, false, "Failed", null);
+            return resHelper.res(ex, false, MessageType.Fail.getMessage(), null);
         }
     }
 
     @Override
     public BasicResponse update(UserSubscriptionRequest request, Long id) {
         if (id == null) {
-            return res(null, false, "Invalid Id", null);
+            return resHelper.res(null, false, MessageType.Missing.getMessage(), null);
         }
         UserSubscription entity = repository.findById(id).orElse(null);
         if(entity != null){
             UserSubscription sub = converter.update(request, entity);
             UserSubscriptionVO vo = converter.apply(repository.save(sub));
-            return res(vo, true, "Success", null);
+            return resHelper.res(vo, true, MessageType.Success.getMessage(), null);
         }else{
-            return res(null, true, "Not Found", null);
+            return resHelper.res(null, true, MessageType.Missing.getMessage(), null);
         }
     }
 
@@ -131,36 +129,17 @@ public class UserSubscriptionServiceImpl implements UserSubscriptionService{
     public BasicResponse delete(Long id) {
         try {
             if (id == null) {
-                return res(null, false, "Invalid Id", null);
+                return resHelper.res(null, false, MessageType.Missing.getMessage(), null);
             }
             UserSubscription sub = repository.findById(id).orElse(null);
             if(sub != null){
                 repository.delete(sub);
-                return res("Deleted Successfully!", true, "Success", null);
+                return resHelper.res("Deleted Successfully!", true, MessageType.Success.getMessage(), null);
             }else{
-                return res(null, true, "Not Found", null);
+                return resHelper.res(null, true, MessageType.Missing.getMessage(), null);
             }
         }catch(Exception ex){
-            return res(ex, false, "Error", null);
+            return resHelper.res(ex, false, MessageType.Fail.getMessage(), null);
         }
-    }
-
-    public BasicResponse res(Object obj, boolean success, String msg, Pageable pageable)
-    {
-        BasicResponse res = new BasicResponse();
-        HashMap<String, Object> map = new HashMap<>();
-
-        if( obj instanceof Exception) {
-            map.put(MessageType.Data.getMessage(), ((Exception) obj).getStackTrace());
-        } else {
-            map.put(MessageType.Data.getMessage(),  obj);
-            if(pageable != null) {
-                map.put(MessageType.CurrentPage.getMessage(), pageable.getPageNumber());
-            }
-        }
-        res.setMsg(msg);
-        res.setSuccess(success);
-        res.setResponse(map);
-        return res;
     }
 }

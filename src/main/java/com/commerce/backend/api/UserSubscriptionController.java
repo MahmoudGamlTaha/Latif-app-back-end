@@ -1,5 +1,6 @@
 package com.commerce.backend.api;
 
+import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.model.request.subscription.UserSubscriptionRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.service.UserSubscriptionService;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 public class UserSubscriptionController extends PublicApiController{
@@ -19,9 +22,9 @@ public class UserSubscriptionController extends PublicApiController{
 
     @GetMapping(value = "/userSubscription/getByUserId")
     public ResponseEntity<BasicResponse> getUserSubscriptionByUserId(@RequestParam(required = true) Long userId,
-                                                                     @RequestParam(required = false) Integer page,
-                                                                     @RequestParam(required = false)Integer size){
-        return new ResponseEntity<>(service.findByUserId(userId, page, size), HttpStatus.OK);
+                                                                     @RequestParam(required = false) Optional<Integer> page,
+                                                                     @RequestParam(required = false) Optional<Integer> size){
+        return new ResponseEntity<>(service.findByUserId(userId, page.orElse(0), size.orElse(SystemConstant.MOBILE_PAGE_SIZE)), HttpStatus.OK);
     }
 
     @PostMapping(value = "/userSubscription/create")
@@ -41,9 +44,9 @@ public class UserSubscriptionController extends PublicApiController{
 
     @GetMapping(value = "/userSubscription/getBySubscriptionType")
     public ResponseEntity<BasicResponse> getBySubscriptionType(@RequestParam(required = true) Long SubscriptionTypeId,
-                                                                     @RequestParam(required = false) Integer page,
-                                                                     @RequestParam(required = false)Integer size){
-        return new ResponseEntity<>(service.findBySubscriptionId(SubscriptionTypeId, page, size), HttpStatus.OK);
+                                                               @RequestParam(required = false) Optional<Integer> page,
+                                                               @RequestParam(required = false) Optional<Integer> size){
+        return new ResponseEntity<>(service.findBySubscriptionId(SubscriptionTypeId, page.orElse(0), size.orElse(SystemConstant.MOBILE_PAGE_SIZE)), HttpStatus.OK);
     }
 
     @GetMapping(value = "/userSubscription/getById")

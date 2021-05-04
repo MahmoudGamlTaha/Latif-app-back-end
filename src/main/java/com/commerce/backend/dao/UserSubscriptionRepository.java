@@ -18,4 +18,5 @@ public interface UserSubscriptionRepository extends JpaRepository<UserSubscripti
     UserSubscription findByUserId(User user, Date now);
     Page<UserSubscription> findUserSubscriptionByUserId(User userId, Pageable pageable);
     Page<UserSubscription> findUserSubscriptionBySubscriptionId(SubscriptionTypes sub, Pageable pageable);
+    Long countByEndDateGreaterThan(Date now);
 }

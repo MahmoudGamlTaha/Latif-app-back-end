@@ -1,5 +1,6 @@
 package com.commerce.backend.dao;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -68,5 +69,11 @@ public class CustomUserAdsCriteriaHelper {
 		});
 		
 		 return userAds;
+	 }
+	 public Object getCountByCategory(Long categoryId){
+		 String queryString = "SELECT Count(*) FROM user_ads WHERE category_id = :catId";
+		 Query query = entityManager.createNativeQuery(queryString).setParameter("catId", categoryId);
+		 System.out.println(query.getSingleResult());
+		 return query.getSingleResult();
 	 }
 }
