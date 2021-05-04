@@ -34,8 +34,8 @@ public class User {
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
   private Cart cart;
   
- // @OneToMany(mappedBy = "created_by")
-  //private UserAds ads;
+  @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
+  private Set<UserAds> ads;
   
   @Column(name = "email", unique = true)
   private String email;
