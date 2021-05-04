@@ -9,31 +9,32 @@ import javax.persistence.*;
 
 import com.commerce.backend.model.composite.UserRoleKey;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "user_roles")
+@Table(name = "user_roles", uniqueConstraints= {@UniqueConstraint(columnNames = {"user_id", "role_Id"})})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserRole {
+public class UserRole  {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_roles_id_seq")
     @SequenceGenerator(name = "user_roles_id_seq", sequenceName = "user_roles_id_seq", allocationSize = 1)
     private Long id;
 
-    @EmbeddedId
-    UserRoleKey userRoleKey;
-
     @ManyToOne
-    @MapsId("userId")
     @JoinColumn(name = "user_id")
     User user;
   
     @ManyToOne
-    @MapsId("roleId")
     @JoinColumn(name = "role_id")
     Role role;
     

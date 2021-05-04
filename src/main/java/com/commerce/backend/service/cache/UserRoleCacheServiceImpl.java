@@ -1,7 +1,10 @@
 package com.commerce.backend.service.cache;
 
+import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.dao.UserRoleRepository;
 import com.commerce.backend.model.composite.UserRoleKey;
+import com.commerce.backend.model.entity.Role;
+import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.entity.UserRole;
 import com.commerce.backend.model.request.role.UserRoleRequest;
 import com.commerce.backend.model.request.role.UserRoleRequestUpdate;
@@ -30,8 +33,14 @@ public class UserRoleCacheServiceImpl implements UserRoleCacheService{
         	UserRoleKey key = new UserRoleKey();
         	key.setRoleId(userRole.getRoleId());
         	key.setUserId(userRole.getUserId());
+        	User user = new User();
+         
+        	user.setId(userRole.getUserId());
+            Role role = new Role();
+            role.setId(userRole.getRoleId());
             UserRole ur = UserRole.builder()
-                    .userRoleKey(key)
+                    .user(user)
+                    .role(role)
                     .created_at(new Date())
                     .build();
             return repo.save(ur);
@@ -47,18 +56,17 @@ public class UserRoleCacheServiceImpl implements UserRoleCacheService{
             UserRole ur = repo.findById(userRole.getId()).orElse(null);
             assert ur != null;
             UserRoleKey key = new UserRoleKey();
-            if(ur.getUserRoleKey() == null) {
-		          ur.setUserRoleKey(key);	
-		        }
+            userRole.setId(userRole.getId());
+            
             if(userRole.getRoleId() != null)
             {
 		        
-                ur.getUserRoleKey().setRoleId(userRole.getRoleId());
+                ur.getRole().setId(userRole.getRoleId());
             }
 
             if(userRole.getUserId() != null)
             {
-                ur.getUserRoleKey().setUserId(userRole.getUserId());
+                ur.getUser().setId(userRole.getUserId());
             }
             ur.setUpdated_at(new Date());
             return repo.save(ur);
@@ -71,7 +79,7 @@ public class UserRoleCacheServiceImpl implements UserRoleCacheService{
     @Override
     public RoleResponse getUserRoleByUserId(Long id) throws Exception {
         try {
-            Long roleId = repo.getUserRoleByUserId(id).getUserRoleKey().getRoleId();
+            Long roleId = repo.getUserRoleByUserId(id).getRole().getId();
             return roleService.getRoleById(roleId);
         }catch (Exception e)
         {
@@ -90,7 +98,7 @@ public class UserRoleCacheServiceImpl implements UserRoleCacheService{
         }catch (Exception e)
         {
             response.setSuccess(false);
-            response.setMsg("Error");
+            response.setMsg(MessageType.Fail.getMessage());
         }
         return response;
     }

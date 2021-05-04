@@ -4,8 +4,6 @@ import com.commerce.backend.constants.SecurityConstants;
 import com.commerce.backend.dao.userAuth.UserPrincipalDetails;
 import com.commerce.backend.dao.userAuth.UserPrincipalDetailsService;
 
-import sun.net.www.protocol.http.AuthenticatorKeys.AuthenticatorKeyAccess;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -38,7 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserPrincipalDetailsService userPrincipalDetailsService;
 
-    @Bean
+  /*  @Bean
     public OpaqueTokenIntrospector introspector() {
         return new CustomAuthoritiesOpaqueTokenIntrospector(
                 restTemplateBuilder,
@@ -50,7 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 securityConstants.getAuthUsername()
         );
     }
-
+*/
    @Override
     public void configure(final HttpSecurity http) throws Exception {
          http.cors()
@@ -59,7 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
                 .antMatchers(securityConstants.getPublicUrl()).permitAll()
-                .antMatchers(securityConstants.getPublicUrl()).authenticated()
+                .antMatchers(securityConstants.getAuthUrl()).authenticated()
                 .anyRequest()
                 .authenticated()
                 .and()

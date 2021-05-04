@@ -32,7 +32,7 @@ public class User {
   private Cart cart;
   
   @OneToMany(mappedBy = "createdBy")
-   private UserAds ads;
+   private Set<UserAds> ads;
   
   @Column(name = "email", unique = true)
   private String email;
