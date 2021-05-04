@@ -61,12 +61,12 @@ public class CustomUserAdsCriteriaHelper {
 				                         .setMaxResults(pageable.getPageSize())
 				                       
 	     			                     .getResultList();	
-		userAds.stream().forEach(arg0 ->
+	/*	userAds.stream().forEach(arg0 ->
 		{
 			this.loggerS.info("VV"+String.valueOf(arg0.getTotalPage()));
 			this.loggerS.info("TT"+String.valueOf(arg0.getTotalItem()));
 		});
-		
+		*/
 		 return userAds;
 	 }
 }
