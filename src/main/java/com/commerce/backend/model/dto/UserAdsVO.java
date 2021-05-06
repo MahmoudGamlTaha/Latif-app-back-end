@@ -6,18 +6,15 @@ import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.converter.KeyResponse;
 import com.commerce.backend.model.entity.User;
 
+import com.commerce.backend.model.entity.UserAdsImage;
 import lombok.Data;
 
 @Data
 public class UserAdsVO {
 	
-    private Object id;
-	
-	private Object code;
+    private long id;
 
-	private Object city;
-
-	private Object type;
+	private String city;
 
 	private String code;
 	
@@ -27,31 +24,31 @@ public class UserAdsVO {
 	
 	private boolean active;
 	
-	private Object active;
+	private String name ;
 	
-	private Object name ;
+	private double longitude;
 	
-	private Object longitude;
+	private double latitude;
 	
-	private Object latitude;
+	private Date created_at;
 	
-	private Object created_at;
+	private Date updated_at;
 	
-	private Object updated_at;
+	private String description;
 	
-	private Object description;
-	
-	private Object short_description;
+	private String short_description;
 
-	private Object price;
+	private Float price;
 	
-	private Object external_link;
+	private Boolean external_link;
 	
-	private Object categoryName;
+	private String categoryName;
 	
-	private Object categoryNameAr;
+	private String categoryNameAr;
 	
-	private Object  categoryId;
+	private Long  categoryId;
+
+	private Set<UserAdsImageVO> Images = new HashSet<UserAdsImageVO>();
   
 	private List<Object> extra = new LinkedList<>();
 }

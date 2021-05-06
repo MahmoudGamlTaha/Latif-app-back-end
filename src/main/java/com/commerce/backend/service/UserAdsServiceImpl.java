@@ -141,10 +141,10 @@ public class UserAdsServiceImpl implements UserAdsService {
 			if(location != null)
 			{
 				Page<UserAds> ads = customUserAdsRepo.findAll(location.getLongitude(), location.getLatitude(), type.getType(), pageable);
-				ads.forEach((ad) -> collect.add(userAdsToVoConverter.convertToVo(ad)));
+				ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 			}else if(type != null){
 				Page<UserAds> ads = customUserAdsRepo.findUserAdsByType(type.getType(), pageable);
-				ads.forEach((ad) -> collect.add(userAdsToVoConverter.convertToVo(ad)));
+				ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 			}
 
 			return res(collect, true, null);
@@ -194,7 +194,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		UserAds single = ads.stream().findFirst().orElse(null);
 		
 		List<UserAdsVO> collect = new ArrayList<>();
-		ads.forEach((ad) -> collect.add(userAdsToVoConverter.convertToVo(ad)));
+		ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 
 		BasicResponse response = res(collect, true, pageable); 
 		if(single != null) {
@@ -218,7 +218,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	public BasicResponse findAdsById(Long id) {
 		try{
 			UserAds ad = (UserAds) customUserAdsRepo.findById(id).orElse(null);
-			UserAdsVO vo = userAdsToVoConverter.convertToVo(ad);
+			UserAdsVO vo = userAdsToVoConverter.apply(ad);
 			return res(vo, true, null);
 		}
 		catch (Exception e)
@@ -266,7 +266,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		response.setSuccess(true);
 		response.setMsg("Ads created successfully ");
 		HashMap<String ,Object> map = new HashMap<String, Object>();
-		UserAdsVO userAdVo = userAdsToVoConverter.convertToVo(entity);
+		UserAdsVO userAdVo = userAdsToVoConverter.apply(entity);
 		map.put("data", userAdVo);
 		map.put("id", entity.getId());
 		response.setResponse(map);
@@ -297,7 +297,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 				this.saveEntityFiles(ad, fileList, files, ad.getType(), ad.getExternalLink());
 			}
 			UserAds dd = userAdsConverter.updateAd(request, ad);
-			UserAdsVO updatedAd = userAdsToVoConverter.convertToVo(customUserAdsRepo.save(dd));
+			UserAdsVO updatedAd = userAdsToVoConverter.apply(customUserAdsRepo.save(dd));
 			return res(updatedAd, true, null);
 		}catch (Exception ex)
 		{
@@ -414,7 +414,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 				.getResultList();
 		System.out.println(userAds);
 		List<UserAdsVO> collect = new ArrayList<>();
-		userAds.forEach((ad) -> collect.add(userAdsToVoConverter.convertToVo(ad)));
+		userAds.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 		return res(collect, true, pageable);
 	}
 
