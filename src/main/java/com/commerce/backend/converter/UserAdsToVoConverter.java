@@ -1,10 +1,8 @@
 package com.commerce.backend.converter;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
+import com.commerce.backend.helper.FieldsNames;
 import com.commerce.backend.model.request.userAds.*;
 
 import org.hibernate.Hibernate;
@@ -178,7 +176,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 	public UserAdsVO copyUserAdsEntityToVo(UserAds source, UserAdsVO destination) {
 		//assert(source.getType() == destination.getType());
 		
-		destination.setId(source.getId());
+		//destination.setId(source.getId());
 		destination.setActive(source.isActive());
 		destination.setCode(source.getCode());
 		destination.setDescription(source.getDescription());
@@ -201,7 +199,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			     imageVos.add(imgVo);
 			 });
           
-   	      destination.setImages(imageVos);
+   	      //destination.setImages(imageVos);
 		 }
 		User user = new User();
 		if(source.getCreatedBy() != null) {
@@ -231,57 +229,57 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		    ((UserPetAdsVO)destination).setVaccinationCertificate(((UserPetAds)source).getVaccinationCertifcate());;
 		    ((UserPetAdsVO)destination).setWeaned(((UserPetAds)source).getWeaned());
 		    ((UserPetAdsVO)destination).setStock(((UserPetAdsVO)destination).getStock());
-		    if(((UserPetAdsVO)destination).getImages() != null){
-		    	Optional<UserAdsImageVO> adsImage = ((UserPetAdsVO)destination).getImages().stream().findFirst();
-		    	if(adsImage.isPresent()) {
-		    	((UserPetAdsVO)destination).setImage(adsImage.get().getImage());
-		    	}
+		  //  if(((UserPetAdsVO)destination).getImages() != null){
+		//    	Optional<UserAdsImageVO> adsImage = ((UserPetAdsVO)destination).getImages().stream().findFirst();
+		    //	if(adsImage.isPresent()) {
+		    //	((UserPetAdsVO)destination).setImage(adsImage.get().getImage());
+		    //	}
 		    
-		    }
+		    //}
 		    PetCategory category = ((UserPetAds)source).getCategory();
 		    String categoryName = category == null ?null:category.getName();
-		    if(categoryName != null) {
+		    /*if(categoryName != null) {
 		    ((UserPetAdsVO)destination).setCategoryName(categoryName);
 		    ((UserPetAdsVO)destination).setCategoryNameAr(category.getNameAr());
 		    ((UserPetAdsVO)destination).setCategoryId(category.getId());
-		    }
+		    }*/
 		}
 		if(source.getType() == AdsType.SERVICE) {
 			ServiceCategory category = ((UserServiceAds)source).getServiceCategory();
 			 //ItemObjectCategory orgCategory = this.itemObjectCategoryRepository.findById(category.getId()).orElse(null);
 		
-			if(category != null) {
+			/*if(category != null) {
 			((UserServiceVO)destination).setAllowAtHome(((UserServiceAds)source).getAllowServiceAtHome());
 			((UserServiceVO)destination).setCategoryId(category.getId());
 			((UserServiceVO)destination).setCategoryName(category.getName());
 			((UserServiceVO)destination).setCategoryNameAr(category.getNameAr());
-			}
+			}*/
 		}
 		else if(source.getType() == AdsType.PET_CARE) {
 			((UserMedicalVO)destination).setAllowServiceAtHome(((UserMedicalAds)source).getAllowServiceAtHome());
 			MedicalCategory category = ((UserMedicalAds)source).getMedicalCategoryType();
-			if(category != null) {
+			/*(category != null) {
 			((UserMedicalVO)destination).setAllowServiceAtHome(((UserMedicalAds)source).getAllowServiceAtHome());
 			((UserMedicalVO)destination).setCategoryId(category.getId());
 			((UserMedicalVO)destination).setCategoryName(category.getName());
 			((UserMedicalVO)destination).setCategoryNameAr(category.getNameAr());
-			}
+			}*/
 		}
 		else if(source.getType() == AdsType.ACCESSORIES) {
 			((UserAccVO)destination).setUsed(((UserAccAds)source).getUsed());
 		    ItemCategory itemCategory = ((UserAccAds)source).getItemCategoryId();
 		    if(itemCategory != null) {
-			((UserAccVO)destination).setCategoryId(itemCategory.getId());
+			/*((UserAccVO)destination).setCategoryId(itemCategory.getId());
 			((UserAccVO)destination).setCategoryName(itemCategory.getNameAr());
-			
+			*/
 			((UserAccVO)destination).setStock(((UserAccAds)source).getStock());
 			
 			ItemCategory category = ((UserAccAds)source).getItemCategoryId();
 			((UserAccVO)destination).setAllowServiceAtHome(((UserAccAds)source).getAllowServiceAtHome());
 			if(category != null) {
-			((UserAccVO)destination).setCategoryId(category.getId());
+			/*((UserAccVO)destination).setCategoryId(category.getId());
 			((UserAccVO)destination).setCategoryName(category.getName());
-			((UserAccVO)destination).setCategoryNameAr(category.getNameAr());
+			((UserAccVO)destination).setCategoryNameAr(category.getNameAr());*/
 			}
 		    }
 		}
@@ -290,5 +288,74 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		}
 		 
 		return destination;
+	}
+
+	public UserAdsVO convertToVo(UserAds entity){
+		UserAdsVO userAdsVo = new UserAdsVO();
+
+		userAdsVo.setId(new KeyResponse(FieldsNames.id, FieldsNames.id_ar, entity.getId()));
+		userAdsVo.setName(new KeyResponse(FieldsNames.name, FieldsNames.name_ar, entity.getName()));
+		userAdsVo.setCode(new KeyResponse(FieldsNames.code, FieldsNames.code_ar, entity.getCode()));
+		userAdsVo.setCity(new KeyResponse(FieldsNames.city, FieldsNames.code_ar, entity.getCity()));
+		userAdsVo.setDescription(new KeyResponse(FieldsNames.desc, FieldsNames.desc_ar, entity.getDescription()));
+		userAdsVo.setShort_description(new KeyResponse(FieldsNames.short_desc, FieldsNames.short_desc_ar, entity.getShortDescription()));
+		userAdsVo.setActive(new KeyResponse(FieldsNames.active, FieldsNames.active_ar, entity.isActive()));
+		userAdsVo.setType(new KeyResponse(FieldsNames.type, FieldsNames.type_ar, entity.getType()));
+		userAdsVo.setPrice(new KeyResponse(FieldsNames.price, FieldsNames.price_ar, entity.getPrice()));
+		userAdsVo.setLongitude(new KeyResponse(FieldsNames.longitude, FieldsNames.longitude_ar, entity.getLongitude()));
+		userAdsVo.setLatitude(new KeyResponse(FieldsNames.longitude, FieldsNames.latitude_ar, entity.getLatitude()));
+		userAdsVo.setCreated_at(new KeyResponse(FieldsNames.createdAt, FieldsNames.createdAt_ar, entity.getLatitude()));
+		userAdsVo.setUpdated_at(new KeyResponse(FieldsNames.updatedAt, FieldsNames.updatedAt_ar, entity.getUpdatedAt()));
+		userAdsVo.setExternal_link(new KeyResponse(FieldsNames.externalLink, FieldsNames.externalLink_ar, entity.getExternalLink()));
+		Set<UserAdsImage> images = entity.getUserAdsImage();
+		if(images != null) {
+			Set<UserAdsImageVO> imageVos = new HashSet<UserAdsImageVO>();
+			images.stream().forEach(img ->{
+				UserAdsImageVO imgVo = new UserAdsImageVO();
+				imgVo.setId(img.getId());
+				imgVo.setImage(img.getImage());
+				imgVo.setExternal_link(entity.getExternalLink());
+				imgVo.setUserAdsId(entity.getId());
+				imageVos.add(imgVo);
+			});
+			userAdsVo.setImages(new KeyResponse(FieldsNames.image, FieldsNames.image_ar, imageVos));
+		}
+		if(entity.getCreatedBy() != null) {
+			User user = new User();
+			user.setId(entity.getCreatedBy().getId());
+			user.setFirstName(entity.getCreatedBy().getFirstName());
+			user.setLastName(entity.getCreatedBy().getLastName());
+			user.setAvatar(entity.getCreatedBy().getAvatar());
+			user.setPhone(entity.getCreatedBy().getPhone());
+			userAdsVo.setCreatedBy(new KeyResponse(FieldsNames.createdBy, FieldsNames.createdBy_ar, user));
+		}
+		List<Object> extraInfo = new ArrayList<>();
+		if(entity.getType() == AdsType.PETS) {
+			extraInfo.add(new KeyResponse(FieldsNames.barkingProblem, FieldsNames.barkingProblem_ar, ((UserPetAds)entity).getBarkingProblem()));
+			extraInfo.add(new KeyResponse(FieldsNames.bread, FieldsNames.bread_ar, ((UserPetAds)entity).getBreed()));
+			extraInfo.add(new KeyResponse(FieldsNames.food, FieldsNames.food_ar, ((UserPetAds)entity).getFood()));
+			extraInfo.add(new KeyResponse(FieldsNames.diseasesOrDisabilities, FieldsNames.diseasesOrDisabilities_ar, ((UserPetAds)entity).getDiseasesDisabilities()));
+			extraInfo.add(new KeyResponse(FieldsNames.diseasesOrDisabilitiesDesc, FieldsNames.diseasesOrDisabilitiesDesc_ar, ((UserPetAds)entity).getDiseasesDisabilitiesDesc()));
+			extraInfo.add(new KeyResponse(FieldsNames.Neutering, FieldsNames.Neutering_ar, ((UserPetAds)entity).getNeutering()));
+			extraInfo.add(new KeyResponse(FieldsNames.training, FieldsNames.training_ar, ((UserPetAds)entity).getTraining()));
+			extraInfo.add(new KeyResponse(FieldsNames.PlayWithKids, FieldsNames.PlayWithKids_ar, ((UserPetAds)entity).getPlayWithKids()));
+			extraInfo.add(new KeyResponse(FieldsNames.Passport, FieldsNames.Passport_ar, ((UserPetAds)entity).getPassport()));
+			extraInfo.add(new KeyResponse(FieldsNames.VaccinationCertificate, FieldsNames.VaccinationCertificate_ar, ((UserPetAds)entity).getVaccinationCertifcate()));
+			extraInfo.add(new KeyResponse(FieldsNames.weaned, FieldsNames.weaned_ar, ((UserPetAds)entity).getWeaned()));
+			extraInfo.add(new KeyResponse(FieldsNames.Stock, FieldsNames.Stock_ar, ((UserPetAds)entity).getStock()));
+			//extraInfo.add(new KeyResponse(FieldsNames.Category, FieldsNames.Category_ar, ((UserPetAds) entity).getCategory()));
+		}else if(entity.getType() == AdsType.SERVICE) {
+			extraInfo.add(new KeyResponse(FieldsNames.AllowAtHome, FieldsNames.AllowAtHome_ar, ((UserServiceAds)entity).getAllowServiceAtHome()));
+			//extraInfo.add(new KeyResponse(FieldsNames.Category, FieldsNames.Category_ar, ((UserServiceAds) entity).getServiceCategory()));
+		}else if(entity.getType() == AdsType.PET_CARE) {
+			extraInfo.add(new KeyResponse(FieldsNames.AllowAtHome, FieldsNames.AllowAtHome_ar, ((UserMedicalAds)entity).getAllowServiceAtHome()));
+			//extraInfo.add(new KeyResponse(FieldsNames.Category, FieldsNames.Category_ar, ((UserMedicalAds) entity).getMedicalCategoryType()));
+		}else if(entity.getType() == AdsType.ACCESSORIES) {
+			extraInfo.add(new KeyResponse(FieldsNames.AllowAtHome, FieldsNames.AllowAtHome_ar, ((UserAccAds)entity).getAllowServiceAtHome()));
+			extraInfo.add(new KeyResponse("used", "مستعمل", ((UserAccAds)entity).getUsed()));
+			//extraInfo.add(new KeyResponse(FieldsNames.Category, FieldsNames.Category_ar, ((UserAccAds) entity).getItemCategoryId()));
+		}
+		userAdsVo.setExtra(extraInfo);
+		return userAdsVo;
 	}
 }
