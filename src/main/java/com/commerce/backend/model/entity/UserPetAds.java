@@ -8,6 +8,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -71,14 +72,5 @@ public class UserPetAds extends UserAds {
 	
 	@Column(name = "diseases_disabilities_desc")
 	private String diseasesDisabilitiesDesc;
-
-	//@ManyToOne
-	//@JoinColumn(name ="category_type")
-	//private PetCategory petCategoryType;
-
-	@ManyToOne
-	@JoinColumn(name ="category_id")
-	@NotFound(action = NotFoundAction.IGNORE)
-	private PetCategory category;
 	
 }

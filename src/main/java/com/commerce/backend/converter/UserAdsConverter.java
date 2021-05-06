@@ -3,6 +3,7 @@ package com.commerce.backend.converter;
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.constants.TrainningType;
+import com.commerce.backend.dao.ItemCategoryRepository;
 import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.model.dto.*;
 import com.commerce.backend.model.entity.*;
@@ -81,6 +82,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         }
      
         entity.setName(String.valueOf( getHashMapKeyWithCheck(hashedData,"name", -1)));
+        entity.setCode(String.valueOf(hashedData.get("code")));
         entity.setDescription(String.valueOf( getHashMapKeyWithCheck(hashedData,"description", -1)));
         entity.setShortDescription(String.valueOf( getHashMapKeyWithCheck(hashedData,"short_description", -1)));
         entity.setActive(Boolean.parseBoolean(String.valueOf(getHashMapKeyWithCheck(hashedData,"active", 1))));
@@ -151,20 +153,20 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             ((UserAccAds)entity).setUsed((Boolean) hashedData.get("used"));
 			ItemCategory category = new ItemCategory();
 			category.setId(Long.parseLong(String.valueOf(hashedData.get("category"))));
-			((UserAccAds)entity).setItemCategoryId(category);
+			((UserAccAds)entity).setCategory(category);
         }
         else if(request.getType() == AdsType.PET_CARE) {
             ((UserMedicalAds)entity).setAllowServiceAtHome((Boolean) hashedData.get("allow_at_home"));
             MedicalCategory medCategory = new MedicalCategory();
             medCategory.setId(Long.parseLong(String.valueOf(getHashMapKeyWithCheck(hashedData,"category", 0))));
-            ((UserMedicalAds)entity).setMedicalCategoryType(medCategory);
+            ((UserMedicalAds)entity).setCategory(medCategory);
         }
         else if(request.getType() == AdsType.SERVICE) {
 			((UserServiceAds)entity).setAllowServiceAtHome(Boolean.parseBoolean(String.valueOf(getHashMapKeyWithCheck(hashedData,"allow_at_home", 1))));
 			 this.loggerS.info("Passss allow at home");
 			ServiceCategory serviceCategory = new ServiceCategory();
-			serviceCategory.setId(Long.parseLong(String.valueOf(getHashMapKeyWithCheck(hashedData,"category", 1))));
-			 ((UserServiceAds)entity).setServiceCategory(serviceCategory);
+			serviceCategory.setId(Long.parseLong(String.valueOf(getHashMapKeyWithCheck(hashedData,"category", 0))));
+			 ((UserServiceAds)entity).setCategory(serviceCategory);
 			 this.loggerS.info("Passss create");
         }
         
@@ -259,7 +261,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             {
                 MedicalCategory medCategory = new MedicalCategory();
                 medCategory.setId(Long.parseLong(String.valueOf(getHashMapKeyWithCheck(data,"category", 0))));
-                ((UserMedicalAds)ad).setMedicalCategoryType(medCategory);
+                ((UserMedicalAds)ad).setCategory(medCategory);
             }
         }
         else if(ad.getType().equals(AdsType.SERVICE))
@@ -272,7 +274,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             {
                 ServiceCategory serviceCategory = new ServiceCategory();
                 serviceCategory.setId(Long.parseLong(String.valueOf(getHashMapKeyWithCheck(data,"category", 1))));
-                ((UserServiceAds)ad).setServiceCategory(serviceCategory);
+                ((UserServiceAds)ad).setCategory(serviceCategory);
             }
         }else if(ad.getType().equals(AdsType.ACCESSORIES))
         {
@@ -283,7 +285,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             if(data.get("category") != null) {
                 ItemCategory category = new ItemCategory();
                 category.setId(Long.parseLong(String.valueOf(data.get("category"))));
-                ((UserAccAds) ad).setItemCategoryId(category);
+                ((UserAccAds) ad).setCategory(category);
             }
         }else if(ad.getType().equals(AdsType.PETS))
         {

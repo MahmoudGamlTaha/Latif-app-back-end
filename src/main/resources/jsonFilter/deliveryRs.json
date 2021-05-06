@@ -2,8 +2,6 @@
   {"name": "name","type": "string", "label": "Category", "required": true},
   {"name": "driver_method", "type": "select","label": "driver method", "label_ar": "طريقة التوصيل'", "required": true, "options":[{"label" : "Car", "code":"Car"}, {"label" : "MotoCycle", "code":"MOTO_CYCLE"}], "multi":false},
   {"name": "city", "type": "select","label": "serve City", "label_ar": "منقظة العمل", "required": true, "options":[{"label" : "Cairo", "code":"Cairo"}, {"label" : "Giza", "code":"Giza"}, {"label" : "Minia", "code":"Minia"}], "multi":false},
-  {"name": "description", "type": "string","label": "Description", "required": true},
-  {"name": "short_description", "type": "string","label": "Short Description", "required": true},
   {"name": "price", "type": "money","label": "Price per Km", "required": true},
   {"name": "image", "type": "files","label": "driver licence", "label_ar": "رخصة القيادة", "required": true},
   {"name": "active", "type": "boolean","label": "Active", "required": true},
