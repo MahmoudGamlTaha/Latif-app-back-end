@@ -139,11 +139,11 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		    PetCategory category = (PetCategory)((UserPetAds)source).getCategory();
 
 		    String categoryName = category == null ?null:category.getName();
-		    /*if(categoryName != null) {
+		    if(categoryName != null) {
 		    ((UserPetAdsVO)destination).setCategoryName(categoryName);
 		    ((UserPetAdsVO)destination).setCategoryNameAr(category.getNameAr());
 		    ((UserPetAdsVO)destination).setCategoryId(category.getId());
-		    }*/
+		    }
 		}
 		if(source.getType() == AdsType.SERVICE) {
 
