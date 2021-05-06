@@ -1,20 +1,24 @@
 package com.commerce.backend.model.dto;
 
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 import com.commerce.backend.constants.AdsType;
+import com.commerce.backend.converter.KeyResponse;
 import com.commerce.backend.model.entity.User;
-import com.commerce.backend.model.entity.UserAdsImage;
 
 import lombok.Data;
 
 @Data
 public class UserAdsVO {
 	
-    private long id;
+    private Object id;
 	
-	
+	private Object code;
+
+	private Object city;
+
+	private Object type;
+
 	private String code;
 	
 	private AdsType type;        
@@ -23,30 +27,31 @@ public class UserAdsVO {
 	
 	private boolean active;
 	
-	private String name ;
+	private Object active;
 	
-	private double longitude;
+	private Object name ;
 	
-	private double latitude;
+	private Object longitude;
 	
-	private Date created_at;
+	private Object latitude;
 	
-	private Date updated_at;
+	private Object created_at;
 	
-	private String description;
+	private Object updated_at;
 	
-	private String short_description;
+	private Object description;
 	
-	private Float price;
+	private Object short_description;
+
+	private Object price;
 	
-	private Boolean external_link;
+	private Object external_link;
 	
-	private String categoryName;
+	private Object categoryName;
 	
-	private String categoryNameAr;
+	private Object categoryNameAr;
 	
-	private Long  categoryId;
-	
-	private Set<UserAdsImageVO> images;
-	 
+	private Object  categoryId;
+  
+	private List<Object> extra = new LinkedList<>();
 }
