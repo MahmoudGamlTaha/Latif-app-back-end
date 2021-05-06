@@ -219,7 +219,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		userAdsVo.setCreated_at(entity.getCreatedAt());
 		userAdsVo.setLatitude(entity.getLatitude());
 		userAdsVo.setUpdated_at(entity.getUpdatedAt());
-		userAdsVo.setExternal_link(entity.getExternalLink());
+		userAdsVo.setExternal_link(Boolean.parseBoolean(checkValue(entity.getExternalLink()).toString()));
 		Set<UserAdsImage> images = entity.getUserAdsImage();
 		if(images != null) {
 			Set<UserAdsImageVO> imageVos = new HashSet<UserAdsImageVO>();
@@ -244,17 +244,18 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		}
 		List<Object> extraInfo = new ArrayList<>();
 		if(entity.getType() == AdsType.PETS) {
-			extraInfo.add(new KeyResponse(FieldsNames.barkingProblem, FieldsNames.barkingProblem_ar, ((UserPetAds)entity).getBarkingProblem()));
-			extraInfo.add(new KeyResponse(FieldsNames.bread, FieldsNames.bread_ar, ((UserPetAds)entity).getBreed()));
+			
+			extraInfo.add(new KeyResponse(FieldsNames.barkingProblem, FieldsNames.barkingProblem_ar, checkValue(((UserPetAds)entity).getBarkingProblem())));
+			extraInfo.add(new KeyResponse(FieldsNames.bread, FieldsNames.bread_ar, checkValue(((UserPetAds)entity).getBreed())));
 			extraInfo.add(new KeyResponse(FieldsNames.food, FieldsNames.food_ar, ((UserPetAds)entity).getFood()));
-			extraInfo.add(new KeyResponse(FieldsNames.diseasesOrDisabilities, FieldsNames.diseasesOrDisabilities_ar, ((UserPetAds)entity).getDiseasesDisabilities()));
-			extraInfo.add(new KeyResponse(FieldsNames.diseasesOrDisabilitiesDesc, FieldsNames.diseasesOrDisabilitiesDesc_ar, ((UserPetAds)entity).getDiseasesDisabilitiesDesc()));
-			extraInfo.add(new KeyResponse(FieldsNames.Neutering, FieldsNames.Neutering_ar, ((UserPetAds)entity).getNeutering()));
+			extraInfo.add(new KeyResponse(FieldsNames.diseasesOrDisabilities, FieldsNames.diseasesOrDisabilities_ar, checkValue(((UserPetAds)entity).getDiseasesDisabilities())));
+			extraInfo.add(new KeyResponse(FieldsNames.diseasesOrDisabilitiesDesc, FieldsNames.diseasesOrDisabilitiesDesc_ar, checkValue(((UserPetAds)entity).getDiseasesDisabilitiesDesc())));
+			extraInfo.add(new KeyResponse(FieldsNames.Neutering, FieldsNames.Neutering_ar, checkValue(((UserPetAds)entity).getNeutering())));
 			extraInfo.add(new KeyResponse(FieldsNames.training, FieldsNames.training_ar, ((UserPetAds)entity).getTraining()));
-			extraInfo.add(new KeyResponse(FieldsNames.PlayWithKids, FieldsNames.PlayWithKids_ar, ((UserPetAds)entity).getPlayWithKids()));
+			extraInfo.add(new KeyResponse(FieldsNames.PlayWithKids, FieldsNames.PlayWithKids_ar, checkValue(((UserPetAds)entity).getPlayWithKids())));
 			extraInfo.add(new KeyResponse(FieldsNames.Passport, FieldsNames.Passport_ar, ((UserPetAds)entity).getPassport()));
-			extraInfo.add(new KeyResponse(FieldsNames.VaccinationCertificate, FieldsNames.VaccinationCertificate_ar, ((UserPetAds)entity).getVaccinationCertifcate()));
-			extraInfo.add(new KeyResponse(FieldsNames.weaned, FieldsNames.weaned_ar, ((UserPetAds)entity).getWeaned()));
+			extraInfo.add(new KeyResponse(FieldsNames.VaccinationCertificate, FieldsNames.VaccinationCertificate_ar, checkValue(((UserPetAds)entity).getVaccinationCertifcate())));
+			extraInfo.add(new KeyResponse(FieldsNames.weaned, FieldsNames.weaned_ar, checkValue(((UserPetAds)entity).getWeaned())));
 			extraInfo.add(new KeyResponse(FieldsNames.Stock, FieldsNames.Stock_ar, ((UserPetAds)entity).getStock()));
 			PetCategory category = (PetCategory)(entity).getCategory();
 			String categoryName = category == null ?null:category.getName();
@@ -262,6 +263,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 				userAdsVo.setCategoryName(categoryName);
 				userAdsVo.setCategoryNameAr(category.getNameAr());
 				userAdsVo.setCategoryId(category.getId());
+				
 			}
 		}else if(entity.getType() == AdsType.SERVICE) {
 			extraInfo.add(new KeyResponse(FieldsNames.AllowAtHome, FieldsNames.AllowAtHome_ar, ((UserServiceAds)entity).getAllowServiceAtHome()));
@@ -294,6 +296,16 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		}
 		userAdsVo.setExtra(extraInfo);
 		return userAdsVo;
+	}
+	public Object checkValue(Object b) {
+		if(b == null && b instanceof Boolean) {
+			return false;
+		}
+		
+		if(b == null && b instanceof String) {
+			return "N/A";
+		}
+		return b;
 	}
 
 }
