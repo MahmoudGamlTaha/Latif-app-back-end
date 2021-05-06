@@ -15,4 +15,8 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
             countQuery = "SELECT count(*) FROM Blog b WHERE CONCAT(b.title, b.description) LIKE %?1%",
             nativeQuery = false)
     Page<Blog> findAll(String keyword, Pageable pageable);
+    
+    @Query(value = "SELECT b FROM Blog b WHERE b.category = ?1",
+    		countQuery = "SELECT count(*) FROM Blog b where b.category = ?1 ")
+    Page<Blog> findByCategory(Long category, Pageable pageable);
 }

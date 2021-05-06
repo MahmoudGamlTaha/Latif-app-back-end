@@ -1,6 +1,8 @@
 package com.commerce.backend.model.response.blog;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.commerce.backend.converter.user.UserResponseConverter;
 import com.commerce.backend.model.entity.Blog;
@@ -19,17 +21,28 @@ public class BlogResponse {
     private String category;
     private String description;
     private String image;
+    private Set<String> images;
     private String path;
     private UserResponse user;
     private Date createdDate;
+    private boolean externalLink;
     public BlogResponse(Blog blog) {
         this.id = blog.getId();
         this.title = blog.getTitle();
         if(blog.getCategory() != null) {
         this.category = blog.getCategory().getName();
         }
+        if(blog.getBlogImage() != null) {
+        	this.images = new HashSet<String>();
+        	blog.getBlogImage().forEach(val -> {
+        		if(this.image == null) {
+        			this.image = val.getImage();
+        		}
+        		this.images.add(val.getImage());
+        	});
+        }
         this.description = blog.getDescription();
-        this.image = blog.getImage();
+       // this.image = blog.getImage();
         this.path = blog.getPath();
         
         this.createdDate = blog.getCreated_at();

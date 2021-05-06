@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,18 +54,21 @@ public class BlogController extends PublicApiController{
     @PostMapping("/blogs/create")
     //@Timed
     public ResponseEntity<BasicResponse> createBlog(@ModelAttribute @Valid BlogRequest blog,
-                                   @RequestParam(value = "files", required = false)
-                                   Optional<List<MultipartFile>> file,
-                                   @RequestParam(value = "extrnFile", required = false)
-                                   Optional<List<String>> extrnFile,
+                                   @RequestParam(value = "images", required = false)
+                                   ArrayList<MultipartFile> images,
+                                   @RequestParam(value = "extrnImage", required = false)
+                                   ArrayList<String> extrnImage,
                                    boolean isExternal) {
-        return new ResponseEntity<BasicResponse> (blogServiceImpl.saveBlog(blog,  extrnFile.orElse(null),file.orElse(null),isExternal), HttpStatus.OK);
+        return new ResponseEntity<BasicResponse> (blogServiceImpl.saveBlog(blog,  extrnImage, images, isExternal), HttpStatus.OK);
     }
 
     @PostMapping("/update")
     public ResponseEntity<BasicResponse> updateBlog(@ModelAttribute @Valid UpdateBlogRequest blogRequest,
-                                   @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
-    	BasicResponse response = blogServiceImpl.update(blogRequest, file);
+    		                        @RequestParam(value = "external", required = false, defaultValue = "true") Boolean external,
+                                    @RequestParam(value = "images", required = false) ArrayList<MultipartFile> images,
+                                    @RequestParam(value = "images", required = false) ArrayList<String> externImages ) throws IOException {
+    	
+    	BasicResponse response = blogServiceImpl.update(blogRequest, external, images, externImages);
     	HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
     	return new ResponseEntity<BasicResponse>(response, status );
     }

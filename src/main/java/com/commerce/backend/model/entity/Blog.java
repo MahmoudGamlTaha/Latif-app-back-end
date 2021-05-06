@@ -44,15 +44,21 @@ public class Blog {
     @Column(name = "description", length = 250)
     private String description;
 
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(optional = true)
     @JoinColumn(name = "user_id")
     private User userId;
     
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "blog")
     private Set<BlogImage> blogImage;
 
     @Column(name = "date")
     private Date date;
+    
+    @Column(name = "active")
+    private Boolean active;
+    
+    @Column(name = "external_Link")
+    private boolean externalLink;
 
     @Column(name = "created_at")
     private Date created_at;

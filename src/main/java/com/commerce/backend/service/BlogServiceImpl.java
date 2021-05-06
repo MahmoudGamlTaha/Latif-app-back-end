@@ -143,11 +143,11 @@ public class BlogServiceImpl implements BlogService{
     }
 
     @Override
-    public BasicResponse update(UpdateBlogRequest blogRequest, MultipartFile file) throws IOException {
+    public BasicResponse update(UpdateBlogRequest blogRequest, boolean external, List<MultipartFile> images, List<String> externImage ) throws IOException {
         BasicResponse response = new BasicResponse();
         HashMap<String, Object> hashMapResponse = new HashMap<String, Object>();
         try {
-            BlogResponse blog = blogCacheService.update(blogRequest, file);
+            BlogResponse blog = blogCacheService.update(blogRequest, external, images, externImage);
             hashMapResponse.put(MessageType.Data.getMessage(), blog);
             response.setSuccess(true);
             response.setResponse(hashMapResponse);
