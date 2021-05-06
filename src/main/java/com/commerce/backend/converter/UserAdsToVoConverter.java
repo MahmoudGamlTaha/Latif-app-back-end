@@ -96,7 +96,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			     imageVos.add(imgVo);
 			 });
           
-   	      //destination.setImages(imageVos);
+   	        destination.setImages(imageVos);
 		 }
 		UserVO user = new UserVO();
 		if(source.getCreatedBy() != null) {
@@ -241,17 +241,17 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			extraInfo.add(new KeyResponse(FieldsNames.VaccinationCertificate, FieldsNames.VaccinationCertificate_ar, ((UserPetAds)entity).getVaccinationCertifcate()));
 			extraInfo.add(new KeyResponse(FieldsNames.weaned, FieldsNames.weaned_ar, ((UserPetAds)entity).getWeaned()));
 			extraInfo.add(new KeyResponse(FieldsNames.Stock, FieldsNames.Stock_ar, ((UserPetAds)entity).getStock()));
-			//extraInfo.add(new KeyResponse(FieldsNames.Category, FieldsNames.Category_ar, ((UserPetAds) entity).getCategory()));
+			extraInfo.add(new KeyResponse(FieldsNames.Category, FieldsNames.Category_ar, ((UserPetAds) entity).getCategory()));
 		}else if(entity.getType() == AdsType.SERVICE) {
 			extraInfo.add(new KeyResponse(FieldsNames.AllowAtHome, FieldsNames.AllowAtHome_ar, ((UserServiceAds)entity).getAllowServiceAtHome()));
-			//extraInfo.add(new KeyResponse(FieldsNames.Category, FieldsNames.Category_ar, ((UserServiceAds) entity).getServiceCategory()));
+			extraInfo.add(new KeyResponse(FieldsNames.Category, FieldsNames.Category_ar, ((UserServiceAds) entity).getServiceCategory()));
 		}else if(entity.getType() == AdsType.PET_CARE) {
 			extraInfo.add(new KeyResponse(FieldsNames.AllowAtHome, FieldsNames.AllowAtHome_ar, ((UserMedicalAds)entity).getAllowServiceAtHome()));
-			//extraInfo.add(new KeyResponse(FieldsNames.Category, FieldsNames.Category_ar, ((UserMedicalAds) entity).getMedicalCategoryType()));
+			extraInfo.add(new KeyResponse(FieldsNames.Category, FieldsNames.Category_ar, ((UserMedicalAds) entity).getMedicalCategoryType()));
 		}else if(entity.getType() == AdsType.ACCESSORIES) {
 			extraInfo.add(new KeyResponse(FieldsNames.AllowAtHome, FieldsNames.AllowAtHome_ar, ((UserAccAds)entity).getAllowServiceAtHome()));
 			extraInfo.add(new KeyResponse("used", "مستعمل", ((UserAccAds)entity).getUsed()));
-			//extraInfo.add(new KeyResponse(FieldsNames.Category, FieldsNames.Category_ar, ((UserAccAds) entity).getItemCategoryId()));
+			extraInfo.add(new KeyResponse(FieldsNames.Category, FieldsNames.Category_ar, ((UserAccAds) entity).getItemCategoryId()));
 		}
 		userAdsVo.setExtra(extraInfo);
 		return userAdsVo;
