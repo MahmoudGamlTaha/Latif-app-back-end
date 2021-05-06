@@ -217,10 +217,8 @@ public class UserAdsServiceImpl implements UserAdsService {
 	@Override
 	public BasicResponse findAdsById(Long id) {
 		try{
-			UserAds ad =  customUserAdsRepo.findById(id).orElse(null);
-			
+			UserAds ad = (UserAds) customUserAdsRepo.findById(id).orElse(null);
 			UserAdsVO vo = userAdsToVoConverter.apply(ad);
-
 			return res(vo, true, null);
 		}
 		catch (Exception e)
@@ -268,7 +266,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		response.setSuccess(true);
 		response.setMsg("Ads created successfully ");
 		HashMap<String ,Object> map = new HashMap<String, Object>();
-		UserAdsVO userAdVo = this.userAdsToVoConverter.apply(entity);
+		UserAdsVO userAdVo = userAdsToVoConverter.apply(entity);
 		map.put("data", userAdVo);
 		map.put("id", entity.getId());
 		response.setResponse(map);
@@ -414,6 +412,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 				.setFirstResult(pageable.getPageNumber())
 				.setMaxResults(pageable.getPageSize())
 				.getResultList();
+		System.out.println(userAds);
 		List<UserAdsVO> collect = new ArrayList<>();
 		userAds.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 		return res(collect, true, pageable);
