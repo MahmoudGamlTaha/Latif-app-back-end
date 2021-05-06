@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 // criteria bulider 
 // check this link https://stackoverflow.com/questions/29604734/how-to-use-native-sql-as-a-fragment-where-clause-of-a-bigger-query-made-with-c
 @Repository
@@ -36,7 +37,9 @@ public interface CustomUserAdsRepo extends JpaRepository<UserAds, Long> {
 
 
     Page<UserAds> findUserAdsByType(String type, Pageable pageable);
-
+    @Query("SELECT ud from UserAds ud where id = ?1")
+    Optional<UserAds> findById(Long id);
+    
     Long countByActiveTrue();
     Long countByActiveTrueAndType(AdsType adsType);
 }

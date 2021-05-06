@@ -7,5 +7,4 @@ import com.commerce.backend.model.entity.UserAccAds;
 
 @Repository
 public interface UserItemsAdsRepository extends JpaRepository<UserAccAds, Long> {
-    Long countByActiveTrueAndTypeAndItemCategoryId(AdsType type, ItemObjectCategory petCategory);
 }

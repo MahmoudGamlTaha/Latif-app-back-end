@@ -18,8 +18,14 @@ public class UserAdsVO {
 	private Object city;
 
 	private Object type;
+
+	private String code;
 	
-	private Object createdBy;
+	private AdsType type;        
+	
+	private UserVO createdBy;
+	
+	private boolean active;
 	
 	private Object active;
 	
@@ -46,8 +52,6 @@ public class UserAdsVO {
 	private Object categoryNameAr;
 	
 	private Object  categoryId;
-	
-	private Object images;
-
+  
 	private List<Object> extra = new LinkedList<>();
 }
