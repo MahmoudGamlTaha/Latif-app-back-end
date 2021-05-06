@@ -217,13 +217,14 @@ public class UserAdsServiceImpl implements UserAdsService {
 	@Override
 	public BasicResponse findAdsById(Long id) {
 		try{
-			UserAds ad = (UserAds) customUserAdsRepo.findById(id).orElse(null);
+			UserAds ad =  customUserAdsRepo.findById(id).orElse(null);
+			
 			UserAdsVO vo = userAdsToVoConverter.apply(ad);
 
 			return res(vo, true, null);
 		}
 		catch (Exception e)
-		{
+		{e.printStackTrace();
 			return res(e, false, null);
 		}
 	}
@@ -323,7 +324,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		try {
 			if(category != null)
 			{
-				adType = itemCategory.findById(category).getCode().toLowerCase();
+				adType = itemCategory.findById(category).getName().toLowerCase();
 				filePath = new ClassPathResource("jsonFiles/"+adType+"Rs.json");
 			}
 			if (filePath == null || !filePath.exists())
@@ -370,7 +371,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		try {
 			if(category != null)
 			{
-				adType = itemCategory.findById(category).getCode().toLowerCase();
+				adType = itemCategory.findById(category).getName().toLowerCase();
 				filePath = new ClassPathResource("jsonFilter/"+adType+"Rs.json");
 			}
 			if (filePath == null || !filePath.exists())

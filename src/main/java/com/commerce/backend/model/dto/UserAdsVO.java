@@ -19,7 +19,7 @@ public class UserAdsVO {
 	
 	private AdsType type;        
 	
-	private User createdBy;
+	private UserVO createdBy;
 	
 	private boolean active;
 	
@@ -48,4 +48,5 @@ public class UserAdsVO {
 	private Long  categoryId;
 	
 	private Set<UserAdsImageVO> images;
+	 
 }

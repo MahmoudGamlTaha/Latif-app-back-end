@@ -7,6 +7,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserMedicalAdsRepository extends JpaRepository<UserMedicalAds, Long> {
-    Long countByActiveTrueAndTypeAndMedicalCategoryType(AdsType type, ItemObjectCategory medicalCategory);
-
 }

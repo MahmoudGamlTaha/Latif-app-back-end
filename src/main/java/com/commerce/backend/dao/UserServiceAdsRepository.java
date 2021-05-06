@@ -10,5 +10,4 @@ import com.commerce.backend.model.entity.UserServiceAds;
 @Repository
 @Transactional
 public interface UserServiceAdsRepository extends UserAdsRepository<UserServiceAds>, UserServiceAdsRepoCustom {
-    Long countByActiveTrueAndTypeAndServiceCategory(AdsType type, ItemObjectCategory Category);
 }

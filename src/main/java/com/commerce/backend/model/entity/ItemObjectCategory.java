@@ -22,7 +22,6 @@ import org.hibernate.annotations.NotFoundAction;
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name ="type", discriminatorType = DiscriminatorType.INTEGER)
-@ToString
 public class ItemObjectCategory {
 
     @Id
@@ -52,6 +51,7 @@ public class ItemObjectCategory {
     private String icon_select;
     
     @OneToMany(mappedBy="parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<ItemObjectCategory> child = new HashSet<ItemObjectCategory>();
     
     @Column(name = "type", insertable = false, updatable = false)
@@ -70,7 +70,7 @@ public class ItemObjectCategory {
    public ItemObjectCategory(String name, String icon, ItemObjectCategory parent) {
 	  this.setName(name);
 	  this.setIcon(icon);
-	  this.setParent(parent);
+	//  this.setParent(parent);
   }
 
 }

@@ -21,12 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserServiceAds extends UserAds {
-	
-	@ManyToOne(optional = true, fetch = FetchType.LAZY)
-	@JoinColumn(name = "category_id")
-	@NotFound(action=NotFoundAction.IGNORE)
-	ServiceCategory serviceCategory;
-	
+		
 	@Column(name = "allow_at_home")
 	Boolean allowServiceAtHome;
 }

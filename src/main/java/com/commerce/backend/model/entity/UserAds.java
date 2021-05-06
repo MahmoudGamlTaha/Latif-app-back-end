@@ -93,8 +93,12 @@ public class UserAds {
 	@Column(columnDefinition = "Geometry", name = "geom", nullable = true)
 	private Geometry coordinates;
 	
+	 @ManyToOne
+	 @NotFound( action = NotFoundAction.IGNORE)
+	 @JoinColumn(name ="category_id")
+	 ItemObjectCategory category;
 	
-	@OneToMany(mappedBy="userAdsImage", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	 @OneToMany(mappedBy="userAdsImage", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	//@OneToMany(cascade = CascadeType.ALL)
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Set<UserAdsImage> userAdsImage = new HashSet<UserAdsImage>();
