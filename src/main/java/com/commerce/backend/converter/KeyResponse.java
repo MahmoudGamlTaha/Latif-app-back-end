@@ -16,11 +16,5 @@ public class KeyResponse {
         this.name_ar = name_ar;
         this.value = value;
     }
-    public static KeyResponse getData(String name, String name_ar, Object value){
-        KeyResponse k = new KeyResponse();
-        k.name = name;
-        k.name_ar = name_ar;
-        k.value = value;
-        return k;
-    }
+  
 }
