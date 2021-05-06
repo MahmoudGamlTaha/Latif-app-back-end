@@ -1,5 +1,7 @@
 package com.commerce.backend.model.response.user;
 
+import java.util.Date;
+
 import lombok.Data;
 
 @Data
@@ -15,4 +17,5 @@ public class UserResponse {
     private String phone;
     private String country;
     private Integer emailVerified;
+    private Date    RegistrationDate;
 }

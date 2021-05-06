@@ -18,6 +18,6 @@ public interface BlogCacheService {
     Blog findById(Long id);
     Page<Blog> search(String keyword, Pageable pageable);
     BasicResponse saveBlog(BlogRequest blog, List<String> externalPath, boolean external, List<MultipartFile> files);
-    BlogResponse update(UpdateBlogRequest blog, MultipartFile file) throws IOException;
+    BlogResponse  update(UpdateBlogRequest blogRequest, boolean external, List<MultipartFile> images, List<String> externImage ) throws IOException;
     BasicResponse deleteBlog(Long id);;
 }

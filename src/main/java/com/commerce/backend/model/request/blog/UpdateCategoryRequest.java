@@ -3,7 +3,6 @@ package com.commerce.backend.model.request.blog;
 import com.sun.istack.NotNull;
 import lombok.Data;
 
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
@@ -14,10 +13,12 @@ public class UpdateCategoryRequest {
     @Positive
     Long id;
   
-    @Size(min = 3, max = 250)
-    @Pattern(regexp = "[0-9a-zA-Z #,_]+")
-  
+    @Size(min = 3, max = 250)  
     String name;
     
     String description;
+    
+    String icon;
+    
+    String icon_select;
 }

@@ -24,6 +24,7 @@ public class UserResponseConverter implements Function<User, UserResponse> {
 	        userResponse.setCountry(user.getCountry());
 	        userResponse.setEmailVerified(user.getEmailVerified());
 	        userResponse.setId(user.getId());
+	        userResponse.setRegistrationDate(user.getRegistrationDate());
     	}
         return userResponse;
     	

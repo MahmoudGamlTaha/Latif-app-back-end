@@ -59,8 +59,6 @@ public class BlogCacheServiceImpl implements BlogCacheService{
     //@Cacheable(key = "#root.methodName")
     public Page<Blog> findAll(Integer page)
     {
-//    	Optional<String> sortBy ;
-
     	 Pageable offset =  PageRequest.of(page, SystemConstant.MOBILE_PAGE_SIZE);
         return blogRepository.findAll(offset);
     }
@@ -99,7 +97,10 @@ public class BlogCacheServiceImpl implements BlogCacheService{
         return blogRepository.findAll(keyword, pageable);
     }
 
-
+    public Page<Blog> findByCategory(Long category, Pageable pageable)
+    {
+        return blogRepository.findByCategory(category, pageable);
+    }
     @Override
     //@Cacheable(key = "#root.methodName")
     public BasicResponse saveBlog(BlogRequest blog, List<String> paths, boolean external,  List<MultipartFile> files)
@@ -112,19 +113,41 @@ public class BlogCacheServiceImpl implements BlogCacheService{
                 .description(blog.getDescription())
                 .category(category)
                 .path(path + "blogs")
+                .externalLink(external)
                 .date(new Date())
                 .created_at(new Date())
                 .build();
+        Set<BlogImage> blogImages = new HashSet<BlogImage>();
         if(external){
             entity.setPath(paths.toString());
+            paths.forEach(path -> {
+            BlogImage image = new BlogImage();
+            image.setBlog(entity);
+            image.setCreatedAt(new Date());
+            image.setExternalLink(entity.isExternalLink());
+            image.setImage(path);
+            blogImages.add(image);
+            entity.setImage(path);
+            });
         }
-        if(files != null) {
-            String fileName = storageService.save(files.get(0));
-            entity.setImage(fileName);
+        if(files != null && !external) {
+            files.forEach(imageFile -> {BlogImage image = new BlogImage();
+            image.setBlog(entity);
+            image.setCreatedAt(new Date());
+            image.setExternalLink(entity.isExternalLink());
+            String fileName = storageService.save(imageFile);
+            if(entity.getImage() == null) {
+            	 entity.setImage(fileName); 	
+            }
+            image.setImage(fileName);
+            blogImages.add(image);
+            });
+           
         }
+        entity.setBlogImage(blogImages);
         Blog blogEntity = blogRepository.save(entity);
         BlogResponse basicResponse = converter.apply(blogEntity);
-        if(files != null) {
+      /*  if(files != null) {
             if (files.size() > 1) {
                 List<BlogImage> ImagesList = new ArrayList<>();
                 for (int i = 1; i < files.size(); i++) {
@@ -137,14 +160,14 @@ public class BlogCacheServiceImpl implements BlogCacheService{
                 }
                 blogImageRepository.saveAll(ImagesList);
             }
-        }
+        }*/
         hashMap.put(MessageType.Data.getMessage(), basicResponse);
         response.setResponse(hashMap);
         return response ;
     }
 
     @Override
-    public BlogResponse update(UpdateBlogRequest blogRequest, MultipartFile file) throws IOException {
+    public BlogResponse update(UpdateBlogRequest blogRequest, boolean external, List<MultipartFile> images, List<String> externImage ) throws IOException {
         Blog blog = blogRepository.findById(blogRequest.getId()).orElse(null);
         if(blog != null) {
             if (blogRequest.getTitle() != null) {
@@ -153,12 +176,31 @@ public class BlogCacheServiceImpl implements BlogCacheService{
             if (blogRequest.getDescription() != null) {
                 blog.setDescription(blogRequest.getDescription());
             }
-            if (file != null) {
+            Set<BlogImage> fileImages = new HashSet<BlogImage>();
+            if (images != null && !external) {
                 if(blog.getImage() != null){
                     storageService.delete(blog.getImage());
                 }
-                String fileName = storageService.save(file);
-                blog.setImage(fileName);
+                images.stream().forEach(img ->{
+                	 String fileName = storageService.save(img);
+                	 BlogImage image = new BlogImage();
+                	 image.setBlog(blog);
+                	 image.setImage(fileName);
+                	 image.setExternalLink(external);
+                	 fileImages.add(image);
+                });
+            }
+            if(external){
+            	
+            	externImage.forEach(path -> {
+                BlogImage image = new BlogImage();
+                image.setBlog(blog);
+                image.setCreatedAt(new Date());
+                image.setExternalLink(blog.isExternalLink());
+                image.setImage(path);
+                fileImages.add(image);
+                blog.setImage(path);
+                });
             }
             blog.setUpdated_at(new Date());
             blogRepository.save(blog);
