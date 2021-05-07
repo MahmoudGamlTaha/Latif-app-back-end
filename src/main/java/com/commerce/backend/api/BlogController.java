@@ -53,13 +53,8 @@ public class BlogController extends PublicApiController{
 
     @PostMapping("/blogs/create")
     //@Timed
-    public ResponseEntity<BasicResponse> createBlog(@ModelAttribute @Valid BlogRequest blog,
-                                   @RequestParam(value = "images", required = false)
-                                   ArrayList<MultipartFile> images,
-                                   @RequestParam(value = "extrnImage", required = false)
-                                   ArrayList<String> extrnImage,
-                                   boolean isExternal) {
-        return new ResponseEntity<BasicResponse> (blogServiceImpl.saveBlog(blog,  extrnImage, images, isExternal), HttpStatus.OK);
+    public ResponseEntity<BasicResponse> createBlog(@RequestBody @Valid BlogRequest blog) {
+        return new ResponseEntity<BasicResponse> (blogServiceImpl.saveBlog(blog,  blog.getExtrnImage(), blog.getImages(), blog.is_external()), HttpStatus.OK);
     }
 
     @PostMapping("/update")

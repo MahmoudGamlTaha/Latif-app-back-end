@@ -290,11 +290,11 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		return userAdsVo;
 	}
 	public Object checkValue(Object b, Integer type) {
-		if(type == SystemConstant.BOOLEAN && b instanceof Boolean) {
+		if(type == SystemConstant.BOOLEAN && b == null) {
 			return false;
 		}
 		
-		if(type == SystemConstant.STRING && b instanceof String) {
+		if(type == SystemConstant.STRING && b == null) {
 			return "N/A";
 		}
 		return b;
