@@ -3,11 +3,12 @@ package com.commerce.backend.model.request.blog;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Null;
-import javax.validation.constraints.Pattern;
+
 import javax.validation.constraints.Size;
 
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,8 +31,8 @@ public class BlogRequest {
    
     ArrayList<String> extrnImage ;
     
-    
-    Optional<ArrayList<MultipartFile>> images;
+    @JsonIgnore
+    ArrayList<MultipartFile> images;
     
     boolean is_external;
 

@@ -57,7 +57,7 @@ public class BlogController extends PublicApiController{
     @PostMapping("/blogs/create")
     //@Timed
     public ResponseEntity<BasicResponse> createBlog(@RequestBody @Valid BlogRequest blog) {
-        return new ResponseEntity<BasicResponse> (blogServiceImpl.saveBlog(blog,  blog.getExtrnImage(), blog.getImages().orElse(null), blog.is_external()), HttpStatus.OK);
+        return new ResponseEntity<BasicResponse> (blogServiceImpl.saveBlog(blog,  blog.getExtrnImage(), blog.getImages(), blog.is_external()), HttpStatus.OK);
     }
 
     @PostMapping("/update")
