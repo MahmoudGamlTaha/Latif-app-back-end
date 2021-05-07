@@ -43,11 +43,9 @@ public interface UserAdsService {
 
     <T> UserAdsVO savePet(UserPetsAdsRequest userPetsAdsRequest);
 
-    BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size);
-
     BasicResponse adsFiltration(AdsFiltrationRequest<String, Object> request, Pageable pageable);
 
-    BasicResponse findNearby(AdsType Type, double longitude, double latitude, Integer distance, Integer page, Integer size, Long cat_id);
+    BasicResponse findNearby(AdsType Type, Double longitude, Double latitude, Integer distance, Integer page, Integer size, Long cat_id);
 
     BasicResponse updateUserAds(UpdateAdRequest<String, Object> request, List<String> fileList, List<MultipartFile> files);
 }

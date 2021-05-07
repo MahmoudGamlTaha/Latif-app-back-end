@@ -185,7 +185,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	}
 
 	@Override
-	public BasicResponse findNearby(AdsType type ,double longitude, double latitude, Integer distance, Integer page, Integer size, Long category)
+	public BasicResponse findNearby(AdsType type ,Double longitude, Double latitude, Integer distance, Integer page, Integer size, Long category)
 	{
 		try {
 			
@@ -461,11 +461,6 @@ public class UserAdsServiceImpl implements UserAdsService {
 			return false;
 		}
 		return true;
-	}
-    @Deprecated
-	@Override
-	public BasicResponse findNearby(double longitude, double latitude, Integer distance, Integer page, Integer size) {
-		return null;
 	}
     
     public BasicResponse res(Object obj, boolean sucess, Pageable pageable  )

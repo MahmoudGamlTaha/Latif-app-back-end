@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class KeyResponse {
+	private String code;
     private String name;
     private String name_ar;
     private Object value;

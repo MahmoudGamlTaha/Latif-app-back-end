@@ -118,7 +118,7 @@ public class BlogCacheServiceImpl implements BlogCacheService{
                 .created_at(new Date())
                 .build();
         Set<BlogImage> blogImages = new HashSet<BlogImage>();
-        if(external){
+        if(external && paths!= null){
             entity.setPath(String.valueOf(paths));
             paths.forEach(path -> {
             BlogImage image = new BlogImage();
