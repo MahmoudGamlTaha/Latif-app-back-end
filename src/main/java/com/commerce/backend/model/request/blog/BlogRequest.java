@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Optional;
 
 @Data
 public class BlogRequest {
@@ -23,14 +24,14 @@ public class BlogRequest {
     Long category;
 
     @NotBlank
-    @Size(min = 10)
+    @Size(min = 5)
     String description;
     
-    @Null
-    ArrayList<String> extrnImage;
+   
+    ArrayList<String> extrnImage ;
     
-    @Null
-    ArrayList<MultipartFile> images;
+    
+    Optional<ArrayList<MultipartFile>> images;
     
     boolean is_external;
 
