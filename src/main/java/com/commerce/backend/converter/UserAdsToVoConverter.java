@@ -233,6 +233,13 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			user.setLastName(entity.getCreatedBy().getLastName());
 			user.setAvatar(entity.getCreatedBy().getAvatar());
 			user.setPhone(entity.getCreatedBy().getPhone());
+			user.setRegistrationDate(entity.getCreatedAt());
+			Set<UserAds> ads = entity.getCreatedBy().getAds();
+			if(ads != null) {
+			user.setAdsCount(ads.size());
+			}else {
+				user.setAdsCount(0);
+			}
 			userAdsVo.setCreatedBy(user);
 		}
 		List<Object> extraInfo = new ArrayList<>();
