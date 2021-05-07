@@ -19,7 +19,7 @@ public class BlogCategoryRequest {
     String nameAr;
     
     @Null
-    @Size(min = 40, max = 300)
+    @Size(max = 300)
     String description;
     
     @Null
@@ -32,4 +32,5 @@ public class BlogCategoryRequest {
     Boolean external_link;
     
     boolean active;
+    
 }
