@@ -3,15 +3,13 @@ package com.commerce.backend.converter;
 import java.util.*;
 
 import com.commerce.backend.helper.FieldsNames;
-import com.commerce.backend.model.request.userAds.*;
-
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.commerce.backend.constants.AdsType;
+import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.dao.ItemObjectCategoryRepository;
-import com.commerce.backend.dao.ServiceCategoryRepository;
 import com.commerce.backend.model.dto.ItemObjectCategoryVO;
 import com.commerce.backend.model.dto.UserAccVO;
 import com.commerce.backend.model.dto.UserAdsImageVO;
@@ -25,17 +23,14 @@ import com.commerce.backend.model.entity.ItemObjectCategory;
 import com.commerce.backend.model.entity.MedicalCategory;
 import com.commerce.backend.model.entity.PetCategory;
 import com.commerce.backend.model.entity.ServiceCategory;
-import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.entity.UserAccAds;
 import com.commerce.backend.model.entity.UserAds;
 import com.commerce.backend.model.entity.UserAdsImage;
 import com.commerce.backend.model.entity.UserMedicalAds;
 import com.commerce.backend.model.entity.UserPetAds;
 import com.commerce.backend.model.entity.UserServiceAds;
-import com.commerce.backend.model.request.userAds.UserAdsGeneralAdsRequest;
 
 import java.util.function.Function;
-
 import javax.transaction.Transactional;
 
 @Component
@@ -67,8 +62,6 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		return convertToVo(source);
 	}
 
-
-	 
 	public UserAdsVO copyUserAdsEntityToVo(UserAds source, UserAdsVO destination) {
 		//assert(source.getType() == destination.getType());
 
@@ -219,7 +212,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		userAdsVo.setCreated_at(entity.getCreatedAt());
 		userAdsVo.setLatitude(entity.getLatitude());
 		userAdsVo.setUpdated_at(entity.getUpdatedAt());
-		userAdsVo.setExternal_link(Boolean.parseBoolean(checkValue(entity.getExternalLink()).toString()));
+		userAdsVo.setExternal_link(Boolean.parseBoolean(checkValue(entity.getExternalLink(), SystemConstant.BOOLEAN).toString()));
 		Set<UserAdsImage> images = entity.getUserAdsImage();
 		if(images != null) {
 			Set<UserAdsImageVO> imageVos = new HashSet<UserAdsImageVO>();
@@ -244,18 +237,17 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		}
 		List<Object> extraInfo = new ArrayList<>();
 		if(entity.getType() == AdsType.PETS) {
-			
-			extraInfo.add(new KeyResponse(FieldsNames.barkingProblem, FieldsNames.barkingProblem_ar, checkValue(((UserPetAds)entity).getBarkingProblem())));
-			extraInfo.add(new KeyResponse(FieldsNames.bread, FieldsNames.bread_ar, checkValue(((UserPetAds)entity).getBreed())));
+			extraInfo.add(new KeyResponse(FieldsNames.barkingProblem, FieldsNames.barkingProblem_ar, checkValue(((UserPetAds)entity).getBarkingProblem(), SystemConstant.BOOLEAN)));
+			extraInfo.add(new KeyResponse(FieldsNames.bread, FieldsNames.bread_ar, checkValue(((UserPetAds)entity).getBreed(), SystemConstant.BOOLEAN)));
 			extraInfo.add(new KeyResponse(FieldsNames.food, FieldsNames.food_ar, ((UserPetAds)entity).getFood()));
-			extraInfo.add(new KeyResponse(FieldsNames.diseasesOrDisabilities, FieldsNames.diseasesOrDisabilities_ar, checkValue(((UserPetAds)entity).getDiseasesDisabilities())));
-			extraInfo.add(new KeyResponse(FieldsNames.diseasesOrDisabilitiesDesc, FieldsNames.diseasesOrDisabilitiesDesc_ar, checkValue(((UserPetAds)entity).getDiseasesDisabilitiesDesc())));
-			extraInfo.add(new KeyResponse(FieldsNames.Neutering, FieldsNames.Neutering_ar, checkValue(((UserPetAds)entity).getNeutering())));
+			extraInfo.add(new KeyResponse(FieldsNames.diseasesOrDisabilities, FieldsNames.diseasesOrDisabilities_ar, checkValue(((UserPetAds)entity).getDiseasesDisabilities(), SystemConstant.BOOLEAN)));
+			extraInfo.add(new KeyResponse(FieldsNames.diseasesOrDisabilitiesDesc, FieldsNames.diseasesOrDisabilitiesDesc_ar, checkValue(((UserPetAds)entity).getDiseasesDisabilitiesDesc(), SystemConstant.STRING)));
+			extraInfo.add(new KeyResponse(FieldsNames.Neutering, FieldsNames.Neutering_ar, checkValue(((UserPetAds)entity).getNeutering(), SystemConstant.BOOLEAN)));
 			extraInfo.add(new KeyResponse(FieldsNames.training, FieldsNames.training_ar, ((UserPetAds)entity).getTraining()));
-			extraInfo.add(new KeyResponse(FieldsNames.PlayWithKids, FieldsNames.PlayWithKids_ar, checkValue(((UserPetAds)entity).getPlayWithKids())));
-			extraInfo.add(new KeyResponse(FieldsNames.Passport, FieldsNames.Passport_ar, ((UserPetAds)entity).getPassport()));
-			extraInfo.add(new KeyResponse(FieldsNames.VaccinationCertificate, FieldsNames.VaccinationCertificate_ar, checkValue(((UserPetAds)entity).getVaccinationCertifcate())));
-			extraInfo.add(new KeyResponse(FieldsNames.weaned, FieldsNames.weaned_ar, checkValue(((UserPetAds)entity).getWeaned())));
+			extraInfo.add(new KeyResponse(FieldsNames.PlayWithKids, FieldsNames.PlayWithKids_ar, checkValue(((UserPetAds)entity).getPlayWithKids(), SystemConstant.BOOLEAN)));
+			extraInfo.add(new KeyResponse(FieldsNames.Passport, FieldsNames.Passport_ar, checkValue(((UserPetAds)entity).getPassport(), SystemConstant.BOOLEAN)));
+			extraInfo.add(new KeyResponse(FieldsNames.VaccinationCertificate, FieldsNames.VaccinationCertificate_ar, checkValue(((UserPetAds)entity).getVaccinationCertifcate(), SystemConstant.BOOLEAN)));
+			extraInfo.add(new KeyResponse(FieldsNames.weaned, FieldsNames.weaned_ar, checkValue(((UserPetAds)entity).getWeaned(), SystemConstant.BOOLEAN)));
 			extraInfo.add(new KeyResponse(FieldsNames.Stock, FieldsNames.Stock_ar, ((UserPetAds)entity).getStock()));
 			PetCategory category = (PetCategory)(entity).getCategory();
 			String categoryName = category == null ?null:category.getName();
@@ -297,12 +289,12 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		userAdsVo.setExtra(extraInfo);
 		return userAdsVo;
 	}
-	public Object checkValue(Object b) {
-		if(b == null && b instanceof Boolean) {
+	public Object checkValue(Object b, Integer type) {
+		if(type == SystemConstant.BOOLEAN && b instanceof Boolean) {
 			return false;
 		}
 		
-		if(b == null && b instanceof String) {
+		if(type == SystemConstant.STRING && b instanceof String) {
 			return "N/A";
 		}
 		return b;

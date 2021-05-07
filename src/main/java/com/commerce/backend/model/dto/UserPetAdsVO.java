@@ -27,7 +27,7 @@ private Boolean neutering;
 
 private Boolean vaccinationCertificate;
 
-private TrainningType training;
+private String training;
 
 private Boolean barkingProblem;
 

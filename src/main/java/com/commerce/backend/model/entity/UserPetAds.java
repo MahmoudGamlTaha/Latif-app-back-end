@@ -52,8 +52,8 @@ public class UserPetAds extends UserAds {
 	private Boolean vaccinationCertifcate;
 	
 	@Column(name = "training")
-	@Enumerated(EnumType.STRING)
-	private TrainningType training;
+	//@Enumerated(EnumType.STRING)
+	private String training;
 	
 	@Column(name = "food")
 	private String food;
