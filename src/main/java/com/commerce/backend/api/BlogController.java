@@ -1,5 +1,6 @@
 package com.commerce.backend.api;
 
+import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.model.request.blog.BlogRequest;
 import com.commerce.backend.model.request.blog.UpdateBlogRequest;
 import com.commerce.backend.model.response.BasicResponse;
@@ -8,6 +9,8 @@ import com.commerce.backend.service.BlogService;
 import com.commerce.backend.service.BlogServiceImpl;
 import io.micrometer.core.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -72,6 +75,14 @@ public class BlogController extends PublicApiController{
     public ResponseEntity<BasicResponse> deleteBlog(Long id)
     {
     	BasicResponse response  = blogServiceImpl.deleteBlog(id);
+    	HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<BasicResponse>( response, status);
+    }
+    
+    @PostMapping("/blogs/blog-by-category/id={category}")
+    public ResponseEntity<BasicResponse> blogByCategory(@PathVariable Long category, @PathVariable(required = false) Optional<Integer> page, @PathVariable(required = false) Optional<Integer> size ){
+    	Pageable pageable = PageRequest.of(page.orElse(0), size.orElse(SystemConstant.MOBILE_PAGE_SIZE));
+    	BasicResponse response  = blogServiceImpl.findBlogByCategory(category, pageable);
     	HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
         return new ResponseEntity<BasicResponse>( response, status);
     }

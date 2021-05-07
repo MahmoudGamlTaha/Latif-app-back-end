@@ -150,13 +150,13 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
        
         if(request.getType() == AdsType.ACCESSORIES) {
             assert entity instanceof UserAccAds;
-            ((UserAccAds)entity).setUsed((Boolean) hashedData.get("used"));
+            ((UserAccAds)entity).setUsed(Boolean.parseBoolean(String.valueOf(hashedData.get("used"))));
 			ItemCategory category = new ItemCategory();
 			category.setId(Long.parseLong(String.valueOf(hashedData.get("category"))));
 			((UserAccAds)entity).setCategory(category);
         }
         else if(request.getType() == AdsType.PET_CARE) {
-            ((UserMedicalAds)entity).setAllowServiceAtHome((Boolean) hashedData.get("allow_at_home"));
+            ((UserMedicalAds)entity).setAllowServiceAtHome(Boolean.parseBoolean(String.valueOf(hashedData.get("allow_at_home"))));
             MedicalCategory medCategory = new MedicalCategory();
             medCategory.setId(Long.parseLong(String.valueOf(getHashMapKeyWithCheck(hashedData,"category", 0))));
             ((UserMedicalAds)entity).setCategory(medCategory);

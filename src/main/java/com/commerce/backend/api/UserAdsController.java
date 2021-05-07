@@ -80,8 +80,8 @@ public class UserAdsController extends PublicApiController {
        
     @GetMapping(value = "/ads/nearest")
     @ResponseBody
-    public ResponseEntity<BasicResponse> getNearest(@RequestParam(value ="longitude", required = true) double longitude,
-                                                      @RequestParam(value ="latitude", required = true) double latitude,
+    public ResponseEntity<BasicResponse> getNearest(@RequestParam(value ="longitude", required = false) Optional<Double> longitude,
+                                                      @RequestParam(value ="latitude", required = false) Optional<Double> latitude,
                                                       @RequestParam(value ="distance", required = false) Integer distance,
                                                       @RequestParam(value ="page", required = false) Optional<Integer> page,
                                                       @RequestParam(value ="pageSize", required= false) Optional<Integer>  pageSize,
@@ -92,9 +92,10 @@ public class UserAdsController extends PublicApiController {
     {
     	distance = distance == null? SystemConstant.DISTANCE: distance;
     	
-        BasicResponse res = userAdsService.findNearby(type.orElse(AdsType.ALL),longitude, latitude, distance, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), category);
+        BasicResponse res = userAdsService.findNearby(type.orElse(AdsType.ALL),longitude.orElse(null), latitude.orElse(null), distance, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE), category);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
+    
  
     @GetMapping(value = "/ads/interested")
     public ResponseEntity<List<UserAdsVO>> getByInterested(@RequestParam("token") String token,

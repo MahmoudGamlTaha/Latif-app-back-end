@@ -19,24 +19,22 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
 @Service
 public class BlogServiceImpl implements BlogService{
 
-    private final BlogRepository blogRepository;
     private final BlogResponseConverter blogResponseConverter;
     private final BlogCacheServiceImpl blogCacheService;
-    private final BlogCategoryRepository blogCategoryRepository;
+
 
     @Autowired
-    public BlogServiceImpl(BlogRepository blogRepository, BlogResponseConverter blogResponseConverter, BlogCacheServiceImpl blogCacheService, BlogCategoryRepository blogCategoryRepository)
+    public BlogServiceImpl(BlogResponseConverter blogResponseConverter, BlogCacheServiceImpl blogCacheService)
     {
         this.blogCacheService = blogCacheService;
         this.blogResponseConverter = blogResponseConverter;
-        this.blogRepository = blogRepository;
-        this.blogCategoryRepository = blogCategoryRepository;
     }
 
 
@@ -169,4 +167,25 @@ public class BlogServiceImpl implements BlogService{
     {
         return blogCacheService.deleteBlog(id);
     }
+
+	@Override
+	public BasicResponse findBlogByCategory(Long category, Pageable pageable) {
+		BasicResponse response = new BasicResponse();
+		HashMap<String, Object> responseObj = new HashMap<String, Object>();
+		try {
+		     Page<Blog> blogs = blogCacheService.findByCategory(category, pageable);
+		     List<BlogResponse> blogResponse =  blogs.get()
+                     .map(blogResponseConverter)
+                     .collect(Collectors.toList());
+		     responseObj.put(MessageType.Data.getMessage(), blogResponse);
+		     response.setResponse(responseObj);
+		     response.setSuccess(true);
+		     response.setMsg(MessageType.Success.getMessage());
+		}catch(Exception ex) {
+			response.setMsg(MessageType.Fail.getMessage());
+			response.setSuccess(false);
+			ex.printStackTrace();
+		}
+		return response; 
+	}
 }
