@@ -19,6 +19,7 @@ public class BlogResponse {
     private Long id;
     private String title;
     private String category;
+    private Long   category_id;
     private String description;
     private String image;
     private Set<String> images;
