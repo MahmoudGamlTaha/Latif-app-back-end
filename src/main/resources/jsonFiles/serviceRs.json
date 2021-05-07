@@ -5,7 +5,7 @@
   {"name": "short_description", "type": "string","label": "Short Description", "required": true},
   {"name": "allow_at_home", "type": "boolean","label": "delivery at home", "required": true},
   {"name": "price", "type": "money","label": "Price", "required": true},
-  {"name": "image", "type": "files","label": "Image", "required": true},
+  {"name": "images", "type": "files","label": "Image", "required": true},
   {"name": "active", "type": "boolean","label": "Active", "required": true},
   {"name": "longitude", "type": "map","label": "Longitude", "required": true},
   {"name": "latitude", "type": "map","label": "Latitude", "required": true}

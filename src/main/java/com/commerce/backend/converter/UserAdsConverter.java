@@ -100,7 +100,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         
         String pointStr = String.format("POINT (%s %s)",entity.getLongitude(), entity.getLatitude());
         entity.setCoordinates(wktToGeometry(pointStr));
-        Object itemImage = getHashMapKeyWithCheck(hashedData,"image", 2);
+        Object itemImage = getHashMapKeyWithCheck(hashedData,"images", 2);
         if(itemImage != null) {
         	if(itemImage instanceof ArrayList) {
         	   List<?> imgList = (List<?>)itemImage;
@@ -141,7 +141,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             ((UserPetAds)entity).setDiseasesDisabilities(hashedData.get("diseasesdisabilities").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setDiseasesDisabilitiesDesc((String) hashedData.get("diseasesdisabilitiesdesc"));
             ((UserPetAds)entity).setNeutering(hashedData.get("neutering").toString().equalsIgnoreCase(String.valueOf(true)));
-            ((UserPetAds)entity).setTraining(TrainningType.valueOf( (String) hashedData.get("training")));
+            ((UserPetAds)entity).setTraining(String.valueOf(hashedData.get("training")));
             ((UserPetAds)entity).setPlayWithKids(hashedData.get("playwithkids").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setPassport(hashedData.get("passport").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setVaccinationCertifcate(hashedData.get("vaccinationcertificate").toString().equalsIgnoreCase(String.valueOf(true)));
@@ -335,7 +335,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             }
             if(data.get("training") != null)
             {
-                ((UserPetAds)ad).setTraining(TrainningType.valueOf(String.valueOf(data.get("training"))));
+                ((UserPetAds)ad).setTraining(String.valueOf(data.get("training")));
             }
             if(data.get("food") != null)
             {
