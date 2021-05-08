@@ -50,7 +50,7 @@ public class ItemObjectCategory {
     @Column(name = "icon_select")
     private String icon_select;
     
-    @OneToMany(mappedBy="parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="parent", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<ItemObjectCategory> child = new HashSet<ItemObjectCategory>();
     

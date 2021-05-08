@@ -35,8 +35,6 @@ public class CategoryController extends PublicApiController {
     @ResponseBody
     public ResponseEntity<BasicResponse> getCategoryByAdsType(@PathVariable("adtypeId") Integer adtypeId, 
     		                                                   @PathVariable(required = false) Optional<Integer> page){
-    	logger2.info("======path variable=========:"+ adtypeId);
-    	
     	BasicResponse response = this.itemObjectCategoryService.findAllByTypeId(adtypeId, page.orElse(0));
     	HttpStatus status = response.getMsg() != MessageType.Success.getMessage()?HttpStatus.BAD_REQUEST: HttpStatus.OK;
     	return new ResponseEntity<BasicResponse>(response, status);
@@ -59,7 +57,11 @@ public class CategoryController extends PublicApiController {
         List<ItemObjectCategoryResponse> itemCategories = itemObjectCategoryService.findAllByOrderByName();
         return new ResponseEntity<>(itemCategories, HttpStatus.OK);
     }
-    
+    @GetMapping(value = "/category/find-by-id/id={id}")
+    public ResponseEntity<BasicResponse> getCategoryById(@PathVariable("id") Long id) {
+        BasicResponse itemCategory = itemObjectCategoryService.findByCategoryId(id);
+        return new ResponseEntity<>(itemCategory, HttpStatus.OK);
+    }
     @PostMapping(value = "/category/create")
     public ResponseEntity<BasicResponse> createCategory(@RequestBody @Valid CategoryRequest request){
     	BasicResponse itemCategory = itemObjectCategoryService.createItemObjectCategory(request);

@@ -42,7 +42,7 @@ public class CustomUserAdsCriteriaHelper {
 			 paging+=" AND category_id = :cat ";
 		 }
 		
-		 sql += " ORDER BY ST_Distance(geom, poi), user_ads.created_at desc ";
+		 sql += " ORDER BY ST_Distance(user_ads.geom, poi) / 1000, user_ads.created_at desc ";
 		
 		 paging +=") as page_info";
 		 sql = sql.replace("page_quey", paging);
@@ -113,7 +113,6 @@ public class CustomUserAdsCriteriaHelper {
 	 public Object getCountByCategory(Long categoryId){
 		 String queryString = "SELECT Count(*) FROM user_ads WHERE category_id = :catId";
 		 Query query = entityManager.createNativeQuery(queryString).setParameter("catId", categoryId);
-		 System.out.println(query.getSingleResult());
 		 return query.getSingleResult();
 	 }
 }
