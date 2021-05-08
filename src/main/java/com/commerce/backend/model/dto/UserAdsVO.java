@@ -47,6 +47,8 @@ public class UserAdsVO {
 	private String categoryNameAr;
 	
 	private Long  categoryId;
+	
+	private String image;
 
 	private Set<UserAdsImageVO> Images = new HashSet<UserAdsImageVO>();
   

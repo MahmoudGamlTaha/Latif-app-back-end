@@ -213,6 +213,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		userAdsVo.setLatitude(entity.getLatitude());
 		userAdsVo.setUpdated_at(entity.getUpdatedAt());
 		userAdsVo.setExternal_link(Boolean.parseBoolean(checkValue(entity.getExternalLink(), SystemConstant.BOOLEAN).toString()));
+		
 		Set<UserAdsImage> images = entity.getUserAdsImage();
 		if(images != null) {
 			Set<UserAdsImageVO> imageVos = new HashSet<UserAdsImageVO>();
@@ -220,11 +221,13 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 				UserAdsImageVO imgVo = new UserAdsImageVO();
 				imgVo.setId(img.getId());
 				imgVo.setImage(img.getImage());
+				userAdsVo.setImage(img.getImage());
 				imgVo.setExternal_link(entity.getExternalLink());
 				imgVo.setUserAdsId(entity.getId());
 				imageVos.add(imgVo);
 			});
 			userAdsVo.setImages(imageVos);
+			
 		}
 		if(entity.getCreatedBy() != null) {
 			UserVO user = new UserVO();

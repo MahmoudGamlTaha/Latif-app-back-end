@@ -1,25 +1,9 @@
 package com.commerce.backend.model.entity;
 
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-
 import com.commerce.backend.constants.AdsType;
-import com.commerce.backend.constants.FoodType;
-import com.commerce.backend.constants.TrainningType;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
