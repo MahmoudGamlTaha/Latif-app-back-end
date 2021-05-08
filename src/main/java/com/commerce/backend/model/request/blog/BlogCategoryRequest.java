@@ -9,20 +9,17 @@ import javax.validation.constraints.Size;
 
 @Data
 public class BlogCategoryRequest {
-    @NotBlank
+    
+	@NotBlank
     @Size(min = 3, max = 250)
-    //@Pattern(regexp = "[0-9a-zA-Z #,_]+")
     String name;
     
     @Size(min = 3, max = 250)
-    //@Pattern(regexp = "[0-9a-zA-Z #,_]+")
     String nameAr;
     
-    @Null
     @Size(max = 300)
     String description;
-    
-    @Null
+  
     Long parentCategory;
     
     String icon;

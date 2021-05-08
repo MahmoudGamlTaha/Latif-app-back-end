@@ -48,9 +48,11 @@ public class BlogController extends PublicApiController{
         return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/blogs/keyword={keyword}")
-    public BasicResponse search(@PathVariable String keyword, Pageable pageable)
-    {
+    @GetMapping({"/blogs/keyword={keyword}/page={page}", "/blogs/keyword={keyword}"})
+    public BasicResponse search(@PathVariable String keyword, @PathVariable(required = false) Integer page)
+    { 
+    	page = page == null?0:page;
+        Pageable pageable = PageRequest.of(page, SystemConstant.MOBILE_PAGE_SIZE);
         return blogServiceImpl.search(keyword, pageable);
     }
 
