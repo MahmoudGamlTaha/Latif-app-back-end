@@ -6,10 +6,12 @@ import com.commerce.backend.converter.blog.BlogResponseConverter;
 import com.commerce.backend.dao.BlogCategoryRepository;
 import com.commerce.backend.dao.BlogImageRepository;
 import com.commerce.backend.dao.BlogRepository;
+import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.entity.Blog;
 import com.commerce.backend.model.entity.BlogCategory;
 import com.commerce.backend.model.entity.BlogImage;
+import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.request.blog.BlogRequest;
 import com.commerce.backend.model.request.blog.UpdateBlogRequest;
 import com.commerce.backend.model.response.BasicResponse;
@@ -38,6 +40,7 @@ public class BlogCacheServiceImpl implements BlogCacheService{
     private final FilesStorageService storageService;
     private final BlogImageRepository blogImageRepository;
     private final BlogResponseConverter converter;
+    private final UserRepository UserRepository; 
     @Value("${swagger.host.path}")
     private String path;
 
@@ -108,10 +111,12 @@ public class BlogCacheServiceImpl implements BlogCacheService{
     	BasicResponse response = new BasicResponse();
     	HashMap<String, Object> hashMap = new HashMap<String, Object>();
         BlogCategory category = blogCategoryRepository.findById(blog.getCategory()).orElse(null);
+        User user = UserRepository.findById(blog.getUserId()).orElse(null);
         Blog entity = Blog.builder()
                 .title(blog.getTitle())
                 .description(blog.getDescription())
                 .category(category)
+                .userId(user)
                 .path(path + "blogs")
                 .externalLink(external)
                 .date(new Date())
