@@ -40,17 +40,18 @@ public class BlogCacheServiceImpl implements BlogCacheService{
     private final FilesStorageService storageService;
     private final BlogImageRepository blogImageRepository;
     private final BlogResponseConverter converter;
-    private final UserRepository UserRepository; 
+    private final UserRepository userRepository; 
     @Value("${swagger.host.path}")
     private String path;
 
     @Autowired
-    public BlogCacheServiceImpl(BlogRepository blogRepository, BlogCategoryRepository blogCategoryRepository, FilesStorageService storageService, BlogImageRepository blogImageRepository, BlogResponseConverter converter) {
+    public BlogCacheServiceImpl(BlogRepository blogRepository, BlogCategoryRepository blogCategoryRepository, FilesStorageService storageService, BlogImageRepository blogImageRepository, BlogResponseConverter converter,UserRepository userRepository) {
         this.blogRepository = blogRepository;
         this.blogCategoryRepository = blogCategoryRepository;
         this.storageService = storageService;
         this.blogImageRepository = blogImageRepository;
         this.converter = converter;
+		this.userRepository = userRepository;
     }
 
     /**
@@ -111,7 +112,7 @@ public class BlogCacheServiceImpl implements BlogCacheService{
     	BasicResponse response = new BasicResponse();
     	HashMap<String, Object> hashMap = new HashMap<String, Object>();
         BlogCategory category = blogCategoryRepository.findById(blog.getCategory()).orElse(null);
-        User user = UserRepository.findById(blog.getUserId()).orElse(null);
+        User user = this.userRepository.findById(blog.getUserId()).orElse(null);
         Blog entity = Blog.builder()
                 .title(blog.getTitle())
                 .description(blog.getDescription())
