@@ -169,6 +169,7 @@ public class BlogCacheServiceImpl implements BlogCacheService{
         }*/
         hashMap.put(MessageType.Data.getMessage(), basicResponse);
         response.setResponse(hashMap);
+        response.setSuccess(true);
         return response ;
     }
 
