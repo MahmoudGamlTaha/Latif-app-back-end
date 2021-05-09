@@ -11,7 +11,7 @@
 <hibernate-configuration>
 	<session-factory>
 
-   		<property name="connection.url">jdbc:postgresql://ec2-3-215-57-87.compute-1.amazonaws.com:5432/dch9jnm7qotids</property> <!-- BD Mane -->
+   		<property name="connection.url">jdbc:postgresql://ec2-3-215-57-87.compute-1.amazonaws.com:5432/d5lbesludlrktt</property> <!-- BD Mane -->
    		<property name="connection.driver_class">org.postgresql.Driver</property> <!-- DB Driver -->
    		<property name="connection.username">rsgymqhtclbrsp</property> <!-- DB User -->
    		<property name="connection.password">78c1fd94bb9536016817229d554b7be520b53753ee86da88381505ef5badb22d</property> <!-- DB Password -->

@@ -4,9 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
-import org.springframework.beans.factory.annotation.Required;
-
-import com.sun.istack.NotNull;
+import javax.validation.constraints.NotNull;
 import com.sun.istack.Nullable;
 
 import lombok.Getter;
@@ -14,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CategoryUpdateRequest {
-	@NotBlank
+    @NotNull(message = "Please enter id")
 	@Positive
 	Long id;
      
