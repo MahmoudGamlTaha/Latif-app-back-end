@@ -10,4 +10,5 @@ import com.commerce.backend.model.entity.ItemCategory;
 @Repository
 public interface ItemCategoryRepository extends CrudRepository<ItemCategory, Long> {
 	List<ItemCategory> findAllByOrderByName();
+
 }

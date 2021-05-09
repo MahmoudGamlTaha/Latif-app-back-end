@@ -2,7 +2,7 @@ package com.commerce.backend.api;
 
 import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.model.request.blog.BlogCategoryRequest;
-import com.commerce.backend.model.request.blog.UpdateCategoryRequest;
+import com.commerce.backend.model.request.blog.UpdateBlogCategoryRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.blog.BlogCategoryResponse;
 import com.commerce.backend.service.BlogCategoryServiceImpl;
@@ -53,8 +53,7 @@ public class BlogCategoriesController extends PublicApiController{
     }
 
     @PostMapping("/blogCategory/update")
-
-    public BlogCategoryResponse updateCategory(@ModelAttribute @Valid UpdateCategoryRequest catRequest)
+    public BlogCategoryResponse updateCategory(@RequestBody @Valid UpdateBlogCategoryRequest catRequest)
     {
         return blogCategoryService.update(catRequest);
     }

@@ -4,7 +4,7 @@ import com.commerce.backend.dao.BlogCategoryRepository;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.entity.BlogCategory;
 import com.commerce.backend.model.request.blog.BlogCategoryRequest;
-import com.commerce.backend.model.request.blog.UpdateCategoryRequest;
+import com.commerce.backend.model.request.blog.UpdateBlogCategoryRequest;
 import com.commerce.backend.model.response.blog.BlogCategoryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;

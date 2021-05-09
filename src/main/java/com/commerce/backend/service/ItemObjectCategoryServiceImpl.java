@@ -9,6 +9,7 @@ import com.commerce.backend.model.entity.ItemCategory;
 import com.commerce.backend.model.entity.ItemObjectCategory;
 import com.commerce.backend.model.entity.PetCategory;
 import com.commerce.backend.model.request.category.CategoryRequest;
+import com.commerce.backend.model.request.category.CategoryUpdateRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 import com.commerce.backend.service.cache.ItemObjectCategoryCacheService;
@@ -112,6 +113,17 @@ public class ItemObjectCategoryServiceImpl implements ItemObjectCategoryService 
 	@Override
 	public BasicResponse findAllByTypeId(Integer id, Integer page) {
 		return itemObjectCategoryCacheService.findAllByTypeId(id, page);
+	}
+
+	@Override
+	public BasicResponse updateItemCategory(CategoryUpdateRequest request) {
+		BasicResponse response = new BasicResponse();
+		HashMap<String, Object> responseValue = new HashMap<String, Object>();
+		ItemObjectCategory objectCategory = itemObjectCategoryCacheService.updateItemCategory(request);
+		responseValue.put(MessageType.Data.getMessage(), objectCategory);
+		response.setMsg(MessageType.Success.getMessage());
+		response.setSuccess(true);
+		return response;
 	}
 	
 }

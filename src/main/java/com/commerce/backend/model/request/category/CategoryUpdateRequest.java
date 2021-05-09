@@ -4,6 +4,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
+import org.springframework.beans.factory.annotation.Required;
+
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 
@@ -11,18 +13,22 @@ import lombok.Getter;
 import lombok.Setter;
 @Getter
 @Setter
-public class CategoryRequest {
-	 
-     @NotBlank
-     @Size(min = 3, max = 200)
+public class CategoryUpdateRequest {
+	@NotBlank
+	@Positive
+	Long id;
+     
+	 @Size(min = 3, max = 200)
      String name ;
      
      @NotBlank
      @Size(min = 3, max = 200)
      String nameAr ;
      
+     @Nullable
      String icon;
      
+     @Nullable
      String icon_select;
      
      @Positive
@@ -31,8 +37,9 @@ public class CategoryRequest {
      
 	  @Nullable
 	 Long catParent;
-	  
-	 boolean active;
 	 
-	 boolean isExternalLink;
+	  @Nullable
+	 Boolean active;
+	 @Nullable
+	 Boolean isExternalLink;
 }

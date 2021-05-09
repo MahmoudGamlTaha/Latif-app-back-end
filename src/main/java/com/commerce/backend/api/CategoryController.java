@@ -2,6 +2,7 @@ package com.commerce.backend.api;
 
 import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.model.request.category.CategoryRequest;
+import com.commerce.backend.model.request.category.CategoryUpdateRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 import com.commerce.backend.service.ItemObjectCategoryService;
@@ -72,6 +73,11 @@ public class CategoryController extends PublicApiController {
     public ResponseEntity<ItemObjectCategoryResponse> deleteCategory(Long id){
     	ItemObjectCategoryResponse itemCategory = itemObjectCategoryService.deleteItemObjectCategory(id);
     	return new ResponseEntity<> (itemCategory, HttpStatus.OK);
+    }
+    @PostMapping(value = "/category/update")
+    public ResponseEntity<BasicResponse> updateCategory(@RequestBody @Valid CategoryUpdateRequest request){
+    	BasicResponse itemCategory = itemObjectCategoryService.updateItemCategory(request);
+    	return new ResponseEntity<>(itemCategory, HttpStatus.OK);
     }
     
 

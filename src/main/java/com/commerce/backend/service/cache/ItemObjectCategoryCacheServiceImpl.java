@@ -13,6 +13,7 @@ import com.commerce.backend.model.entity.ItemObjectCategory;
 import com.commerce.backend.model.entity.PetCategory;
 import com.commerce.backend.model.entity.ServiceCategory;
 import com.commerce.backend.model.request.category.CategoryRequest;
+import com.commerce.backend.model.request.category.CategoryUpdateRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 
@@ -199,5 +200,40 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 		categoryByType.setMsg(MessageType.Success.getMessage());
 		
 		return categoryByType;
+	}
+
+	@Override
+	public ItemObjectCategory updateItemCategory(CategoryUpdateRequest request) {
+		ItemObjectCategory category = this.itemCategoryRepository.findById(request.getId()).orElse(null);
+		if(category == null) {
+			return null;
+		}
+		if(request.getActive() != null) {
+			category.setActive(request.getActive());
+		}
+		if(request.getCatParent() == null) {
+			ItemObjectCategory parent	= this.itemCategoryRepository.findById(request.getCatParent()).orElse(null);
+			category.setParent(parent);
+		}
+		if(request.getIcon() != null) {
+			category.setIcon(request.getIcon());
+		}
+		if(request.getIcon_select() != null) {
+			category.setIcon_select(request.getIcon_select());
+		}
+		if(request.getNameAr() != null) {
+			category.setNameAr(request.getNameAr());
+		}
+		if(request.getName() != null) {
+			category.setName(request.getName());
+		}
+		if(request.getType() != null) {
+			category.setType(request.getType());
+		}
+		if(request.getIsExternalLink() != null) {
+			category.setIsExternalLink(request.getIsExternalLink());
+		}
+		this.itemObjectRepository.save(category);
+		return category;
 	}
 }

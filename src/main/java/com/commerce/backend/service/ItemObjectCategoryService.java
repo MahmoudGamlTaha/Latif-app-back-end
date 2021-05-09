@@ -2,6 +2,7 @@ package com.commerce.backend.service;
 
 import com.commerce.backend.model.entity.ItemObjectCategory;
 import com.commerce.backend.model.request.category.CategoryRequest;
+import com.commerce.backend.model.request.category.CategoryUpdateRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 
@@ -16,4 +17,5 @@ public interface ItemObjectCategoryService {
     List<ItemObjectCategoryResponse> findItemCategories();
     BasicResponse createItemObjectCategory(CategoryRequest request);
     ItemObjectCategoryResponse deleteItemObjectCategory(Long id);
+    BasicResponse updateItemCategory(CategoryUpdateRequest request);
 }

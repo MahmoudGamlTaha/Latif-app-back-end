@@ -60,7 +60,7 @@ public class FieldsNames {
     public static final String VaccinationCertificate_ar = "شهادة تطعيم";
     public static final String Stock = "Stock";
     public static final String Stock_ar = "المخزون";
-    public static final String AllowAtHome = "Allow At Hom";
+    public static final String AllowAtHome = "Delivery At Home";
     public static final String AllowAtHome_ar = "داخل المنزل";
     public static final String used = "used";
     public static final String used_ar = "مستعمل";
