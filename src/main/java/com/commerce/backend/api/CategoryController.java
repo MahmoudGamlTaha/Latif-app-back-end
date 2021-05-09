@@ -2,6 +2,7 @@ package com.commerce.backend.api;
 
 import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.model.request.category.CategoryRequest;
+import com.commerce.backend.model.request.category.CategoryUpdateRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 import com.commerce.backend.service.ItemObjectCategoryService;
@@ -35,8 +36,6 @@ public class CategoryController extends PublicApiController {
     @ResponseBody
     public ResponseEntity<BasicResponse> getCategoryByAdsType(@PathVariable("adtypeId") Integer adtypeId, 
     		                                                   @PathVariable(required = false) Optional<Integer> page){
-    	logger2.info("======path variable=========:"+ adtypeId);
-    	
     	BasicResponse response = this.itemObjectCategoryService.findAllByTypeId(adtypeId, page.orElse(0));
     	HttpStatus status = response.getMsg() != MessageType.Success.getMessage()?HttpStatus.BAD_REQUEST: HttpStatus.OK;
     	return new ResponseEntity<BasicResponse>(response, status);
@@ -59,7 +58,11 @@ public class CategoryController extends PublicApiController {
         List<ItemObjectCategoryResponse> itemCategories = itemObjectCategoryService.findAllByOrderByName();
         return new ResponseEntity<>(itemCategories, HttpStatus.OK);
     }
-    
+    @GetMapping(value = "/category/find-by-id/id={id}")
+    public ResponseEntity<BasicResponse> getCategoryById(@PathVariable("id") Long id) {
+        BasicResponse itemCategory = itemObjectCategoryService.findByCategoryId(id);
+        return new ResponseEntity<>(itemCategory, HttpStatus.OK);
+    }
     @PostMapping(value = "/category/create")
     public ResponseEntity<BasicResponse> createCategory(@RequestBody @Valid CategoryRequest request){
     	BasicResponse itemCategory = itemObjectCategoryService.createItemObjectCategory(request);
@@ -70,6 +73,11 @@ public class CategoryController extends PublicApiController {
     public ResponseEntity<ItemObjectCategoryResponse> deleteCategory(Long id){
     	ItemObjectCategoryResponse itemCategory = itemObjectCategoryService.deleteItemObjectCategory(id);
     	return new ResponseEntity<> (itemCategory, HttpStatus.OK);
+    }
+    @PostMapping(value = "/category/update")
+    public ResponseEntity<BasicResponse> updateCategory(@RequestBody @Valid CategoryUpdateRequest request){
+    	BasicResponse itemCategory = itemObjectCategoryService.updateItemCategory(request);
+    	return new ResponseEntity<>(itemCategory, HttpStatus.OK);
     }
     
 

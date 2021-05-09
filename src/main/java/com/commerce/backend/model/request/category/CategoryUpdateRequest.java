@@ -4,25 +4,29 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
-import com.sun.istack.NotNull;
+import javax.validation.constraints.NotNull;
 import com.sun.istack.Nullable;
 
 import lombok.Getter;
 import lombok.Setter;
 @Getter
 @Setter
-public class CategoryRequest {
-	 
-     @NotBlank
-     @Size(min = 3, max = 200)
+public class CategoryUpdateRequest {
+    @NotNull(message = "Please enter id")
+	@Positive
+	Long id;
+     
+	 @Size(min = 3, max = 200)
      String name ;
      
      @NotBlank
      @Size(min = 3, max = 200)
      String nameAr ;
      
+     @Nullable
      String icon;
      
+     @Nullable
      String icon_select;
      
      @Positive
@@ -31,8 +35,9 @@ public class CategoryRequest {
      
 	  @Nullable
 	 Long catParent;
-	  
-	 boolean active;
 	 
-	 boolean isExternalLink;
+	  @Nullable
+	 Boolean active;
+	 @Nullable
+	 Boolean isExternalLink;
 }

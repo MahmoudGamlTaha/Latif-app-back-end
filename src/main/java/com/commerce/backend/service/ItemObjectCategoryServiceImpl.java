@@ -1,5 +1,6 @@
 package com.commerce.backend.service;
 
+import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.converter.category.ItemObjectCategoryResponseConverter;
 import com.commerce.backend.dao.ItemObjectCategoryRepository;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
@@ -8,12 +9,14 @@ import com.commerce.backend.model.entity.ItemCategory;
 import com.commerce.backend.model.entity.ItemObjectCategory;
 import com.commerce.backend.model.entity.PetCategory;
 import com.commerce.backend.model.request.category.CategoryRequest;
+import com.commerce.backend.model.request.category.CategoryUpdateRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 import com.commerce.backend.service.cache.ItemObjectCategoryCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,10 +34,30 @@ public class ItemObjectCategoryServiceImpl implements ItemObjectCategoryService 
     }
 
 	@Override
-	public ItemObjectCategory findById(Long id) {
-		return itemObjectCategoryCacheService.findById(id);
+	public BasicResponse findByCategoryId(Long id) {
+		BasicResponse response = new BasicResponse();
+		try {
+		
+		 ItemObjectCategory itemObject = itemObjectCategoryCacheService.findById(id);
+		 HashMap<String,Object> responseValue = new HashMap<String, Object>(); 
+		response.setSuccess(true);
+		response.setMsg(MessageType.Success.getMessage());
+		responseValue.put(MessageType.Data.getMessage(), itemObject);
+		 response.setResponse(responseValue);
+		}catch(Exception ex) {
+			ex.printStackTrace();
+			response.setMsg(ex.getMessage());
+			response.setSuccess(false);
+		}
+		 return response;
 	}
-
+	@Override
+	public ItemObjectCategory findById(Long id) {
+		
+		 ItemObjectCategory itemObject = itemObjectCategoryCacheService.findById(id);
+	     return itemObject;
+	}
+		 
 	@Override
     public List<ItemObjectCategoryResponse> findAllByOrderByName() {
         List<ItemObjectCategory> productCategories = itemObjectCategoryCacheService.findAllByOrderByName();
@@ -90,6 +113,17 @@ public class ItemObjectCategoryServiceImpl implements ItemObjectCategoryService 
 	@Override
 	public BasicResponse findAllByTypeId(Integer id, Integer page) {
 		return itemObjectCategoryCacheService.findAllByTypeId(id, page);
+	}
+
+	@Override
+	public BasicResponse updateItemCategory(CategoryUpdateRequest request) {
+		BasicResponse response = new BasicResponse();
+		HashMap<String, Object> responseValue = new HashMap<String, Object>();
+		ItemObjectCategory objectCategory = itemObjectCategoryCacheService.updateItemCategory(request);
+		responseValue.put(MessageType.Data.getMessage(), objectCategory);
+		response.setMsg(MessageType.Success.getMessage());
+		response.setSuccess(true);
+		return response;
 	}
 	
 }

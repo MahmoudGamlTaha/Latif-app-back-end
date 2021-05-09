@@ -6,7 +6,8 @@ import com.commerce.backend.dao.BlogCategoryRepository;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.entity.BlogCategory;
 import com.commerce.backend.model.request.blog.BlogCategoryRequest;
-import com.commerce.backend.model.request.blog.UpdateCategoryRequest;
+import com.commerce.backend.model.request.blog.UpdateBlogCategoryRequest;
+import com.commerce.backend.model.request.blog.UpdateBlogRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.blog.BlogCategoryResponse;
 import com.commerce.backend.service.cache.BlogCategoryCacheService;
@@ -80,7 +81,7 @@ public class BlogCategoryServiceImpl {
                 .collect(Collectors.toList());
     }
 
-    public BlogCategoryResponse update(UpdateCategoryRequest CatRequest)
+    public BlogCategoryResponse update(UpdateBlogCategoryRequest CatRequest)
     {
         Configuration configuration = new Configuration();
         configuration.configure("hibernate.cfg.xml");
