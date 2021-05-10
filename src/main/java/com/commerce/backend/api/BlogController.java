@@ -62,7 +62,7 @@ public class BlogController extends PublicApiController{
         return new ResponseEntity<BasicResponse> (blogServiceImpl.saveBlog(blog,  blog.getExtrnImage(), blog.getImages(), blog.is_external()), HttpStatus.OK);
     }
 
-    @PostMapping("/update")
+    @PostMapping("/blogs/update")
     public ResponseEntity<BasicResponse> updateBlog(@ModelAttribute @Valid UpdateBlogRequest blogRequest,
     		                        @RequestParam(value = "external", required = false, defaultValue = "true") Boolean external,
                                     @RequestParam(value = "images", required = false) ArrayList<MultipartFile> images,

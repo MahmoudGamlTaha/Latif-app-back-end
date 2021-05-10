@@ -21,7 +21,7 @@ public class UserRoleServiceImpl implements UserRoleService{
     }
 
     @Override
-    public UserRole create(UserRoleRequest userRole) throws Exception {
+    public BasicResponse create(UserRoleRequest userRole) throws Exception {
         try {
             return cacheService.create(userRole);
         }catch (Exception e)
