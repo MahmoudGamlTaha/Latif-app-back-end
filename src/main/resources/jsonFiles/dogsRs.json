@@ -1,5 +1,4 @@
 {"form":[
-  {"name": "code", "type": "string","label": "Code", "required": true},
   {"name": "active", "type": "boolean","label": "Active", "required": true},
   {"name": "longitude", "type": "map","label": "Longitude", "required": true},
   {"name": "latitude", "type": "map","label": "Latitude", "required": true},
@@ -18,7 +17,6 @@
   {"name": "diseasesDisabilities", "type": "boolean","label": "Diseases or Disabilities", "required": true},
   {"name": "diseasesDisabilitiesDesc", "type": "string","label": "Diseases or Disabilities Desc", "required": true},
   {"name": "category", "type": "string","label": "Name", "required": true},
-  {"name": "name","type": "string", "label": "Category", "required": true},
   {"name": "food", "type": "select","label": "Food", "required": true, "options":[{"label" : "Dry", "code":"DRY"}, {"label" : "Wet", "code":"WET"}, {"label" : "Home cooked", "code":"HOME_COOKED"}], "multi":true},
   {"name": "petsImages", "type": "files","label": "Pets Images", "required": true},
   {"name": "barkingProblem", "type": "boolean", "label": "Barking Problem", "required": true}
