@@ -1,6 +1,12 @@
 package com.commerce.backend.service.cache;
 
+import com.commerce.backend.constants.MessageType;
+import com.commerce.backend.dao.RoleRepository;
+import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.dao.UserRoleRepository;
+import com.commerce.backend.helper.resHelper;
+import com.commerce.backend.model.entity.Role;
+import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.entity.UserRole;
 import com.commerce.backend.model.request.role.UserRoleRequest;
 import com.commerce.backend.model.request.role.UserRoleRequestUpdate;
@@ -11,29 +17,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class UserRoleCacheServiceImpl implements UserRoleCacheService{
 
     private final UserRoleRepository repo;
     private final RoleServiceImpl roleService;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserRoleCacheServiceImpl(UserRoleRepository repo, RoleServiceImpl roleService) {
+    public UserRoleCacheServiceImpl(UserRoleRepository repo, RoleServiceImpl roleService, UserRepository userRepository, RoleRepository roleRepository) {
         this.repo = repo;
         this.roleService = roleService;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
-    public UserRole create(UserRoleRequest userRole) throws Exception {
+    public BasicResponse create(UserRoleRequest userRole) throws Exception {
         try {
-            UserRole ur = UserRole.builder()
-                    .userId(userRole.getUserId())
-                    .roleId(userRole.getRoleId())
-                    .created_at(new Date())
-                    .build();
-            return repo.save(ur);
+            User user = userRepository.findById(userRole.getUserId()).orElse(null);
+            if(user == null){
+                return resHelper.res(null, false, MessageType.Missing.getMessage(), null);
+            }
+            Role role = roleRepository.findById(userRole.getRoleId()).orElse(null);
+            if(role == null){
+                return resHelper.res(null, false, MessageType.Missing.getMessage(), null);
+            }
+            UserRole userRole1 = repo.getUserRoleByUserId(userRole.getUserId());
+            if(userRole1.getRoleId().equals(userRole.getRoleId())) {
+                return resHelper.res(null, false, MessageType.Fail.getMessage(), null);
+            }
+            Set<Role> test = new HashSet<>();
+            test.add(role);
+            user.setRoles(test);
+            return resHelper.res(userRepository.save(user), true, "success", null);
         }catch (Exception e)
         {
             throw new Exception(e);

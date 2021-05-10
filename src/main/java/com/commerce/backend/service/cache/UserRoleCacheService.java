@@ -8,7 +8,7 @@ import com.commerce.backend.model.response.role.RoleResponse;
 
 public interface UserRoleCacheService {
 
-    UserRole create (UserRoleRequest userRole) throws Exception;
+    BasicResponse create (UserRoleRequest userRole) throws Exception;
     UserRole update (UserRoleRequestUpdate userRole) throws Exception;
     RoleResponse getUserRoleByUserId(Long id) throws Exception;
     BasicResponse delete(Long id) throws Exception;

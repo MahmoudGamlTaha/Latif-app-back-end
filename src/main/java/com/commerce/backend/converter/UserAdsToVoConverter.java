@@ -96,7 +96,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			user.setFirstName(source.getCreatedBy().getFirstName());
 			user.setLastName(source.getCreatedBy().getLastName());
 			user.setAvatar(source.getCreatedBy().getAvatar());
-			user.setPhone(source.getCreatedBy().getPhone());
+			user.setPhone(source.getCreatedBy().getMobile());
 			user.setRegistrationDate(source.getCreatedBy().getRegistrationDate());
 			Set<UserAds> ads = source.getCreatedBy().getAds();
 			user.setAdsCount(ads==null?0:ads.size());
@@ -235,7 +235,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			user.setFirstName(entity.getCreatedBy().getFirstName());
 			user.setLastName(entity.getCreatedBy().getLastName());
 			user.setAvatar(entity.getCreatedBy().getAvatar());
-			user.setPhone(entity.getCreatedBy().getPhone());
+			user.setPhone(entity.getCreatedBy().getMobile());
 			user.setRegistrationDate(entity.getCreatedAt());
 			Set<UserAds> ads = entity.getCreatedBy().getAds();
 			if(ads != null) {

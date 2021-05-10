@@ -20,7 +20,7 @@ public class UserResponseConverter implements Function<User, UserResponse> {
 	        userResponse.setCity(user.getCity());
 	        userResponse.setState(user.getState());
 	        userResponse.setZip(user.getZip());
-	        userResponse.setPhone(user.getPhone());
+	        userResponse.setPhone(user.getMobile());
 	        userResponse.setCountry(user.getCountry());
 	        userResponse.setEmailVerified(user.getEmailVerified());
 	        userResponse.setId(user.getId());
