@@ -199,12 +199,13 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		userAdsVo.setCreated_at(new KeyResponse(FieldsNames.createdAt, FieldsNames.createdAt_ar, entity.getLatitude()));
 		userAdsVo.setUpdated_at(new KeyResponse(FieldsNames.updatedAt, FieldsNames.updatedAt_ar, entity.getUpdatedAt()));
 		userAdsVo.setExternal_link(new KeyResponse(FieldsNames.externalLink, FieldsNames.externalLink_ar, entity.getExternalLink()));*/
+		
 		userAdsVo.setId(entity.getId());
 		userAdsVo.setName(entity.getName());
 		userAdsVo.setCode(entity.getCode());
 		userAdsVo.setActive(entity.isActive());
 		userAdsVo.setCity(entity.getCity());
-		userAdsVo.setDescription(entity.getDescription());
+		userAdsVo.setDescription(checkValue(entity.getDescription(),SystemConstant.STRING).toString());
 		userAdsVo.setShort_description(entity.getShortDescription());
 		userAdsVo.setType(entity.getType());
 		userAdsVo.setPrice(entity.getPrice());
@@ -249,7 +250,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		if(entity.getType() == AdsType.PETS) {
 			extraInfo.add(new KeyResponse(FieldsNames.barkingProblem, FieldsNames.barkingProblem_ar, checkValue(((UserPetAds)entity).getBarkingProblem(), SystemConstant.BOOLEAN)));
 			extraInfo.add(new KeyResponse(FieldsNames.bread, FieldsNames.bread_ar, checkValue(((UserPetAds)entity).getBreed(), SystemConstant.BOOLEAN)));
-			extraInfo.add(new KeyResponse(FieldsNames.food, FieldsNames.food_ar, ((UserPetAds)entity).getFood()));
+			extraInfo.add(new KeyResponse(FieldsNames.food, FieldsNames.food_ar, checkValue(((UserPetAds)entity).getFood(), SystemConstant.STRING)));
 			extraInfo.add(new KeyResponse(FieldsNames.diseasesOrDisabilities, FieldsNames.diseasesOrDisabilities_ar, checkValue(((UserPetAds)entity).getDiseasesDisabilities(), SystemConstant.BOOLEAN)));
 			extraInfo.add(new KeyResponse(FieldsNames.diseasesOrDisabilitiesDesc, FieldsNames.diseasesOrDisabilitiesDesc_ar, checkValue(((UserPetAds)entity).getDiseasesDisabilitiesDesc(), SystemConstant.STRING)));
 			extraInfo.add(new KeyResponse(FieldsNames.Neutering, FieldsNames.Neutering_ar, checkValue(((UserPetAds)entity).getNeutering(), SystemConstant.BOOLEAN)));
@@ -278,12 +279,19 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			}
 		}else if(entity.getType() == AdsType.PET_CARE) {
 			extraInfo.add(new KeyResponse(FieldsNames.AllowAtHome, FieldsNames.AllowAtHome_ar, ((UserMedicalAds)entity).getAllowServiceAtHome()));
+			try {
 			MedicalCategory category = (MedicalCategory)((UserMedicalAds)entity).getCategory();
+			
 			String categoryName = category == null ?null:category.getName();
 			if(categoryName != null) {
 				userAdsVo.setCategoryName(categoryName);
 				userAdsVo.setCategoryNameAr(category.getNameAr());
 				userAdsVo.setCategoryId(category.getId());
+			}
+        }catch(Exception ex) {
+            	System.out.print("=============");
+				System.out.print(userAdsVo.getId());
+				System.out.print("=============");
 			}
 		}else if(entity.getType() == AdsType.ACCESSORIES) {
 			extraInfo.add(new KeyResponse(FieldsNames.AllowAtHome, FieldsNames.AllowAtHome_ar, ((UserAccAds)entity).getAllowServiceAtHome()));
@@ -301,7 +309,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 	}
 	public Object checkValue(Object b, Integer type) {
 		if(type == SystemConstant.BOOLEAN && b == null) {
-			return false;
+			return "N/A";
 		}
 		
 		if(type == SystemConstant.STRING && b == null) {
