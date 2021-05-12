@@ -25,7 +25,7 @@ public class UserRoleController extends PublicApiController {
     }
 
     @PostMapping("/userRole/create")
-    public UserRole createUserRole(UserRoleRequest userRole) throws Exception {
+    public BasicResponse createUserRole(UserRoleRequest userRole) throws Exception {
         return service.create(userRole);
     }
 

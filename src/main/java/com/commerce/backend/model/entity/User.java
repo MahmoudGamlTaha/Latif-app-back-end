@@ -21,7 +21,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-//@ToString(exclude = "cart")
 public class User {
 
   @Id
@@ -62,7 +61,7 @@ public class User {
   private Integer emailVerified;
 
   @Column(name = "mobile")
-  private String phone;
+  private String mobile;
 
   @Column(name = "avatar")
   private String avatar;
@@ -72,6 +71,12 @@ public class User {
 
   @Column(name = "address1")
   private String address;
+
+  @Column(name = "active")
+  private boolean active;
+
+  @Column(name = "username")
+  private String username;
   
   @Column(name = "created_at", updatable = false)
    @Type(type = "timestamp")
@@ -85,4 +90,13 @@ public class User {
   )
   @NotFound(action = NotFoundAction.IGNORE)
   private Set<SubscriptionTypes> subscriptions = new HashSet<>();
+
+  @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+  @JoinTable(
+          name = "user_roles",
+          joinColumns = {@JoinColumn(name = "user_id")},
+          inverseJoinColumns = {@JoinColumn(name = "role_id")}
+  )
+  @NotFound(action = NotFoundAction.IGNORE)
+  private Set<Role> roles  = new HashSet<>();
 }
