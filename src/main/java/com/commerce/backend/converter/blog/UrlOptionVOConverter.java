@@ -24,6 +24,7 @@ public class UrlOptionVOConverter  implements Function<Cites, ItemObjectCategory
 	     object.setName(city.getCityEn());
 	     object.setNameAr(city.getCityAr());
 	     object.setId(city.getId());
+	     object.setIsExternalLink(true);
 	     return convert.apply(object);
 	     //  return urlOp;
 	}
