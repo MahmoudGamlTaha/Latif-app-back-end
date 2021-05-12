@@ -31,7 +31,7 @@ public class CityController extends PublicApiController {
 	    response.setMsg(MessageType.Success.getMessage());
 	   
 	    HashMap<String, Object> responseMap = new HashMap<String, Object>();
-	    List<UrlOptionVO> urlOptions = new LinkedList<UrlOptionVO>();
+	    List<Object> urlOptions = new LinkedList<Object>();
 	    this.cityReposioty.findByActive(true).forEach(city -> {
 	        urlOptions.add(this.urlOptionVoConverter.apply(city));    	
 	    });
