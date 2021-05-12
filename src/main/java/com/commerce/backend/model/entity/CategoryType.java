@@ -30,6 +30,9 @@ public class CategoryType {
     @Column(name = "active")
     private Boolean active;
     
+    @Column(name = "order")
+    private Integer order;
+    
     @Column(name = "created_at")
     private Date created_at;
 

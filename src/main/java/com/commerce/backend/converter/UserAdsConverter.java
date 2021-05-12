@@ -6,6 +6,7 @@ import com.commerce.backend.constants.TrainningType;
 import com.commerce.backend.dao.ItemCategoryRepository;
 import com.commerce.backend.dao.ItemObjectCategoryRepository;
 import com.commerce.backend.dao.MedicalCategoryRepository;
+import com.commerce.backend.dao.ServiceCategoryRepository;
 import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.model.dto.*;
 import com.commerce.backend.model.entity.*;
@@ -13,6 +14,8 @@ import com.commerce.backend.model.request.userAds.AdsFiltrationRequest;
 import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
 
 import com.commerce.backend.model.request.userAds.UpdateAdRequest;
+import com.fasterxml.jackson.databind.jsontype.DefaultBaseTypeLimitingValidator;
+
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
@@ -52,6 +55,9 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
     private ItemCategoryRepository itemCategoryRepository;
     
     @Autowired
+    private ServiceCategoryRepository serviceCategoryRepository;
+    
+    @Autowired
 	private UserRepository user;
 	
 	private final static GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), SystemConstant.COORDINATE_SYSTEM); 
@@ -76,6 +82,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         	
             entity = new UserServiceAds();
         }
+        
         return convertToEntity(request, entity);
     }
     /*
@@ -91,7 +98,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         }
      
         entity.setName(String.valueOf( getHashMapKeyWithCheck(hashedData,"name", -1)));
-        entity.setCode(String.valueOf(hashedData.get("code")));
+      //  entity.setCode(String.valueOf(hashedData.get("code")));
         entity.setDescription(String.valueOf( getHashMapKeyWithCheck(hashedData,"description", -1)));
         entity.setShortDescription(String.valueOf( getHashMapKeyWithCheck(hashedData,"short_description", -1)));
       //  entity.setActive(Boolean.parseBoolean(String.valueOf(getHashMapKeyWithCheck(hashedData,"active", 1))));
@@ -172,11 +179,12 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         else if(request.getType() == AdsType.SERVICE) {
 			((UserServiceAds)entity).setAllowServiceAtHome(Boolean.parseBoolean(String.valueOf(getHashMapKeyWithCheck(hashedData,"allow_at_home", 1))));
 			 this.loggerS.info("Passss allow at home");
-			ServiceCategory serviceCategory = new ServiceCategory();
-			serviceCategory.setId(Long.parseLong(String.valueOf(getHashMapKeyWithCheck(hashedData,"category", 0))));
-			serviceCategory = serviceCategory.getId() == 0 ?null : serviceCategory;
+			 Long categoryId = Long.parseLong(String.valueOf(getHashMapKeyWithCheck(hashedData,"category", 0)));
+		     ServiceCategory serviceCategory = this.serviceCategoryRepository.findById(categoryId).orElse(null);
 			 ((UserServiceAds)entity).setCategory(serviceCategory);
 			 this.loggerS.info("Passss create");
+        } else if(request.getType() == AdsType.DELIVERY) {
+        	
         }
         
         return entity;
@@ -235,7 +243,6 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             ad.setLatitude(Double.parseDouble(String.valueOf(getHashMapKeyWithCheck(data,"latitude", 0))));
 
             Coordinate coordinate = new Coordinate();
-
             coordinate.x = ad.getLongitude();
             coordinate.y = ad.getLatitude();
 
