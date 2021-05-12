@@ -11,10 +11,16 @@ import lombok.Data;
 @Table(name="cites")
 @Data
 public class Cites {
-    @Id
+    
+	@Id
 	Long id;
+    
     @Column(name = "city_ar")
     String cityAr;
+    
     @Column(name = "city_en")
     String cityEn;
+    
+    @Column(name = "active")
+    boolean active;
 }

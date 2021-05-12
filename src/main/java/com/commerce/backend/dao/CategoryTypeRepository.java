@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface CategoryTypeRepository extends JpaRepository<CategoryType, Long> {
-    @Query("SELECT b FROM CategoryType b WHERE ACTIVE = true")
+    @Query("SELECT b FROM CategoryType b WHERE b.active = true")
     List<CategoryType> findAll(String keyword);
     Optional<CategoryType> findByName(String name);
 }
