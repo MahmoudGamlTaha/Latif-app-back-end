@@ -2,8 +2,6 @@ package com.commerce.backend.service;
 
 import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.converter.category.ItemObjectCategoryResponseConverter;
-import com.commerce.backend.dao.ItemObjectCategoryRepository;
-import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.dto.ItemObjectCategoryVO;
 import com.commerce.backend.model.entity.ItemCategory;
 import com.commerce.backend.model.entity.ItemObjectCategory;
@@ -14,6 +12,8 @@ import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 import com.commerce.backend.service.cache.ItemObjectCategoryCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -59,15 +59,23 @@ public class ItemObjectCategoryServiceImpl implements ItemObjectCategoryService 
 	}
 		 
 	@Override
-    public List<ItemObjectCategoryResponse> findAllByOrderByName() {
-        List<ItemObjectCategory> productCategories = itemObjectCategoryCacheService.findAllByOrderByName();
-        if (productCategories.isEmpty()) {
-            throw new ResourceNotFoundException("Could not find product categories");
-        }
-        return productCategories
-                .stream()
+    public BasicResponse findAllByOrderByName(Pageable pagable) {
+        Page<ItemObjectCategory> productCategories = itemObjectCategoryCacheService.findAllByOrderByName(pagable);
+       
+        BasicResponse response = new BasicResponse();
+        HashMap<String, Object> mapResponse = new HashMap<String, Object>();
+        mapResponse.put(MessageType.TotalItems.getMessage() , productCategories.getTotalElements());
+        mapResponse.put(MessageType.CurrentPage.getMessage(), productCategories.getPageable().getPageNumber() + 1);
+      
+        List<ItemObjectCategoryResponse> itemObjectResponse = productCategories.get()
                 .map(itemObjectCategoryResponseConverter)
                 .collect(Collectors.toList());
+        mapResponse.put(MessageType.Data.getMessage(), itemObjectResponse);
+        response.setMsg(MessageType.Success.getMessage());
+        response.setResponse(mapResponse);
+        response.setSuccess(true);
+        return response;
+       
     }
 
 

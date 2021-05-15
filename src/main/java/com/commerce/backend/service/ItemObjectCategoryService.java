@@ -8,11 +8,13 @@ import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+
 public interface ItemObjectCategoryService {
 	ItemObjectCategory findById(Long id);
     BasicResponse findAllByTypeId(Integer id, Integer page);
 	public BasicResponse findByCategoryId(Long id);
-    List<ItemObjectCategoryResponse> findAllByOrderByName();
+	BasicResponse findAllByOrderByName(Pageable page);
     List<ItemObjectCategoryResponse> findPetsCategories();
     List<ItemObjectCategoryResponse> findItemCategories();
     BasicResponse createItemObjectCategory(CategoryRequest request);

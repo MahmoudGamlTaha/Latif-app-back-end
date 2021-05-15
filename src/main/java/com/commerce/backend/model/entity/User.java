@@ -29,9 +29,9 @@ public class User {
   private Long id;
 
   //  TODO remove this and use cart repository findByUserId instead
-  @JsonIgnore
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-  private Cart cart;
+  //@JsonIgnore
+  //@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  //private Cart cart;
   
   @OneToMany(mappedBy = "createdBy", fetch = FetchType.EAGER)
   private Set<UserAds> ads;

@@ -1,6 +1,7 @@
 package com.commerce.backend.api;
 
 
+import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 import com.commerce.backend.service.ItemObjectCategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +17,9 @@ import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebCl
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -59,8 +63,8 @@ class CategoryControllerTest {
         List<ItemObjectCategoryResponse> productCategoryResponses = Stream.generate(ItemObjectCategoryResponse::new)
                 .limit(faker.number().randomDigitNotZero())
                 .collect(Collectors.toList());
-
-        given(productCategoryService.findAllByOrderByName()).willReturn(productCategoryResponses);
+              Pageable pageable = PageRequest.of(0, SystemConstant.MOBILE_PAGE_SIZE);
+    //    given(productCategoryService.findAllByOrderByName(pageable)).willReturn(productCategoryResponses);
 
         // when
         MvcResult result = mockMvc.perform(get("/api/public/category")
@@ -69,7 +73,8 @@ class CategoryControllerTest {
                 .andReturn();
 
         // then
-        verify(productCategoryService, times(1)).findAllByOrderByName();
+        Pageable pageable1 = PageRequest.of(0, SystemConstant.MOBILE_PAGE_SIZE);
+        verify(productCategoryService, times(1)).findAllByOrderByName(pageable1);
         then(result.getResponse().getContentAsString()).isEqualTo(objectMapper.writeValueAsString(productCategoryResponses));
     }
 

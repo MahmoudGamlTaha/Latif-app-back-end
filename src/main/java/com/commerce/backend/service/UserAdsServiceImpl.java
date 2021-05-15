@@ -407,12 +407,11 @@ public class UserAdsServiceImpl implements UserAdsService {
 	@Override
 	@SuppressWarnings("unchecked")
 	public BasicResponse adsFiltration(AdsFiltrationRequest<String, Object> ads, Pageable pageable) {
-		Query query = userAdsConverter.getQuery(ads);
+		Query query = userAdsConverter.buildFilterQuery(ads);
 		List<UserAds> userAds = query
 				.setFirstResult(pageable.getPageNumber())
 				.setMaxResults(pageable.getPageSize())
 				.getResultList();
-		System.out.println(userAds);
 		List<UserAdsVO> collect = new ArrayList<>();
 		userAds.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 		return res(collect, true, pageable);

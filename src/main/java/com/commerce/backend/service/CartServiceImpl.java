@@ -42,7 +42,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartResponse addToCart(Long productVariantId, Integer amount) {
-        User user = userService.getUser();
+     /*   User user = userService.getUser();
         Cart cart = user.getCart();
 
         if (Objects.nonNull(cart) && Objects.nonNull(cart.getCartItemList()) && !cart.getCartItemList().isEmpty()) {
@@ -82,13 +82,14 @@ public class CartServiceImpl implements CartService {
         cart = calculatePrice(cart);
 
         cart = cartRepository.save(cart);
-        return cartResponseConverter.apply(cart);
+        return cartResponseConverter.apply(cart);*/
+    	return null;
     }
 
     @Override
     public CartResponse incrementCartItem(Long cartItemId, Integer amount) {
         User user = userService.getUser();
-        Cart cart = user.getCart();
+      /*  Cart cart = user.getCart();
         if (Objects.isNull(cart) || Objects.isNull(cart.getCartItemList()) || cart.getCartItemList().isEmpty()) {
             throw new ResourceNotFoundException("Empty cart");
         }
@@ -106,12 +107,13 @@ public class CartServiceImpl implements CartService {
         cartItem.setAmount(cartItem.getAmount() + amount);
         cart = calculatePrice(cart);
         cart = cartRepository.save(cart);
-        return cartResponseConverter.apply(cart);
+        return cartResponseConverter.apply(cart);*/
+        return null;
     }
 
     @Override
     public CartResponse decrementCartItem(Long cartItemId, Integer amount) {
-        User user = userService.getUser();
+      /*  User user = userService.getUser();
         Cart cart = user.getCart();
         if (Objects.isNull(cart) || Objects.isNull(cart.getCartItemList()) || cart.getCartItemList().isEmpty()) {
             throw new ResourceNotFoundException("Empty cart");
@@ -135,27 +137,29 @@ public class CartServiceImpl implements CartService {
             cart.setCartItemList(cartItemList);
             cart = calculatePrice(cart);
             cart = cartRepository.save(cart);
-            return cartResponseConverter.apply(cart);
-        }
+            return cartResponseConverter.apply(cart);*/
+    	return null;
+   /*     }
 
-        cartItem.setAmount(cartItem.getAmount() - amount);
+       cartItem.setAmount(cartItem.getAmount() - amount);
         cart = calculatePrice(cart);
-        cart = cartRepository.save(cart);
-        return cartResponseConverter.apply(cart);
+        cart = cartRepository.save(cart);*/
+      //  return cartResponseConverter.apply(cart);
     }
 
     @Override
     public CartResponse fetchCart() {
-        Cart cart = userService.getUser().getCart();
+      /*  Cart cart = userService.getUser().getCart();
         if (cart == null) {
             return null;
         }
-        return cartResponseConverter.apply(cart);
+        return cartResponseConverter.apply(cart);*/
+    	return null;
     }
 
     @Override
     public CartResponse removeFromCart(Long cartItemId) {
-        User user = userService.getUser();
+      /*  User user = userService.getUser();
         Cart cart = user.getCart();
 
         if (Objects.isNull(cart) || Objects.isNull(cart.getCartItemList()) || cart.getCartItemList().isEmpty()) {
@@ -181,12 +185,13 @@ public class CartServiceImpl implements CartService {
         cart.setCartItemList(cartItemsList);
         cart = calculatePrice(cart);
         cart = cartRepository.save(cart);
-        return cartResponseConverter.apply(cart);
+        return cartResponseConverter.apply(cart);*/
+    	return null;
     }
 
     @Override
     public boolean confirmCart(ConfirmCartRequest confirmCartRequest) {
-        Cart dbCart = userService.getUser().getCart();
+  /*      Cart dbCart = userService.getUser().getCart();
         if (Objects.isNull(dbCart)) {
             return false;
         }
@@ -211,20 +216,21 @@ public class CartServiceImpl implements CartService {
                 return dbCart.getDiscount().getDiscountPercent().equals(confirmCartRequest.getDiscount().getDiscountPercent());
             }
             return Objects.isNull(dbCart.getDiscount()) && Objects.isNull(confirmCartRequest.getDiscount());
-        }
+        }*/
         return false;
     }
 
     @Override
     public void emptyCart() {
-        User user = userService.getUser();
+     /*   User user = userService.getUser();
         user.setCart(null);
-        userService.saveUser(user);
+        userService.saveUser(user);*/
+    	
     }
 
     @Override
     public Cart getCart() {
-        return userService.getUser().getCart();
+        return null;//userService.getUser().getCart();
     }
 
 
