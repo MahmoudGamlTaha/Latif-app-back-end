@@ -1,7 +1,7 @@
 {"form":[
   {"name": "name","type": "string", "label": "name", "label_ar": "الاسم", "required": false},
   {"name": "category", "type": "url_option", "label": "category", "url":"/api/public/cat-by-adType/type=1" , "required": true},
-  {"name": "city", "type": "select","label": "city of ads", "label_ar": "المدينة", "required": false, "options":[{"label" : "Cairo", "code":"Cairo"}, {"label" : "Giza", "code":"Giza"}, {"label" : "Minia", "code":"Minia"}], "multi":false},
+  {"name": "city", "type": "url_option","label": "city of ads", "label_ar": "مكان الاعلان","url":"/api/public/cites", "required": true},
   {"name": "price", "type": "money","label": "Price", "required": false},
   {"name": "breed", "type": "string","label": "Breed", "required": false},
   {"name": "stock", "type": "Integer","label": "Stock", "required": false},

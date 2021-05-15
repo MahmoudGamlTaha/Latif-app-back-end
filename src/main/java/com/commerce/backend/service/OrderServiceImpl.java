@@ -56,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponse postOrder(PostOrderRequest postOrderRequest) {
-        User user = userService.getUser();
+      /*  User user = userService.getUser();
         Cart cart = user.getCart();
         if (Objects.isNull(cart) || Objects.isNull(cart.getCartItemList())) {
             throw new InvalidArgumentException("Cart is not valid");
@@ -100,6 +100,7 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = orderRepository.save(saveOrder);
         cartService.emptyCart();
-        return orderResponseConverter.apply(order);
+        return orderResponseConverter.apply(order);*/
+    	return null;
     }
 }

@@ -331,23 +331,23 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             }
             if(data.get("vaccinationCertificate") != null)
             {
-                ((UserPetAds)ad).setVaccinationCertifcate(Boolean.parseBoolean(String.valueOf(data.get("vaccinationCertificate"))));
+                ((UserPetAds)ad).setVaccinationCertifcate(Boolean.parseBoolean(String.valueOf(data.get("vaccinationcertificate"))));
             }
             if(data.get("passport") != null)
             {
                 ((UserPetAds)ad).setPassport(Boolean.parseBoolean(String.valueOf(data.get("passport"))));
             }
-            if(data.get("playWithKids") != null)
+            if(data.get("playwithkids") != null)
             {
-                ((UserPetAds)ad).setPlayWithKids(Boolean.parseBoolean(String.valueOf(data.get("playWithKids"))));
+                ((UserPetAds)ad).setPlayWithKids(Boolean.parseBoolean(String.valueOf(data.get("playwithkids"))));
             }
             if(data.get("diseasesDisabilities") != null)
             {
-                ((UserPetAds)ad).setDiseasesDisabilities(Boolean.parseBoolean(String.valueOf(data.get("diseasesDisabilities"))));
+                ((UserPetAds)ad).setDiseasesDisabilities(Boolean.parseBoolean(String.valueOf(data.get("diseasesdisabilities"))));
             }
             if(data.get("diseasesDisabilitiesDesc") != null)
             {
-                ((UserPetAds)ad).setDiseasesDisabilitiesDesc(String.valueOf(data.get("diseasesDisabilitiesDesc")));
+                ((UserPetAds)ad).setDiseasesDisabilitiesDesc(String.valueOf(data.get("diseasesdisabilitiesdesc")));
             }
             if(data.get("training") != null)
             {
@@ -355,7 +355,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             }
             if(data.get("food") != null)
             {
-                ((UserPetAds)ad).setFood(String.valueOf(data.get("name")));
+                ((UserPetAds)ad).setFood(String.valueOf(data.get("food")));
             }
             if(data.get("stock") != null)
             {
@@ -369,8 +369,8 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
        public boolean success;
        public String msg;
     }
-
-    public Query getQuery (AdsFiltrationRequest<String, Object> ads)
+    
+    public Query buildFilterQuery (AdsFiltrationRequest<String, Object> ads)
     {
         List<HashMap<String, Object>> filterRequest = ads.getUserAds();
         AdsType type =  ads.getType();
@@ -380,9 +380,52 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
                 + "            FROM user_ads user_ads, "
                 + "            (SELECT ST_MakePoint(:long, :lat) as poi) as poi "
                 + "            WHERE ST_DWithin(user_ads.geom, poi, :dist)";
+       
+        Double longitude = Double.parseDouble(this.getHashMapKeyWithCheck(data, "longitude", 0).toString());
+        Double latitude  = Double.parseDouble(this.getHashMapKeyWithCheck(data, "latitude", 0).toString());
+        Double distance = Double.parseDouble(this.getHashMapKeyWithCheck(data, "distance", 0).toString()) ;
+        if(latitude == 0 || longitude == 0) {
+        	return this.getQueryWithoutlocation(ads);
+        }
+        distance =  distance == 0 ? SystemConstant.DISTANCE: distance;
+        sql += this.getQueryString(sql, ads);
+        sql += " ORDER BY ST_Distance(geom, poi) desc";
+        Query query = entityManager.createNativeQuery(sql, UserAds.class)              
+                .setParameter("long", longitude)
+                .setParameter("lat", latitude)
+                .setParameter("dist", distance);
+                 this.getQueryString(sql, ads);
+        query = this.buildQueryWithParam(data, query, type);
+     
+       
+        return query;
+    }
+    public Query getQueryWithoutlocation (AdsFiltrationRequest<String, Object> ads)
+    {
+        List<HashMap<String, Object>> filterRequest = ads.getUserAds();
+        AdsType type =  ads.getType();
+        HashMap<String, Object> data = new HashMap<String, Object>();
+        String sql = "SELECT user_ads.* "
+                + "            FROM user_ads user_ads "
+                + "            WHERE 1 = 1";
+        for(HashMap<String, Object> d: filterRequest){
+        	data.put(d.get("id").toString().toLowerCase(), d.get("value"));
+        }     
+              sql = this.getQueryString(sql, ads);
+              sql += " ORDER BY created_at desc "; 
+              Query query = entityManager.createNativeQuery(sql, UserAds.class);              
+      
+        query = this.buildQueryWithParam(data, query, type);
+        return query;
+    }
+    public String getQueryString(String sql, AdsFiltrationRequest<String, Object> ads) {
+    	  List<HashMap<String, Object>> filterRequest = ads.getUserAds();
+          AdsType type =  ads.getType();
+          HashMap<String, Object> data = new HashMap<String, Object>();
         for(HashMap<String, Object> d: filterRequest){
         	data.put(d.get("id").toString().toLowerCase(), d.get("value"));
         }
+      
         if(type != null) {
         	sql += " AND type = :type ";
         }
@@ -408,21 +451,26 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             sql += " AND short_description LIKE :short_description ";
         }
         
+        if(data.get("description") != null)
+        {
+            sql += " AND description LIKE :description ";
+        }
+        
         if(data.get("price") != null)
         {
             sql += " AND NULLIF(price, 0) BETWEEN  :from AND :to ";
         }
 
-        if(type != null && type.getType().equals("ACCESSORIES"))
-        {
+    //    if(type != null && type.getType().equals("ACCESSORIES"))
+      //  {
             if(data.get("used") != null && data.get("used").equals(true))
             {
                 sql += " AND used = true";
             }
-        }
+        //}
 
-        if(type != null && type.getType().equals("PETS"))
-        {
+     //   if(type != null && type.getType().equals("PETS"))
+   //     {
             if(data.get("breed") != null)
             {
                 sql += " AND breed LIKE :breed ";
@@ -445,11 +493,11 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             }
             if(data.get("playwithkids") != null)
             {
-                sql += " AND play_with_kids = :playWithKids ";
+                sql += " AND play_with_kids = :playwithkids ";
             }
             if(data.get("diseasesdisabilities") != null)
             {
-                sql += " AND diseases_disabilities = :diseasesDisabilities ";
+                sql += " AND diseases_disabilities = :diseasesdisabilities ";
             }
             if(data.get("barkingproblem") != null)
             {
@@ -463,91 +511,89 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             {
                 sql += " AND food LIKE :food ";
             }
-        }
+            
+           if(data.get("latitude") != null && data.get("latitude") != null){
+        	   // no need now
+           }
+     //   }
 
-        sql += " ORDER BY ST_Distance(geom, poi) ";
-        Double distance = Double.parseDouble(this.getHashMapKeyWithCheck(data, "distance", 0).toString()) ;
-        distance =  distance == 0 ? SystemConstant.DISTANCE: distance;
-        Query query = entityManager.createNativeQuery(sql, UserAds.class)              
-                .setParameter("long", Double.parseDouble(this.getHashMapKeyWithCheck(data, "longitude", 0).toString()))
-                .setParameter("lat",  Double.parseDouble(this.getHashMapKeyWithCheck(data, "latitude", 0).toString()))
-                .setParameter("dist", distance);
-      
-       System.out.println("--------------------");
-        if(type != null) {
-        	System.out.println(type);
-        	query.setParameter("type", type.getType());
-        }
-        if(data.get("category") != null) {
-            query.setParameter("cat", Long.parseLong(this.getHashMapKeyWithCheck(data, "category", 0).toString() ));
-        }
-        if(data.get("name") != null)
-        {
-            query.setParameter("name", data.get("name"));
-        }
-        
-        if(data.get("active") != null)
-        {
-        	 query.setParameter("active", Boolean.parseBoolean(String.valueOf(data.get("active"))));
-        }
-        if(data.get("description") != null)
-        {
-            query.setParameter("description", data.get("description"));
-        }
-        if(data.get("short_description") != null)
-        {
-            query.setParameter("short_description", data.get("short_description"));
-        }
-        if(data.get("breed") != null)
-        {
-            query.setParameter("breed", data.get("breed"));
-        }
-        if(data.get("training") != null)
-        {
-            query.setParameter("training", data.get("training"));
-        }
-        if(data.get("food") != null)
-        {
-            query.setParameter("food", data.get("food"));
-        }
-        if(data.get("weaned") != null)
-        {
-            query.setParameter("weaned", Boolean.parseBoolean(String.valueOf(data.get("weaned"))));
-        }
-        if(data.get("neutering") != null)
-        {
-            query.setParameter("neutering",Boolean.parseBoolean(String.valueOf( data.get("neutering"))));
-        }
-        if(data.get("vaccinationcertificate") != null)
-        {
-            query.setParameter("vC", Boolean.parseBoolean(String.valueOf(data.get("vaccinationcertificate"))));
-        }
-        if(data.get("passport") != null)
-        {
-            query.setParameter("passport", Boolean.parseBoolean(String.valueOf(data.get("passport"))));
-        }
-        if(data.get("playwithkids") != null)
-        {
-            query.setParameter("playWithKids", Boolean.parseBoolean(String.valueOf(data.get("playwithkids"))));
-        }
-        if(data.get("diseasesdisabilities") != null)
-        {
-            query.setParameter("diseasesDisabilities", Boolean.parseBoolean(String.valueOf(data.get("diseasesdisabilities"))));
-        }
-        if(data.get("barkingproblem") != null)
-        {
-            query.setParameter("barkingproblem", Boolean.parseBoolean(String.valueOf(data.get("barkingproblem"))));
-        }
-        if(data.get("price") != null)
-        {
-            Double prFrom = 0d; //Double.parseDouble(String.valueOf(data.get("price"))) / 2;
-            Double prTo = Double.parseDouble(String.valueOf(data.get("price"))) + 1;
-            query.setParameter("from", prFrom);
-            query.setParameter("to", prTo);
-        }
-        return query;
+
+    	return sql;
     }
-    
+    public Query buildQueryWithParam( HashMap<String, Object> data, Query query, AdsType type) {
+    	  if(type != null) {
+          	System.out.println(type);
+          	query.setParameter("type", type.getType());
+          }
+          if(data.get("category") != null) {
+              query.setParameter("cat", Long.parseLong(this.getHashMapKeyWithCheck(data, "category", 0).toString() ));
+          }
+          if(data.get("name") != null)
+          {
+              query.setParameter("name", data.get("name")+"%");
+          }
+          
+          if(data.get("active") != null)
+          {
+          	 query.setParameter("active", Boolean.parseBoolean(String.valueOf(data.get("active"))));
+          }
+          if(data.get("description") != null)
+          {
+              query.setParameter("description", data.get("description")+"%");
+          }
+          if(data.get("short_description") != null)
+          {
+              query.setParameter("short_description", data.get("short_description")+"%");
+          }
+          if(data.get("breed") != null)
+          {
+              query.setParameter("breed", data.get("breed")+"%");
+          }
+          if(data.get("training") != null)
+          {
+              query.setParameter("training", data.get("training")+"%");
+          }
+          if(data.get("food") != null)
+          {
+              query.setParameter("food", data.get("food")+"%");
+          }
+          if(data.get("weaned") != null)
+          {
+              query.setParameter("weaned", Boolean.parseBoolean(String.valueOf(data.get("weaned"))));
+          }
+          if(data.get("neutering") != null)
+          {
+              query.setParameter("neutering",Boolean.parseBoolean(String.valueOf( data.get("neutering"))));
+          }
+          if(data.get("vaccinationcertificate") != null)
+          {
+              query.setParameter("vC", Boolean.parseBoolean(String.valueOf(data.get("vaccinationcertificate"))));
+          }
+          if(data.get("passport") != null)
+          {
+              query.setParameter("passport", Boolean.parseBoolean(String.valueOf(data.get("passport"))));
+          }
+          if(data.get("playwithkids") != null)
+          {
+              query.setParameter("playwithkids", Boolean.parseBoolean(String.valueOf(data.get("playwithkids"))));
+          }
+          if(data.get("diseasesdisabilities") != null)
+          {
+              query.setParameter("diseasesdisabilities", Boolean.parseBoolean(String.valueOf(data.get("diseasesdisabilities"))));
+          }
+          if(data.get("barkingproblem") != null)
+          {
+              query.setParameter("barkingproblem", Boolean.parseBoolean(String.valueOf(data.get("barkingproblem"))));
+          }
+          if(data.get("price") != null)
+          {
+              Double prFrom = 0d; //Double.parseDouble(String.valueOf(data.get("price"))) / 2;
+              Double prTo = Double.parseDouble(String.valueOf(data.get("price"))) + 1;
+              query.setParameter("from", prFrom);
+              query.setParameter("to", prTo);
+          }
+          return query;
+    }
     public Geometry wktToGeometry(String wellKnownText) throws ParseException {
     		    return new WKTReader().read(wellKnownText);
     }

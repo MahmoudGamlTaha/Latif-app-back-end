@@ -260,9 +260,9 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			((UserPetAdsVO)destination).setTraining(((UserPetAds)source).getTraining());
 			((UserPetAdsVO)destination).setPlayWithKids(((UserPetAds)source).getPlayWithKids());
 			((UserPetAdsVO)destination).setPassport(((UserPetAds)source).getPassport());
-		  ((UserPetAdsVO)destination).setVaccinationCertificate(((UserPetAds)source).getVaccinationCertifcate());;
-		  ((UserPetAdsVO)destination).setWeaned(((UserPetAds)source).getWeaned());
-		  ((UserPetAdsVO)destination).setStock(((UserPetAdsVO)destination).getStock());
+		    ((UserPetAdsVO)destination).setVaccinationCertificate(((UserPetAds)source).getVaccinationCertifcate());;
+		    ((UserPetAdsVO)destination).setWeaned(((UserPetAds)source).getWeaned());
+		    ((UserPetAdsVO)destination).setStock(((UserPetAdsVO)destination).getStock());
 
 		    if(((UserPetAdsVO)destination).getImages() != null){
 		    	Optional<UserAdsImageVO> adsImage = ((UserPetAdsVO)destination).getImages().stream().findFirst();

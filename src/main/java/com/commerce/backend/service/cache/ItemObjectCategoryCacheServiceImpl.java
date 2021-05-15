@@ -53,9 +53,9 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
     }
 
     @Override
-    @Cacheable(key = "#root.methodName", unless = "#result.size()==0")
-    public List<ItemObjectCategory> findAllByOrderByName() {
-        return itemObjectRepository.findAllByOrderByName();
+    @Cacheable(key = "#root.methodName", unless = "#result.getSize()==0")
+    public Page<ItemObjectCategory> findAllByOrderByName(Pageable pageable){
+        return itemObjectRepository.findAll(pageable);
     }
 
 	@Override

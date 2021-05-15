@@ -1,6 +1,7 @@
 package com.commerce.backend.api;
 
 import com.commerce.backend.constants.MessageType;
+import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.model.request.category.CategoryRequest;
 import com.commerce.backend.model.request.category.CategoryUpdateRequest;
 import com.commerce.backend.model.response.BasicResponse;
@@ -10,6 +11,8 @@ import com.commerce.backend.service.ItemObjectCategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,10 +56,12 @@ public class CategoryController extends PublicApiController {
         return new ResponseEntity<>(accCategories, HttpStatus.OK);
     }
     
-    @GetMapping(value = "/category")
-    public ResponseEntity<List<ItemObjectCategoryResponse>> getAllCategories() {
-        List<ItemObjectCategoryResponse> itemCategories = itemObjectCategoryService.findAllByOrderByName();
-        return new ResponseEntity<>(itemCategories, HttpStatus.OK);
+    @GetMapping(value = {"/category/{page}","/category"})
+    public ResponseEntity<BasicResponse> getAllCategories(@PathVariable(value="page", required = false) Optional<Integer> page) {
+    	Pageable pageable = PageRequest.of(page.orElse(0), SystemConstant.MOBILE_PAGE_SIZE);
+         BasicResponse response = itemObjectCategoryService.findAllByOrderByName(pageable);
+     	HttpStatus status = response.getMsg() != MessageType.Success.getMessage()?HttpStatus.BAD_REQUEST: HttpStatus.OK;
+    	return new ResponseEntity<BasicResponse>(response, status);
     }
     @GetMapping(value = "/category/find-by-id/id={id}")
     public ResponseEntity<BasicResponse> getCategoryById(@PathVariable("id") Long id) {
