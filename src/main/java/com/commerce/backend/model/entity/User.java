@@ -24,8 +24,8 @@ import java.util.Set;
 public class User {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+  @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
   private Long id;
 
   //  TODO remove this and use cart repository findByUserId instead
@@ -58,9 +58,9 @@ public class User {
   private String zip;
 
   @Column(name = "email_verified")
-  private Integer emailVerified;
+  private Boolean emailVerified;
 
-  @Column(name = "mobile")
+  @Column(name = "mobile", unique = true)
   private String mobile;
 
   @Column(name = "avatar")
