@@ -3,6 +3,7 @@ package com.commerce.backend.converter;
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.constants.TrainningType;
+import com.commerce.backend.dao.CityRepository;
 import com.commerce.backend.dao.ItemCategoryRepository;
 import com.commerce.backend.dao.ItemObjectCategoryRepository;
 import com.commerce.backend.dao.MedicalCategoryRepository;
@@ -59,6 +60,9 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
     
     @Autowired
 	private UserRepository user;
+    
+    @Autowired
+    private CityRepository cityRepository;
 	
 	private final static GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), SystemConstant.COORDINATE_SYSTEM); 
     @Override
@@ -108,6 +112,10 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         entity.setLongitude(Double.parseDouble(String.valueOf(getHashMapKeyWithCheck(hashedData,"longitude", 0))));
         entity.setLatitude(Double.parseDouble(String.valueOf(getHashMapKeyWithCheck(hashedData,"latitude", 0))));
         entity.setCreatedAt((new Date()));
+        Cites city= this.cityRepository.findById(Long.parseLong(String.valueOf(getHashMapKeyWithCheck(hashedData,"city", 0)))).orElse(null);
+        
+        if(city != null) 
+        entity.setCity(city.getCityAr());
         
         Coordinate coordinate = new Coordinate();
         
