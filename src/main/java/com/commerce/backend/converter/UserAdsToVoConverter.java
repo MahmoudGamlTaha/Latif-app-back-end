@@ -95,7 +95,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		userAdsVo.setLatitude(entity.getLatitude());
 		userAdsVo.setUpdated_at(entity.getUpdatedAt());
 		userAdsVo.setExternal_link(Boolean.parseBoolean(checkValue(entity.getExternalLink(), SystemConstant.BOOLEAN).toString()));
-		
+		userAdsVo.setCity(entity.getCity());
 		Set<UserAdsImage> images = entity.getUserAdsImage();
 		if(images != null) {
 			Set<UserAdsImageVO> imageVos = new HashSet<UserAdsImageVO>();
