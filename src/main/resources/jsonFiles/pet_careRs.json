@@ -1,9 +1,11 @@
 {"form":[
+  
+  {"name": "category", "type": "url_option", "label": "Category", "url":"/api/public/cat-by-adType/type=4" , "required": true},
+  {"name": "city", "type": "url_option","label": "City", "label_ar": "مكان الاعلان","url":"/api/public/cites", "required": true},
   {"name": "name","type": "string", "label": "Name", "required": false},
-  {"name": "category", "type": "url_option", "label": "category", "url":"/api/public/cat-by-adType/type=4" , "required": true},
   {"name": "description", "type": "string","label": "Description", "required": true},
   {"name": "short_description", "type": "string","label": "Short Description", "required": true},
-  {"name": "allow_at_home", "type": "boolean","label": "Allow at home", "required": true},
+  {"name": "allow_at_home", "type": "boolean","label": "Delivery at home", "required": true},
   {"name": "price", "type": "money","label": "Price", "required": true},
   {"name": "image", "type": "file","label": "Image", "required": true},
   {"name": "longitude", "type": "map","label": "Longitude", "required": true},

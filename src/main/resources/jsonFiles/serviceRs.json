@@ -1,9 +1,10 @@
 {"form":[
-  {"name": "name","type": "string", "label": "name", "label_ar": "اسم الخدمة", "required": true},
   {"name": "category","type": "url_option", "label": "service type","label_ar": "نوع الخدمة", "url":"/api/public/cat-by-adType/type=3", "required": true},
+  {"name": "city", "type": "url_option","label": "City", "label_ar": "مكان الاعلان","url":"/api/public/cites", "required": true},
+  {"name": "name","type": "string", "label": "name", "label_ar": "اسم الخدمة", "required": true},
   {"name": "description", "type": "string","label": "Description", "required": true},
   {"name": "short_description", "type": "string","label": "Short Description", "required": true},
-  {"name": "allow_at_home", "type": "boolean","label": "delivery at home", "required": true},
+  {"name": "allow_at_home", "type": "boolean","label": "Delivery at home", "required": true},
   {"name": "price", "type": "money","label": "Price", "required": true},
   {"name": "images", "type": "files","label": "Image", "required": true},
   {"name": "longitude", "type": "map","label": "Longitude", "required": true},

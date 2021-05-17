@@ -1,10 +1,10 @@
 {"form":[
+     {"name": "city", "type": "url_option","label": "City", "label_ar": "مكان الاعلان","url":"/api/public/cites", "required": true},
     {"name": "name","type": "string", "label": "Name", "required": true},
     {"name": "description", "type": "string","label": "Description", "required": true},
     {"name": "short_description", "type": "string","label": "Short Description", "required": true},
     {"name": "price", "type": "money","label": "Price", "required": true},
     {"name": "image", "type": "file","label": "Image", "required": true},
-    {"name": "active", "type": "boolean","label": "Active", "required": true},
     {"name": "longitude", "type": "map","label": "Longitude", "required": true},
     {"name": "latitude", "type": "map","label": "Latitude", "required": true},
     {"url": "/ads/pet/save"}
