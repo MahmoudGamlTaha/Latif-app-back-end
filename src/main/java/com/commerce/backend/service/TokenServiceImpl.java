@@ -53,7 +53,7 @@ public class TokenServiceImpl implements TokenService {
         verificationToken.setUser(user);
         verificationToken.setExpiryDate(calculateExpiryDate());
         verificationTokenRepository.save(verificationToken);
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, token));
+     //   eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, token));
     }
 
     @Override
@@ -92,7 +92,7 @@ public class TokenServiceImpl implements TokenService {
 
         checkTokenExpire(verificationToken.getExpiryDate());
 
-        user.setEmailVerified(1);
+        user.setEmailVerified(true);
         verificationTokenRepository.delete(verificationToken);
         userService.saveUser(user);
     }

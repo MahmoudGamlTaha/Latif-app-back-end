@@ -36,6 +36,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             credentials = new ObjectMapper().readValue(request.getInputStream(), LoginCredentialDto.class);
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
 
         assert credentials != null;

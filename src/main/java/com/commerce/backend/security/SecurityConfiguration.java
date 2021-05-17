@@ -49,15 +49,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
                 .authorizeRequests()
-                .antMatchers("/registration").permitAll()
+                .antMatchers("/api/public/account/registration").permitAll()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers("api/public/blogs/**").hasAnyRole("USER", "ADMIN", "MANAGER")
-                .antMatchers("api/public/account/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("api/public/userSubscription/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("api/public/subscriptionTypes/**").hasRole("ADMIN")
-                .antMatchers("api/public/userRole/**").hasRole("ADMIN")
-                .antMatchers("api/public/blogCategory/**").hasRole("ADMIN")
-                .antMatchers("api/public/product/**").hasRole("ADMIN");
+                .antMatchers("/api/public/blogs/**").hasAnyRole("USER", "ADMIN", "MANAGER")
+                .antMatchers("/api/public/account/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/public/userSubscription/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/public/subscriptionTypes/**").hasRole("ADMIN")
+                .antMatchers("/api/public/userRole/**").hasRole("ADMIN")
+                .antMatchers("/api/public/blogCategory/**").hasRole("ADMIN");
                 //.antMatchers("/api/public/**").hasAuthority("ACCESS_TEST2")
                 //.anyRequest().authenticated()
     }

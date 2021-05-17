@@ -16,6 +16,6 @@ public class UserResponse {
     private String zip;
     private String phone;
     private String country;
-    private Integer emailVerified;
+    private Boolean emailVerified;
     private Date    RegistrationDate;
 }
