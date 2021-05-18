@@ -1,11 +1,11 @@
 {"form":[
-  {"name": "name","type": "string", "label": "name", "required": true},
-  {"name": "category", "type": "url_option", "label": "type", "url":"/api/public/cat-by-adType/type=2" , "required": true},
-  {"name": "used", "type": "boolean","label": "Used", "required": true},
-  {"name": "price", "type": "money","label": "Price", "required": true},
-  {"name": "active", "type": "boolean","label": "Active", "required": true},
-  {"name": "longitude", "type": "map","label": "Longitude", "required": true},
-  {"name": "latitude", "type": "map","label": "Latitude", "required": true}
+  {"name": "city", "type": "url_option","label": "City", "label_ar": "مكان الاعلان","url":"/api/public/cites", "required": true},
+  {"name": "name","type": "string", "label": "Name", "required": false},
+  {"name": "category", "type": "url_option", "label": "Type", "url":"/api/public/cat-by-adType/type=2" , "required": false},
+  {"name": "used", "type": "boolean","label": "Used", "required": false},
+  {"name": "price", "type": "money","label": "Price", "required": false},
+  {"name": "longitude", "type": "map","label": "Longitude", "required": false},
+  {"name": "latitude", "type": "map","label": "Latitude", "required": false}
 ],
 "url": "api/public/ads/ads-filtration"
 }

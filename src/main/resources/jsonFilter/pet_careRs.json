@@ -1,4 +1,5 @@
 {"form":[
+{"name": "city", "type": "url_option","label": "City", "label_ar": "مكان الاعلان","url":"/api/public/cites", "required": true},
   {"name": "name","type": "string", "label": "Name", "required": true},
   {"name": "category", "type": "url_option", "label": "type", "url":"/api/public/cat-by-adType/type=4", "required": true},
   {"name": "description", "type": "string","label": "Description", "required": true},
