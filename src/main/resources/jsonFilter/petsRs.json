@@ -1,7 +1,7 @@
 {"form":[
-  {"name": "name","type": "string", "label": "Name", "label_ar": "الاسم", "required": false},
+{"name": "city", "type": "url_option","label": "City", "label_ar": "مكان الاعلان","url":"/api/public/cites", "required": true},
   {"name": "category", "type": "url_option", "label": "Category", "url":"/api/public/cat-by-adType/type=1" , "required": true},
-  {"name": "city", "type": "url_option","label": "City of ads", "label_ar": "مكان الاعلان","url":"/api/public/cites", "required": true},
+  {"name": "name","type": "string", "label": "Name", "label_ar": "الاسم", "required": false},
   {"name": "price", "type": "money","label": "Price", "required": false},
   {"name": "breed", "type": "string","label": "Breed", "required": false},
   {"name": "stock", "type": "Integer","label": "Stock", "required": false},
