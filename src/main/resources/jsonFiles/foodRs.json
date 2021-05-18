@@ -8,4 +8,4 @@
     {"name": "longitude", "type": "map","label": "Longitude", "required": true},
     {"name": "latitude", "type": "map","label": "Latitude", "required": true},
     {"url": "/ads/pet/save"}
-]}
+]} 
