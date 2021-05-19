@@ -99,4 +99,8 @@ public class User {
   )
   @NotFound(action = NotFoundAction.IGNORE)
   private Set<Role> roles  = new HashSet<>();
+
+  @OneToMany
+  @JoinColumn(name = "user_id")
+  private Set<UserReportedAds> userReportedAds;
 }

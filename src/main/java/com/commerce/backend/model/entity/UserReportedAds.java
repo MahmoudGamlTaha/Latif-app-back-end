@@ -1,29 +1,39 @@
 package com.commerce.backend.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import com.commerce.backend.constants.ReportType;
 import lombok.Data;
+
+import java.util.Date;
 
 @Entity
 @Table(name = "user_reported_ads")
 @Data
-@DiscriminatorColumn(name ="type", discriminatorType = DiscriminatorType.STRING)
+//@DiscriminatorColumn(name ="type", discriminatorType = DiscriminatorType.STRING)
 public class UserReportedAds {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-    @ManyToOne
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reported_ads_id")
+    @SequenceGenerator(name = "reported_ads_id", sequenceName = "reported_ads_id", allocationSize = 1)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
     
-    @Column(name = "type", insertable = false, updatable = false, nullable = false)
-	private String type;   
+    @Column(name = "type")
+	private ReportType reportType;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "ads_id")
+    private UserAds ads;
+
+    @Column(name = "reason")
+    private String reason;
+
+    @Column(name = "created_at")
+    private Date createdAt;
+
+    @Column(name = "updated_at")
+    private Date updatedAt;
 }

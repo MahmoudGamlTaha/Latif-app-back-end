@@ -136,6 +136,12 @@ public class UserAdsController extends PublicApiController {
     	 return new ResponseEntity<BasicResponse>(response, status); 
     }
 
+    @GetMapping(value = "ads/myAds")
+    public ResponseEntity<BasicResponse> myAds(@RequestParam(value ="page", required = false) Optional<Integer> page,
+                                               @RequestParam(value ="pageSize", required= false) Optional<Integer>  pageSize){
+        return new ResponseEntity<>(userAdsService.myAds(page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE)), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/ads/update")
     public ResponseEntity<BasicResponse> updateUserAds(@RequestBody UpdateAdRequest<String, Object> request, @RequestParam(required = false) List<String> fileList, @RequestParam(required = false) List<MultipartFile> files) {
         return new ResponseEntity<BasicResponse>(userAdsService.updateUserAds(request, fileList, files), HttpStatus.OK);

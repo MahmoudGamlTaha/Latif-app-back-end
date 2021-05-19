@@ -52,11 +52,11 @@ public class UserAds {
 	
 	//@Transient
 	@Column(name = "type", insertable = false, updatable = false, nullable = false)
-	private AdsType type;        
-	
-   @ManyToOne(cascade = {CascadeType.MERGE})
-	 @JoinColumn(name = "created_by")
-	 private User createdBy;
+	private AdsType type;
+
+	@ManyToOne
+	@JoinColumn(name="created_by", nullable=false)
+	private User createdBy;
 	
 	@Column(name = "active")
 	private boolean active;
@@ -110,4 +110,8 @@ public class UserAds {
 	@Setter(AccessLevel.PRIVATE)
 	@Column(name = "total_item", insertable = false, updatable = false)
 	private long totalItem;
+
+	@OneToMany
+	@JoinColumn(name = "ads_id")
+	private Set<UserReportedAds> userReportedAds;
 }

@@ -153,6 +153,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserByMobileNumber(String mobile) {
+        if(mobile != null){
+            return userRepository.findByMobile(mobile);
+        }
         return null;
     }
 
