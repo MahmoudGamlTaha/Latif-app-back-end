@@ -8,7 +8,7 @@
   {"name": "allow_at_home", "type": "boolean","label": "Delivery at home", "required": true},
   {"name": "used", "type": "boolean","label": "Used", "required": true},
   {"name": "price", "type": "money","label": "Price", "required": true},
-  {"name": "images", "type": "file","label": "Image", "required": true},
+  {"name": "images", "type": "files","label": "Image", "required": true},
   {"name": "longitude", "type": "map","label": "Longitude", "required": true},
   {"name": "latitude", "type": "map","label": "Latitude", "required": true}
 ],
