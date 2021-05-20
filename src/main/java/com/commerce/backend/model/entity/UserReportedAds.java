@@ -3,6 +3,7 @@ package com.commerce.backend.model.entity;
 import javax.persistence.*;
 
 import com.commerce.backend.constants.ReportType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import java.util.Date;
@@ -17,14 +18,15 @@ public class UserReportedAds {
     @SequenceGenerator(name = "reported_ads_id", sequenceName = "reported_ads_id", allocationSize = 1)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     private User user;
-    
+
     @Column(name = "type")
 	private ReportType reportType;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ads_id")
     private UserAds ads;
 

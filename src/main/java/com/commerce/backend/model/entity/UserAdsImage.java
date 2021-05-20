@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
@@ -31,6 +32,7 @@ public class UserAdsImage {
    @Column(name = "image")
    private String image;
 
+   @JsonBackReference
    @ManyToOne(optional = true, fetch = FetchType.LAZY)
    @JoinColumn(name = "user_ads_id", nullable = false)
    @NotFound(action = NotFoundAction.IGNORE)

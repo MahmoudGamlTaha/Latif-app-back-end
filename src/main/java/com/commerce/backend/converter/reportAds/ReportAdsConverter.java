@@ -31,7 +31,7 @@ public class ReportAdsConverter implements Function<UserReportedAds, ReportTypeV
             ((ReportAdsVo)vo).setReason(userReportedAds.getReason());
         }
         vo.setUser(userResponseConverter.apply(userReportedAds.getUser()));
-        vo.setAd(userReportedAds.getAds().getId());
+        vo.setAd(userReportedAds.getAds());
         vo.setId(userReportedAds.getId());
         vo.setType(userReportedAds.getReportType());
         vo.setCreatedAt(userReportedAds.getCreatedAt());

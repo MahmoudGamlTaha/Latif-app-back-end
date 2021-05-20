@@ -1,5 +1,6 @@
 package com.commerce.backend.api;
 
+import com.commerce.backend.constants.ReportType;
 import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.model.request.report.ReportRequest;
 import com.commerce.backend.model.response.BasicResponse;
@@ -30,22 +31,27 @@ public class ReportedAdsController extends PublicApiController{
     @GetMapping(value = "/reportedAds/interested")
     public ResponseEntity<BasicResponse> getInterestedAds(@RequestParam(value ="page", required = false) Optional<Integer> page,
                                                           @RequestParam(value ="pageSize", required= false) Optional<Integer>  pageSize){
-        return new ResponseEntity<>(reportAdsService.getInterestedAds(page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE)), HttpStatus.OK);
+        return new ResponseEntity<>(reportAdsService.getReportedAds(ReportType.INTEREST, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE)), HttpStatus.OK);
     }
 
     @GetMapping(value = "/reportedAds/reportedAds")
     public ResponseEntity<BasicResponse> getReportedAds(@RequestParam(value ="page", required = false) Optional<Integer> page,
                                                           @RequestParam(value ="pageSize", required= false) Optional<Integer>  pageSize){
-        return new ResponseEntity<>(reportAdsService.getReportedAds(page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE)), HttpStatus.OK);
+        return new ResponseEntity<>(reportAdsService.getReportedAds(ReportType.REPORT, page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE)), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/reportedAds/create")
+    @PostMapping(value = "/reportedAds/makeReport")
     public ResponseEntity<BasicResponse> makeReport(@RequestBody ReportRequest request){
-        return new ResponseEntity<>(reportAdsService.makeReport(request), HttpStatus.OK);
+        return new ResponseEntity<>(reportAdsService.create(request), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/reportedAds/addToInterestList")
+    public ResponseEntity<BasicResponse> addToInterestList(@RequestBody ReportRequest request){
+        return new ResponseEntity<>(reportAdsService.create(request), HttpStatus.OK);
     }
 
     @PostMapping(value = "/reportedAds/remove")
-    public ResponseEntity<BasicResponse> removeFromInterestedList(@RequestBody Long id){
+    public ResponseEntity<BasicResponse> removeFromInterestedList(@RequestParam(required = true) Long id){
         return new ResponseEntity<>(reportAdsService.removeFromInterestedList(id), HttpStatus.OK);
     }
 }

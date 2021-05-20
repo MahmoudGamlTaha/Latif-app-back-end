@@ -1,5 +1,6 @@
 package com.commerce.backend.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,7 +33,8 @@ public class User {
   //@JsonIgnore
   //@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
   //private Cart cart;
-  
+
+  @JsonManagedReference
   @OneToMany(mappedBy = "createdBy", fetch = FetchType.EAGER)
   private Set<UserAds> ads;
   
@@ -100,6 +102,7 @@ public class User {
   @NotFound(action = NotFoundAction.IGNORE)
   private Set<Role> roles  = new HashSet<>();
 
+  @JsonManagedReference
   @OneToMany
   @JoinColumn(name = "user_id")
   private Set<UserReportedAds> userReportedAds;

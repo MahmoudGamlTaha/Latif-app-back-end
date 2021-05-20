@@ -49,7 +49,7 @@ public class ReportAdsServiceImpl implements ReportAdsService{
     }
 
     @Override
-    public BasicResponse makeReport(ReportRequest request) {
+    public BasicResponse create(ReportRequest request) {
         String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         User user = userService.findUserByMobileNumber(principle);
         if(user == null || request.getAdId() == null || request.getType() == null){
@@ -79,22 +79,11 @@ public class ReportAdsServiceImpl implements ReportAdsService{
     }
 
     @Override
-    public BasicResponse getInterestedAds(Integer page, Integer pageSize) {
+    public BasicResponse getReportedAds(ReportType type,Integer page, Integer pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
         String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         User user = userService.findUserByMobileNumber(principle);
-        Page<UserReportedAds> reportedAds = reportedAdsRepository.findByUserAndReportType(user, ReportType.INTEREST, pageable);
-        List<ReportTypeVo> collect = new ArrayList<>();
-        reportedAds.forEach((ad)-> collect.add(reportAdsConverter.apply(ad)));
-        return resHelper.res(collect, true, MessageType.Success.getMessage(), pageable);
-    }
-
-    @Override
-    public BasicResponse getReportedAds(Integer page, Integer pageSize) {
-        Pageable pageable = PageRequest.of(page, pageSize);
-        String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        User user = userService.findUserByMobileNumber(principle);
-        Page<UserReportedAds> reportedAds = reportedAdsRepository.findByUserAndReportType(user, ReportType.REPORT, pageable);
+        Page<UserReportedAds> reportedAds = reportedAdsRepository.findByUserAndReportType(user, type, pageable);
         List<ReportTypeVo> collect = new ArrayList<>();
         reportedAds.forEach((ad)-> collect.add(reportAdsConverter.apply(ad)));
         return resHelper.res(collect, true, MessageType.Success.getMessage(), pageable);
@@ -102,10 +91,21 @@ public class ReportAdsServiceImpl implements ReportAdsService{
 
     @Override
     public BasicResponse removeFromInterestedList(Long id) {
-        if(id == null){
-            return resHelper.res(null , false, MessageType.Missing.getMessage(), null);
+        try{
+            if(id == null){
+                return resHelper.res(null , false, MessageType.Missing.getMessage(), null);
+            }
+            String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+            User user = userService.findUserByMobileNumber(principle);
+            UserReportedAds reportedAds = reportedAdsRepository.findById(id).orElse(null);
+            if(reportedAds != null && reportedAds.getReportType().equals(ReportType.INTEREST) && user == reportedAds.getUser()) {
+                reportedAdsRepository.deleteById(id);
+                return resHelper.res("Deleted Successfully!", true, MessageType.Success.getMessage(), null);
+            }else{
+                return resHelper.res(null , false, MessageType.Fail.getMessage(), null);
+            }
+        }catch(Exception ex){
+            return resHelper.res(ex, false, MessageType.Fail.getMessage(), null);
         }
-        reportedAdsRepository.deleteById(id);
-        return null;
     }
 }
