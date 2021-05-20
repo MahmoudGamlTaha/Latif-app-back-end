@@ -20,13 +20,18 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class UserAccAds  extends UserAds{
-  @Column(name = "used")
-  private Boolean used;
+public class UserAccAds extends UserAds {
+	
+	@Column(name = "used")
+	private Boolean used;
 
-  @Column(name = "allow_at_home")
-  Boolean allowServiceAtHome;
-  
-  @Column(name = "stock")
-  private double stock;
+	@Column(name = "allow_at_home")
+	Boolean allowServiceAtHome;
+
+	@Column(name = "stock")
+	private int stock;
+
+	@Column(name = "image")
+	private String image;
+
 }
