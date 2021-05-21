@@ -9,9 +9,10 @@ import javax.validation.constraints.Size;
 public class LoginCredentialDto {
 
     @NotNull
+    @Size(min = 11)
     private String mobile;
 
     @NotNull
-    @Size(min = 1)
+    @Size(min = 4)
     private String password;
 }

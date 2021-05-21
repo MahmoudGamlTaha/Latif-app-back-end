@@ -520,7 +520,7 @@ class UserServiceImplTest {
 
         // given
         User user = new User();
-        user.setEmailVerified(1);
+        user.setEmailVerified(true);
 
         given(userRepository.findByEmail(userName)).willReturn(Optional.of(user));
 
@@ -537,7 +537,7 @@ class UserServiceImplTest {
 
         // given
         User user = new User();
-        user.setEmailVerified(faker.number().numberBetween(2, 100));
+        user.setEmailVerified(false);
 
         given(userRepository.findByEmail(userName)).willReturn(Optional.of(user));
 

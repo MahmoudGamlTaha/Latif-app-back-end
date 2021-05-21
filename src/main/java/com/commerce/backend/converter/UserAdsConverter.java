@@ -142,7 +142,24 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         		
         	}
         }
-        
+        Object itemMainImage = getHashMapKeyWithCheck(hashedData,"image", 2);
+        if(itemImage != null) {
+        	if(itemMainImage instanceof ArrayList) {
+        	   List<?> imgList = (List<?>)itemMainImage;
+        		Set<UserAdsImage> images = new HashSet<UserAdsImage>();
+        		imgList.forEach(item -> {
+        			UserAdsImage image = new UserAdsImage(); 	
+        			image.setImage(item.toString());
+        			image.setIsExternalLink(entity.getExternalLink());
+        		    image.setUserAdsImage(entity);
+        			images.add(image);
+        			entity.getUserAdsImage().add(image);
+        			 this.loggerS.info("image added path :"+ item.toString() );
+        		
+        		});
+        		
+        	}
+        }
         User user = new User();
         String userId =  String.valueOf(getHashMapKeyWithCheck(hashedData,"created_by", 0));
         userId = userId.equals("0")? "1" : userId;
@@ -159,7 +176,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             ((UserPetAds)entity).setBarkingProblem(hashedData.get("barkingproblem").toString().equalsIgnoreCase(String.valueOf(true)));
             }
             ((UserPetAds)entity).setBreed(String.valueOf(getHashMapKeyWithCheck(hashedData, "breed", -1)));
-            ((UserPetAds)entity).setStock(Integer.parseInt(String.valueOf(getHashMapKeyWithCheck(hashedData,"stock", 0))));
+            ((UserPetAds)entity).setStock(Integer.parseInt(String.valueOf(getHashMapKeyWithCheck(hashedData,"stock", 1))));
             ((UserPetAds)entity).setWeaned(Boolean.parseBoolean(String.valueOf(getHashMapKeyWithCheck(hashedData,"weaned", 1))));
             ((UserPetAds)entity).setFood(String.valueOf(getHashMapKeyWithCheck(hashedData,"food", -1)));
             ((UserPetAds)entity).setDiseasesDisabilities(hashedData.get("diseasesdisabilities").toString().equalsIgnoreCase(String.valueOf(true)));
@@ -177,6 +194,10 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             ((UserAccAds)entity).setUsed(Boolean.parseBoolean(String.valueOf(hashedData.get("used"))));
 			ItemCategory category = this.itemCategoryRepository.findById(Long.parseLong(String.valueOf(hashedData.get("category")))).orElse(null);
 			((UserAccAds)entity).setCategory(category);
+            ((UserAccAds)entity).setStock(Integer.parseInt(String.valueOf(String.valueOf(hashedData.get("stock")))));
+            ((UserAccAds)entity).setAllowServiceAtHome(Boolean.parseBoolean(String.valueOf(hashedData.get("allow_at_home"))));
+
+
         }
         else if(request.getType() == AdsType.PET_CARE) {
             ((UserMedicalAds)entity).setAllowServiceAtHome(Boolean.parseBoolean(String.valueOf(hashedData.get("allow_at_home"))));

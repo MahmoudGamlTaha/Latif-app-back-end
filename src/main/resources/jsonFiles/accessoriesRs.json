@@ -1,16 +1,18 @@
 {"form":[
-  {"name": "name","type": "string", "label": "name", "required": true},
+  {"name": "category", "type": "url_option", "label": "Category", "url":"/api/public/cat-by-adType/type=2" , "required": true},
+  {"name": "city", "type": "url_option","label": "City", "label_ar": "مكان الاعلان","url":"/api/public/cites", "required": true},
+  {"name": "name","type": "string", "label": "Name", "required": true},
   {"name": "stock","type": "Integer", "label": "Stock", "required": false},
   {"name": "description", "type": "string","label": "Description", "required": true},
   {"name": "short_description", "type": "string","label": "Short Description", "required": true},
-  {"name": "category", "type": "url_option", "label": "category", "url":"/api/public/cat-by-adType/type=2" , "required": true},
+  {"name": "allow_at_home", "type": "boolean","label": "Delivery at home", "required": true},
   {"name": "used", "type": "boolean","label": "Used", "required": true},
   {"name": "price", "type": "money","label": "Price", "required": true},
-  {"name": "images", "type": "file","label": "Image", "required": true},
-  {"name": "active", "type": "boolean","label": "Active", "required": true},
+  {"name": "images", "type": "files","label": "Image", "required": true},
   {"name": "longitude", "type": "map","label": "Longitude", "required": true},
   {"name": "latitude", "type": "map","label": "Latitude", "required": true}
 ],
 "url": "/api/public/ads/create?type=ACCESSORIES"
 }
-
+ 
+ 

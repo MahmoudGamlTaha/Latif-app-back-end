@@ -49,8 +49,16 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setEmail(registerUserRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerUserRequest.getPassword()));
-        user.setEmailVerified(0);
-
+        user.setEmailVerified(false);
+        user.setMobile(registerUserRequest.getPhone());
+        user.setActive(true);
+        user.setRegistrationDate(new Date());
+        String[] names = registerUserRequest.getName().split(" ");
+   
+        user.setFirstName(names[0]);
+        if(names.length > 1) {
+        user.setLastName(names[1]);
+        }
         return userRepository.save(user);
     }
 
@@ -148,7 +156,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean getVerificationStatus() {
         User user = getUser();
-        return user.getEmailVerified() == 1;
+        return user.getEmailVerified() == true;
     }
 
     @Override
