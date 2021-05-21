@@ -5,11 +5,13 @@ import java.util.*;
 import com.commerce.backend.helper.FieldsNames;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Component;
 
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.dao.ItemObjectCategoryRepository;
+import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.dto.ItemObjectCategoryVO;
 import com.commerce.backend.model.dto.UserAccVO;
 import com.commerce.backend.model.dto.UserAdsImageVO;
@@ -31,6 +33,8 @@ import com.commerce.backend.model.entity.UserPetAds;
 import com.commerce.backend.model.entity.UserServiceAds;
 
 import java.util.function.Function;
+
+import javax.management.AttributeNotFoundException;
 import javax.transaction.Transactional;
 
 @Component
@@ -40,7 +44,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 	ItemObjectCategoryRepository itemObjectCategoryRepository;
     
 	@Override
-	 public UserAdsVO apply( UserAds source) {
+	 public UserAdsVO apply( UserAds source) throws ResourceNotFoundException{
 		UserAdsVO userAdsVo = null;
        if(source == null) {
     	   return userAdsVo;
@@ -56,7 +60,10 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		}
 		else if(UserAds.class.cast(source).getType() == AdsType.SERVICE) {
 			userAdsVo = new UserServiceVO();
+		}else {
+			 throw new ResourceNotFoundException("Category Not Found");
 		}
+		
 		System.out.println(UserAds.class.cast(source).getType());
 		assert userAdsVo != null;
 		return convertToVo(source);
@@ -170,9 +177,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 				userAdsVo.setCategoryId(category.getId());
 			}
         }catch(Exception ex) {
-            	System.out.print("=============");
-				System.out.print(userAdsVo.getId());
-				System.out.print("=============");
+            	ex.printStackTrace();
 			}
 		}else if(entity.getType() == AdsType.ACCESSORIES) {
 			extraInfo.add(new KeyResponse(FieldsNames.AllowAtHome, FieldsNames.AllowAtHome_ar, ((UserAccAds)entity).getAllowServiceAtHome()));
