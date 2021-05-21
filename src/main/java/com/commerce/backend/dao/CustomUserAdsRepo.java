@@ -1,6 +1,7 @@
 package com.commerce.backend.dao;
 
 import com.commerce.backend.constants.AdsType;
+import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.entity.UserAds;
 import com.commerce.backend.model.entity.UserPetAds;
 import org.springframework.data.domain.Page;
@@ -42,4 +43,6 @@ public interface CustomUserAdsRepo extends JpaRepository<UserAds, Long> {
     
     Long countByActiveTrue();
     Long countByActiveTrueAndType(AdsType adsType);
+
+    Page<UserAds> findByCreatedByAndActiveTrue(User user, Pageable pageable);
 }

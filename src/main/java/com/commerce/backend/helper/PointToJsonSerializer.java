@@ -10,7 +10,7 @@ import com.commerce.backend.constants.SystemConstant;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.vividsolutions.jts.geom.Point;
+import org.locationtech.jts.geom.Point;
 
 public class PointToJsonSerializer extends JsonSerializer<Point> {
 	private static final Logger logger = LoggerFactory.getLogger(PointToJsonSerializer.class);
