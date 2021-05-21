@@ -12,15 +12,16 @@ import com.commerce.backend.model.request.user.RegisterUserRequest;
 import com.commerce.backend.model.request.user.UpdateUserAddressRequest;
 import com.commerce.backend.model.request.user.UpdateUserRequest;
 import com.commerce.backend.model.response.user.UserResponse;
+import com.commerce.backend.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -199,4 +200,22 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByMobile(m) != null;
     }
 
+    @Override
+    public User getCurrentUser(){
+        String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        return this.findUserByMobileNumber(principle);
+    }
+
+    @Override
+    public boolean isAdmin(){
+        User user = getCurrentUser();
+        UserDetailsImpl userDetails = new UserDetailsImpl(user);
+        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+        return authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+    }
+
+    @Override
+    public boolean isAuthorized(User user) {
+        return getCurrentUser() == user;
+    }
 }

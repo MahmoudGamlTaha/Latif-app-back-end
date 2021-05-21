@@ -35,4 +35,10 @@ public interface UserService {
     User registerNewUserAccount(UserDto accountDto) throws Exception;
 
     void deleteUser(User user);
+
+    boolean isAdmin();
+
+    User getCurrentUser();
+
+    boolean isAuthorized(User user);
 }

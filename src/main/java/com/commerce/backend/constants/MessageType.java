@@ -7,6 +7,7 @@ public enum MessageType {
     Missing("Data Missing"),
 	CurrentPage("currentPage"),
 	TotalItems("totalItems"),
+	NotAuthorized("notAuthorized"),
 	TotalPages("totalPages");
 	private String message;
 	
