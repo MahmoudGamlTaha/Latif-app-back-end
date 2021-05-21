@@ -10,34 +10,34 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
-
+    
     public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        try {
+    //    try {
             User user = userRepository.findByMobile(s);
             if (user == null) {
                 throw new UsernameNotFoundException("No user found with phone: " + s);
             }
             return new UserDetailsImpl(user);
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
+      //  } catch (final Exception e) {
+        //    throw new RuntimeException(e);
+       // }
     }
 
     public UserDetails loadUserByMobileNum(String mobile) throws UsernameNotFoundException {
-        try {
+        //try {
             User user = userRepository.findByMobile(mobile);
             if (user == null) {
                 throw new UsernameNotFoundException("No user found with phone: " + mobile);
             }
             return new UserDetailsImpl(user);
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
+       // } catch (final Exception e) {
+         //   throw new RuntimeException(e);
+       // }
     }
 }
 

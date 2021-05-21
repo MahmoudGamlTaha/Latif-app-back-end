@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Type;
@@ -52,11 +54,12 @@ public class UserAds {
 	
 	//@Transient
 	@Column(name = "type", insertable = false, updatable = false, nullable = false)
-	private AdsType type;        
-	
-   @ManyToOne(cascade = {CascadeType.MERGE})
-	 @JoinColumn(name = "created_by")
-	 private User createdBy;
+	private AdsType type;
+
+	@JsonBackReference
+	@ManyToOne
+	@JoinColumn(name="created_by", nullable=false)
+	private User createdBy;
 	
 	@Column(name = "active")
 	private boolean active;
@@ -97,7 +100,8 @@ public class UserAds {
 	 @NotFound( action = NotFoundAction.IGNORE)
 	 @JoinColumn(name ="category_id")
 	 ItemObjectCategory category;
-	
+
+	@JsonManagedReference
 	 @OneToMany(mappedBy="userAdsImage", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	//@OneToMany(cascade = CascadeType.ALL)
 	@NotFound(action = NotFoundAction.IGNORE)
@@ -110,4 +114,9 @@ public class UserAds {
 	@Setter(AccessLevel.PRIVATE)
 	@Column(name = "total_item", insertable = false, updatable = false)
 	private long totalItem;
+
+	@JsonIgnore
+	@OneToMany
+	@JoinColumn(name = "ads_id")
+	private Set<UserReportedAds> userReportedAds;
 }

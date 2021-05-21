@@ -3,10 +3,10 @@ package com.commerce.backend.service;
 
 import com.commerce.backend.constants.AdsType;
 import com.commerce.backend.constants.MessageType;
-import com.commerce.backend.constants.TrainningType;
 import com.commerce.backend.converter.UserAdsConverter;
 import com.commerce.backend.converter.UserAdsToVoConverter;
 import com.commerce.backend.dao.*;
+import com.commerce.backend.helper.resHelper;
 import com.commerce.backend.model.dto.*;
 import com.commerce.backend.model.entity.*;
 import com.commerce.backend.model.request.userAds.*;
@@ -33,7 +33,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +60,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 	private UserAdsImageRepository userAdsImageRepository;
 	private CustomUserAdsRepo customUserAdsRepo;
 	private CustomUserAdsCriteriaHelper customUserAdsCriteriaHelper;
+	private final UserService userService;
 	private final Path rootLocation = Paths.get("upload");
 	@Value("${swagger.host.path}")
 	private String path;
@@ -71,7 +73,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 							  UserAdsImageRepository userAdsImageRepository,
 							  CustomUserAdsRepo repo,
 							  CustomUserAdsCriteriaHelper customUserAdsCriteriaHelper,
-							  ItemObjectCategoryService itemCategory) {
+							  ItemObjectCategoryService itemCategory, UserService userService) {
 	
 
 	
@@ -86,10 +88,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 		this.customUserAdsRepo = repo;
 		this.customUserAdsCriteriaHelper = customUserAdsCriteriaHelper;
 		this.itemCategory = itemCategory;
-	}
-
-	public UserAdsServiceImpl() {
-
+		this.userService = userService;
 	}
 
 	@Override
@@ -230,6 +229,20 @@ public class UserAdsServiceImpl implements UserAdsService {
 	public List<UserAdsVO> searchItemDisplay(String keyword, Integer page, Integer size) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public BasicResponse myAds(Integer page, Integer size) {
+		Pageable pageable = PageRequest.of(page, size);
+		String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+		User user = userService.findUserByMobileNumber(principle);
+		if(user != null){
+			Page<UserAds> ads = customUserAdsRepo.findByCreatedByAndActiveTrue(user, pageable);
+			List<UserAdsVO> collect = new ArrayList<>();
+			ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
+			return resHelper.res(collect , true, MessageType.Success.getMessage(), pageable);
+		}
+		return resHelper.res(null , false, MessageType.Missing.getMessage(), null);
 	}
 
 	@Override

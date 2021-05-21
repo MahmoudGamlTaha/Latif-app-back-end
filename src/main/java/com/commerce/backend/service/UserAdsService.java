@@ -48,4 +48,6 @@ public interface UserAdsService {
     BasicResponse findNearby(AdsType Type, Double longitude, Double latitude, Integer distance, Integer page, Integer size, Long cat_id);
 
     BasicResponse updateUserAds(UpdateAdRequest<String, Object> request, List<String> fileList, List<MultipartFile> files);
+
+    BasicResponse myAds(Integer page, Integer size);
 }

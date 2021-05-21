@@ -77,7 +77,8 @@ public class UserAdsController extends PublicApiController {
     	Pageable pageable = PageRequest.of(0, SystemConstant.MOBILE_PAGE_SIZE);
         return new ResponseEntity<BasicResponse>(userAdsService.adsFiltration(filterRequest, pageable), HttpStatus.OK);
     }
-       
+    
+    @CrossOrigin(origins = "*")   
     @GetMapping(value = "/ads/nearest")
     @ResponseBody
     public ResponseEntity<BasicResponse> getNearest(@RequestParam(value ="longitude", required = false) Optional<Double> longitude,
@@ -134,6 +135,12 @@ public class UserAdsController extends PublicApiController {
     		status = HttpStatus.BAD_REQUEST;
     	}
     	 return new ResponseEntity<BasicResponse>(response, status); 
+    }
+
+    @GetMapping(value = "ads/myAds")
+    public ResponseEntity<BasicResponse> myAds(@RequestParam(value ="page", required = false) Optional<Integer> page,
+                                               @RequestParam(value ="pageSize", required= false) Optional<Integer>  pageSize){
+        return new ResponseEntity<>(userAdsService.myAds(page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE)), HttpStatus.OK);
     }
 
     @PostMapping(value = "/ads/update")

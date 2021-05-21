@@ -177,6 +177,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		}else if(entity.getType() == AdsType.ACCESSORIES) {
 			extraInfo.add(new KeyResponse(FieldsNames.AllowAtHome, FieldsNames.AllowAtHome_ar, ((UserAccAds)entity).getAllowServiceAtHome()));
 			extraInfo.add(new KeyResponse(FieldsNames.used, FieldsNames.used_ar, ((UserAccAds)entity).getUsed()));
+			extraInfo.add(new KeyResponse(FieldsNames.Stock, FieldsNames.Stock_ar, ((UserAccAds)entity).getStock()));
 			ItemCategory category = (ItemCategory)((UserAccAds)entity).getCategory();
 			String categoryName = category == null ?null:category.getName();
 			if(categoryName != null) {

@@ -4,14 +4,17 @@ package com.commerce.backend.advice;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.model.response.BasicResponse;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,4 +45,18 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(response, headers, status);
 
     }
+	@ExceptionHandler(value = {UsernameNotFoundException.class})
+	protected ResponseEntity<BasicResponse> handleUserNotFoundException(UsernameNotFoundException ex){
+		 BasicResponse response = new BasicResponse();
+         response.setMsg(ex.getMessage());
+         response.setSuccess(false);
+    	return new ResponseEntity<BasicResponse>(response, HttpStatus.NOT_ACCEPTABLE);
+	}
+	@ExceptionHandler(value = {RuntimeException.class})
+	protected ResponseEntity<BasicResponse> handleRuntimeException(UsernameNotFoundException ex){
+		 BasicResponse response = new BasicResponse();
+        response.setMsg(ex.getMessage());
+        response.setSuccess(false);
+   	return new ResponseEntity<BasicResponse>(response, HttpStatus.NOT_ACCEPTABLE);
+	}
 }
