@@ -1,12 +1,12 @@
 {"form":[
-    {"name": "city", "type": "url_option","label": "City", "label_ar": "مكان الاعلان","url":"/api/public/cites", "required": true},
-    {"name": "name","type": "string", "label": "Category", "required": true},
-    {"name": "code", "type": "string","label": "Code", "required": true},
-    {"name": "description", "type": "string","label": "Description", "required": true},
-    {"name": "short_description", "type": "string","label": "Short Description", "required": true},
-    {"name": "price", "type": "money","label": "Price", "required": true},
-  {"name": "images", "type": "files","label": "Image", "required": true},
-    {"name": "longitude", "type": "map","label": "Longitude", "required": true},
-    {"name": "latitude", "type": "map","label": "Latitude", "required": true},
+    {"name": "city", "type": "url_option","label": "City", "label_ar": "مكان الاعلان","url":"/api/public/cites", "required": true,"requiredcond":""},
+    {"name": "name","type": "string", "label": "Category", "required": true,"requiredcond":""},
+    {"name": "code", "type": "string","label": "Code", "required": true,"requiredcond":""},
+    {"name": "description", "type": "string","label": "Description", "required": true,"requiredcond":""},
+    {"name": "short_description", "type": "string","label": "Short Description", "required": true,"requiredcond":""},
+    {"name": "price", "type": "money","label": "Price", "required": true,"requiredcond":""},
+  {"name": "images", "type": "files","label": "Image", "required": true,"requiredcond":""},
+    {"name": "longitude", "type": "map","label": "Longitude", "required": true,"requiredcond":""},
+    {"name": "latitude", "type": "map","label": "Latitude", "required": true,"requiredcond":""},
     {"url": "/ads/pet/save"}
 ]} 
