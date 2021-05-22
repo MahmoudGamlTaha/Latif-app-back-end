@@ -119,4 +119,7 @@ public class UserAds {
 	@OneToMany
 	@JoinColumn(name = "ads_id")
 	private Set<UserReportedAds> userReportedAds;
+	
+	@Column(name = "selling_type")
+	private String selling_type;
 }

@@ -42,5 +42,5 @@ private String diseasesDisabilitiesDesc;
 private ItemObjectCategoryVO category;
 
 private String food;
-
+private String selling_type;
 }
