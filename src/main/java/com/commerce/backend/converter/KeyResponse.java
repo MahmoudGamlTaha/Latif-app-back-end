@@ -12,7 +12,8 @@ public class KeyResponse {
     private String name_ar;
     private Object value;
 
-    public KeyResponse(String name, String name_ar, Object value){
+    public KeyResponse(String fieldNameKey,String name, String name_ar, Object value){
+    	this.code  =fieldNameKey;
         this.name = name;
         this.name_ar = name_ar;
         this.value = value;
