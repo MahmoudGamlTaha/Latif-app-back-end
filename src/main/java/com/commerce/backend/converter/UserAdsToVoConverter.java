@@ -238,6 +238,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 				 imgVo.setImage(img.getImage());
 				 imgVo.setExternal_link(source.getExternalLink());
 				 imgVo.setUserAdsId(source.getId());
+				 destination.setImage(img.getImage());
 			     imageVos.add(imgVo);
 			 });
           
