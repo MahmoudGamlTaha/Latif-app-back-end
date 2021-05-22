@@ -44,5 +44,7 @@ public class UserPetsAdsRequest extends UserAdsRequest {
 	
 	private Integer food;
 	
+	private String selling_type;
+	
 	private Set<MultipartFile> petsImages;
 }

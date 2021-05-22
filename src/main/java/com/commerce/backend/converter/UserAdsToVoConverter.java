@@ -60,8 +60,10 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		}
 		else if(UserAds.class.cast(source).getType() == AdsType.SERVICE) {
 			userAdsVo = new UserServiceVO();
-		}else {
-			 throw new ResourceNotFoundException("Category Not Found");
+		}
+		else {
+			userAdsVo = new UserPetAdsVO();
+			// throw new ResourceNotFoundException("Category Not Found");
 		}
 		
 		System.out.println(UserAds.class.cast(source).getType());
@@ -148,6 +150,9 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			extraInfo.add(new KeyResponse(FieldsNames.VaccinationCertificate, FieldsNames.VaccinationCertificate_ar, checkValue(((UserPetAds)entity).getVaccinationCertifcate(), SystemConstant.BOOLEAN)));
 			extraInfo.add(new KeyResponse(FieldsNames.weaned, FieldsNames.weaned_ar, checkValue(((UserPetAds)entity).getWeaned(), SystemConstant.BOOLEAN)));
 			extraInfo.add(new KeyResponse(FieldsNames.Stock, FieldsNames.Stock_ar, ((UserPetAds)entity).getStock()));
+			extraInfo.add(new KeyResponse(FieldsNames.selling_type, FieldsNames.selling_type, ((UserPetAds)entity).getSelling_type()));
+
+			
 			PetCategory category = (PetCategory)(entity).getCategory();
 			String categoryName = category == null ?null:category.getName();
 			if(categoryName != null) {
