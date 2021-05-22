@@ -13,8 +13,8 @@ import lombok.Setter;
 
 @Entity
 @DiscriminatorValue(AdsType.Values.Driver)
-@Setter
 @Getter
+@Setter
 public class UserDriverAds extends UserAds {
    @Column(name = "driver_method")
     Boolean driver_method;

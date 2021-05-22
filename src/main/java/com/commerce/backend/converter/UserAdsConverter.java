@@ -186,6 +186,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             ((UserPetAds)entity).setPlayWithKids(hashedData.get("playwithkids").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setPassport(hashedData.get("passport").toString().equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setVaccinationCertifcate(hashedData.get("vaccinationcertificate").toString().equalsIgnoreCase(String.valueOf(true)));
+            ((UserPetAds)entity).setSelling_type(String.valueOf(hashedData.get("selling_type")));
             ((UserPetAds)entity).setCategory(category);
         }
        
@@ -265,6 +266,8 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         {
             ad.setPrice(Float.parseFloat(String.valueOf(data.get("price"))));
         }
+       
+        
         ad.setUpdatedAt(new Date());
         if(data.get("longitude") != null && data.get("latitude") != null)
         {
@@ -389,6 +392,10 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             if(data.get("stock") != null)
             {
                 ((UserPetAds)ad).setStock((Integer) data.get("stock"));
+            }
+            if(data.get("selling_type") != null)
+            {
+                ad.setSelling_type((String.valueOf(data.get("selling_type"))));
             }
         }
         return ad;

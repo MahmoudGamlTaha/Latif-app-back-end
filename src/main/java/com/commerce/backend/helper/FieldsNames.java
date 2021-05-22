@@ -66,4 +66,6 @@ public class FieldsNames {
     public static final String used_ar = "مستعمل";
     public static final String Category = "Category";
     public static final String Category_ar = "الفئه";
+    public static final String selling_type = "Ad Type";
+    public static final String selling_type_ar = "نوع الإعلان";
 }
