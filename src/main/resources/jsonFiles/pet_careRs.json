@@ -1,15 +1,15 @@
 {"form":[
   
-  {"name": "category", "type": "url_option", "label": "Category", "url":"/api/public/cat-by-adType/type=4" , "required": true},
-  {"name": "city", "type": "url_option","label": "City", "label_ar": "مكان الاعلان","url":"/api/public/cites", "required": true},
-  {"name": "name","type": "string", "label": "Name", "required": false},
-  {"name": "description", "type": "string","label": "Description", "required": true},
-  {"name": "short_description", "type": "string","label": "Short Description", "required": true},
-  {"name": "allow_at_home", "type": "boolean","label": "Delivery at home", "required": true},
-  {"name": "price", "type": "money","label": "Price", "required": true},
-  {"name": "images", "type": "files","label": "Image", "required": true},
-  {"name": "longitude", "type": "map","label": "Longitude", "required": true},
-  {"name": "latitude", "type": "map","label": "Latitude", "required": true}
+  {"name": "category", "type": "url_option", "label": "Category", "url":"/api/public/cat-by-adType/type=4" , "required": true,"requiredcond":""},
+  {"name": "city", "type": "url_option","label": "City", "label_ar": "مكان الاعلان","url":"/api/public/cites", "required": true,"requiredcond":""},
+  {"name": "name","type": "string", "label": "Name", "required": false,"requiredcond":""},
+  {"name": "description", "type": "string","label": "Description", "required": true,"requiredcond":""},
+  {"name": "short_description", "type": "string","label": "Short Description", "required": true,"requiredcond":""},
+  {"name": "allow_at_home", "type": "boolean","label": "Delivery at home", "required": true,"requiredcond":""},
+  {"name": "price", "type": "money","label": "Price", "required": true,"requiredcond":""},
+  {"name": "images", "type": "files","label": "Image", "required": true,"requiredcond":""},
+  {"name": "longitude", "type": "map","label": "Longitude", "required": true,"requiredcond":""},
+  {"name": "latitude", "type": "map","label": "Latitude", "required": true,"requiredcond":""}
 ],
 "url": "/api/public/ads/create?type=PET_CARE"
 }
