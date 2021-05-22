@@ -8,6 +8,7 @@ public enum MessageType {
 	CurrentPage("currentPage"),
 	TotalItems("totalItems"),
 	NotAuthorized("notAuthorized"),
+	NotFound("notFound"),
 	TotalPages("totalPages");
 	private String message;
 	

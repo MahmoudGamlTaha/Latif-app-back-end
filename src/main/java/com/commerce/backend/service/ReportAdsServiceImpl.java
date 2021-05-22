@@ -98,11 +98,15 @@ public class ReportAdsServiceImpl implements ReportAdsService{
             String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
             User user = userService.findUserByMobileNumber(principle);
             UserReportedAds reportedAds = reportedAdsRepository.findById(id).orElse(null);
-            if(reportedAds != null && reportedAds.getReportType().equals(ReportType.INTEREST) && user == reportedAds.getUser()) {
-                reportedAdsRepository.deleteById(id);
-                return resHelper.res("Deleted Successfully!", true, MessageType.Success.getMessage(), null);
+            if(reportedAds != null && reportedAds.getReportType().equals(ReportType.INTEREST)) {
+                if (userService.isAuthorized(reportedAds.getUser()) || userService.isAdmin()) {
+                    reportedAdsRepository.deleteById(id);
+                    return resHelper.res("Deleted Successfully!", true, MessageType.Success.getMessage(), null);
+                } else {
+                    return resHelper.res(null, false, MessageType.NotAuthorized.getMessage(), null);
+                }
             }else{
-                return resHelper.res(null , false, MessageType.Fail.getMessage(), null);
+                return resHelper.res(null , false, MessageType.NotFound.getMessage(), null);
             }
         }catch(Exception ex){
             return resHelper.res(ex, false, MessageType.Fail.getMessage(), null);
