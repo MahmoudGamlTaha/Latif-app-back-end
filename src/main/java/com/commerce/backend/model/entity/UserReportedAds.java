@@ -30,8 +30,9 @@ public class UserReportedAds {
     @JoinColumn(name = "ads_id")
     private UserAds ads;
 
-    @Column(name = "reason")
-    private String reason;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "reason", referencedColumnName = "id")
+    private ReportReasons reason;
 
     @Column(name = "created_at")
     private Date createdAt;
