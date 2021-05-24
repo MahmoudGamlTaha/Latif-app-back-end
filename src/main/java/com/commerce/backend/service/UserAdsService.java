@@ -50,4 +50,6 @@ public interface UserAdsService {
     BasicResponse updateUserAds(UpdateAdRequest<String, Object> request, List<String> fileList, List<MultipartFile> files);
 
     BasicResponse myAds(Integer page, Integer size);
+
+    BasicResponse adActivation(Long id, boolean activate);
 }
