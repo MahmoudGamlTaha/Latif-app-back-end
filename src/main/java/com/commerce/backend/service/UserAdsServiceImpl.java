@@ -33,7 +33,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -74,10 +73,10 @@ public class UserAdsServiceImpl implements UserAdsService {
 							  CustomUserAdsRepo repo,
 							  CustomUserAdsCriteriaHelper customUserAdsCriteriaHelper,
 							  ItemObjectCategoryService itemCategory, UserService userService) {
-	
 
-	
-		
+
+
+
 		this.userPetsAdsRepository = userPetsAdsRepository;
 		this.userServiceAdsRepository = userServiceAdsRepository;
 		this.userItemsAdsRepository = userItemsAdsRepository;
@@ -493,5 +492,27 @@ public class UserAdsServiceImpl implements UserAdsService {
 		return res;
 	}
 
-
+	@Override
+	public BasicResponse adActivation(Long id, boolean activate) {
+		if(id == null)
+		{
+			return resHelper.res(null , false, MessageType.Missing.getMessage(), null);
+		}
+		try {
+			UserAds ad = customUserAdsRepo.findById(id).orElse(null);
+			if(ad == null)
+			{
+				resHelper.res(null , false, MessageType.Missing.getMessage(), null);
+			}
+			if(userService.isAuthorized(ad.getCreatedBy()) || userService.isAdmin()) {
+				ad.setActive(activate);
+				customUserAdsRepo.save(ad);
+				return resHelper.res(ad , true, MessageType.Success.getMessage(), null);
+			}else{
+				return resHelper.res(null , false, MessageType.NotAuthorized.getMessage(), null);
+			}
+		}catch (Exception ex){
+			 return resHelper.res(ex , false, MessageType.Missing.getMessage(), null);
+		}
+	}
 }
