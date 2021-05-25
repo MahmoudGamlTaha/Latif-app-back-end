@@ -68,4 +68,6 @@ public class FieldsNames {
     public static final String Category_ar = "الفئه";
     public static final String selling_type = "Ad Type";
     public static final String selling_type_ar = "نوع الإعلان";
+    public static final String driver_method = "Driver Method";
+    public static final String driver_method_ar = "طريقة التوصيل";
 }

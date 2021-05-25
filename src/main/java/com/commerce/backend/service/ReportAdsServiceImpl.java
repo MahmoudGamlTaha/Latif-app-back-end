@@ -102,8 +102,6 @@ public class ReportAdsServiceImpl implements ReportAdsService{
             if(id == null){
                 return resHelper.res(null , false, MessageType.Missing.getMessage(), null);
             }
-            String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-            User user = userService.findUserByMobileNumber(principle);
             UserReportedAds reportedAds = reportedAdsRepository.findById(id).orElse(null);
             if(reportedAds != null && reportedAds.getReportType().equals(ReportType.INTEREST)) {
                 if (userService.isAuthorized(reportedAds.getUser()) || userService.isAdmin()) {

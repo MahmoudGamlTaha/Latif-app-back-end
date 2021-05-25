@@ -27,22 +27,30 @@ public class ReportReasonsServiceImpl implements ReportReasonsService{
 
     @Override
     public BasicResponse createReason(String reason) {
-        if(reason != null) {
-            ReportReasons reportReasons = new ReportReasons();
-            reportReasons.setValue(reason);
-            return resHelper.res(reportReasonsRepository.save(reportReasons), true, MessageType.Success.getMessage(), null);
+        if(userService.isAdmin()) {
+            if (reason != null) {
+                ReportReasons reportReasons = new ReportReasons();
+                reportReasons.setValue(reason);
+                return resHelper.res(reportReasonsRepository.save(reportReasons), true, MessageType.Success.getMessage(), null);
+            }
+        }else{
+            return resHelper.res(null, false, MessageType.NotAuthorized.getMessage(), null);
         }
         return resHelper.res(null, false, MessageType.Fail.getMessage(), null);
     }
 
     @Override
     public BasicResponse updateReason(Long id, String reason) {
-        if(reason != null && id != null) {
-            ReportReasons reportReasons = reportReasonsRepository.findById(id).orElse(null);
-            if(reportReasons != null) {
-                reportReasons.setValue(reason);
-                return resHelper.res(reportReasonsRepository.save(reportReasons), true, MessageType.Success.getMessage(), null);
+        if(userService.isAdmin()) {
+            if (reason != null && id != null) {
+                ReportReasons reportReasons = reportReasonsRepository.findById(id).orElse(null);
+                if (reportReasons != null) {
+                    reportReasons.setValue(reason);
+                    return resHelper.res(reportReasonsRepository.save(reportReasons), true, MessageType.Success.getMessage(), null);
+                }
             }
+        }else{
+            return resHelper.res(null, false, MessageType.NotAuthorized.getMessage(), null);
         }
         return resHelper.res(null, false, MessageType.Fail.getMessage(), null);
     }
@@ -50,11 +58,15 @@ public class ReportReasonsServiceImpl implements ReportReasonsService{
     @Override
     public BasicResponse removeReason(Long id) {
         try {
-            if (id != null) {
-                reportReasonsRepository.deleteById(id);
-                return resHelper.res(MessageType.Deleted.getMessage(), true, MessageType.Success.getMessage(), null);
+            if(userService.isAdmin()) {
+                if (id != null) {
+                    reportReasonsRepository.deleteById(id);
+                    return resHelper.res(MessageType.Deleted.getMessage(), true, MessageType.Success.getMessage(), null);
+                } else {
+                    return resHelper.res(null, false, MessageType.Missing.getMessage(), null);
+                }
             }else{
-                return resHelper.res(null, false, MessageType.Missing.getMessage(), null);
+                return resHelper.res(null, false, MessageType.NotAuthorized.getMessage(), null);
             }
         }catch (Exception ex) {
             return resHelper.res(ex, false, MessageType.Fail.getMessage(), null);
