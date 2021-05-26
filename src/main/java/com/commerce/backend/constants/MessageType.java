@@ -4,9 +4,10 @@ public enum MessageType {
 	Success("SUCCESS"),
 	Fail("Fail"),
 	Data("data"),
-    Missing("Data Missing"),
+  Missing("Data Missing"),
 	CurrentPage("currentPage"),
 	TotalItems("totalItems"),
+	Deleted("Deleted Successfully"),
 	NotAuthorized("notAuthorized"),
 	NotFound("notFound"),
 	TotalPages("totalPages");

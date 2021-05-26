@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.commerce.backend.constants.DriverMethods;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
@@ -24,4 +25,7 @@ public class UserServiceAds extends UserAds {
 		
 	@Column(name = "allow_at_home")
 	Boolean allowServiceAtHome;
+
+	@Column(name = "driver_method")
+	private DriverMethods driverMethods;
 }

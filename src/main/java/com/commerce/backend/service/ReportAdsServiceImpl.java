@@ -4,9 +4,11 @@ import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.constants.ReportType;
 import com.commerce.backend.converter.reportAds.ReportAdsConverter;
 import com.commerce.backend.dao.CustomUserAdsRepo;
+import com.commerce.backend.dao.ReportReasonsRepository;
 import com.commerce.backend.dao.ReportedAdsRepository;
 import com.commerce.backend.helper.resHelper;
 import com.commerce.backend.model.dto.ReportTypeVo;
+import com.commerce.backend.model.entity.ReportReasons;
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.entity.UserAds;
 import com.commerce.backend.model.entity.UserReportedAds;
@@ -30,13 +32,15 @@ public class ReportAdsServiceImpl implements ReportAdsService{
     private final ReportAdsConverter reportAdsConverter;
     private final UserService userService;
     private final CustomUserAdsRepo userAdsRepo;
+    private final ReportReasonsRepository reportReasonsRepository;
 
     @Autowired
-    public ReportAdsServiceImpl(ReportedAdsRepository reportedAdsRepository, ReportAdsConverter reportAdsConverter, UserService userService, CustomUserAdsRepo userAdsRepo) {
+    public ReportAdsServiceImpl(ReportedAdsRepository reportedAdsRepository, ReportAdsConverter reportAdsConverter, UserService userService, CustomUserAdsRepo userAdsRepo, ReportReasonsRepository reportReasonsRepository) {
         this.reportedAdsRepository = reportedAdsRepository;
         this.reportAdsConverter = reportAdsConverter;
         this.userService = userService;
         this.userAdsRepo = userAdsRepo;
+        this.reportReasonsRepository = reportReasonsRepository;
     }
 
     @Override
@@ -68,7 +72,10 @@ public class ReportAdsServiceImpl implements ReportAdsService{
             reportedAds.setUser(user);
             reportedAds.setAds(userAds);
             if(request.getType().equals(ReportType.REPORT)){
-                reportedAds.setReason(request.getReason());
+                ReportReasons reportReasons = reportReasonsRepository.findById(request.getReason()).orElse(null);
+                if(reportReasons != null) {
+                    reportedAds.setReason(reportReasons);
+                }
             }
             reportedAds.setReportType(request.getType());
             reportedAds.setCreatedAt(new Date());
@@ -95,8 +102,6 @@ public class ReportAdsServiceImpl implements ReportAdsService{
             if(id == null){
                 return resHelper.res(null , false, MessageType.Missing.getMessage(), null);
             }
-            String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-            User user = userService.findUserByMobileNumber(principle);
             UserReportedAds reportedAds = reportedAdsRepository.findById(id).orElse(null);
             if(reportedAds != null && reportedAds.getReportType().equals(ReportType.INTEREST)) {
                 if (userService.isAuthorized(reportedAds.getUser()) || userService.isAdmin()) {
