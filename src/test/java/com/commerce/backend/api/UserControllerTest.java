@@ -85,12 +85,12 @@ class UserControllerTest {
         UpdateUserRequest updateUserRequest = new UpdateUserRequest();
         updateUserRequest.setFirstName(firstName);
         updateUserRequest.setLastName(lastName);
-        updateUserRequest.setPhone(phone);
+        //updateUserRequest.setPhone(phone);
 
         UserResponse userResponse = new UserResponse();
 
 
-        given(userService.updateUser(updateUserRequest)).willReturn(userResponse);
+        //given(userService.updateUser(updateUserRequest)).willReturn(userResponse);
 
         // when
         MvcResult result = mockMvc.perform(put("/api/account")
@@ -116,7 +116,7 @@ class UserControllerTest {
         UpdateUserRequest updateUserRequest = new UpdateUserRequest();
         updateUserRequest.setFirstName(firstName);
         updateUserRequest.setLastName(lastName);
-        updateUserRequest.setPhone(phone);
+        //updateUserRequest.setPhone(phone);
 
         // when
         MvcResult result = mockMvc.perform(put("/api/account")
