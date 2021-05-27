@@ -1,16 +1,19 @@
 package com.commerce.backend.service;
 
+import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.converter.user.UserResponseConverter;
 import com.commerce.backend.dao.RoleRepository;
 import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.error.exception.InvalidArgumentException;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
+import com.commerce.backend.helper.resHelper;
 import com.commerce.backend.model.dto.UserDto;
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.request.user.PasswordResetRequest;
 import com.commerce.backend.model.request.user.RegisterUserRequest;
 import com.commerce.backend.model.request.user.UpdateUserAddressRequest;
 import com.commerce.backend.model.request.user.UpdateUserRequest;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.user.UserResponse;
 import com.commerce.backend.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,14 +119,48 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateUser(UpdateUserRequest updateUserRequest) {
-        User user = getUser();
-        user.setFirstName(updateUserRequest.getFirstName());
-        user.setLastName(updateUserRequest.getLastName());
-        user.setMobile(updateUserRequest.getPhone());
-
-        user = userRepository.save(user);
-        return userResponseConverter.apply(user);
+    public BasicResponse updateUser(UpdateUserRequest updateUserRequest) {
+        if(updateUserRequest.getId() == null){
+            return resHelper.res(null, false, MessageType.Missing.getMessage(), null);
+        }
+        User user = userRepository.findById(updateUserRequest.getId()).orElse(null);
+        if(user != null){
+            if(isAdmin() || isAuthorized(user)) {
+                if(updateUserRequest.getFirstName() != null) {
+                    user.setFirstName(updateUserRequest.getFirstName());
+                }
+                if(updateUserRequest.getLastName() != null) {
+                    user.setLastName(updateUserRequest.getLastName());
+                }
+                //if(updateUserRequest.getPhone() != null) {
+                //    user.setMobile(updateUserRequest.getPhone());
+                //}
+                if(updateUserRequest.getEmail() != null) {
+                    user.setEmail(updateUserRequest.getEmail());
+                }
+                if(updateUserRequest.getCity() != null) {
+                    user.setCity(updateUserRequest.getCity());
+                }
+                if(updateUserRequest.getCountry() != null) {
+                    user.setCountry(updateUserRequest.getCountry());
+                }
+                if(updateUserRequest.getState() != null) {
+                    user.setState(updateUserRequest.getState());
+                }
+                if(updateUserRequest.getAddress() != null) {
+                    user.setAddress(updateUserRequest.getAddress());
+                }
+                if(updateUserRequest.getUsername() != null) {
+                    user.setUsername(updateUserRequest.getUsername());
+                }
+                user = userRepository.save(user);
+                return resHelper.res(userResponseConverter.apply(user), true, MessageType.Success.getMessage(), null);
+            }else{
+                return resHelper.res(null, false, MessageType.NotAuthorized.getMessage(), null);
+            }
+        }else{
+            return resHelper.res(null, false, MessageType.NotFound.getMessage(), null);
+        }
     }
 
     @Override
@@ -213,6 +250,14 @@ public class UserServiceImpl implements UserService {
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
         return authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
+
+    /**
+     *
+     * @param user
+     * @return
+     *
+     * check if user is the owner and has authority to make change
+     */
 
     @Override
     public boolean isAuthorized(User user) {
