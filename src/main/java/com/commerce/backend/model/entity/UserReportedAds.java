@@ -2,8 +2,11 @@ package com.commerce.backend.model.entity;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Type;
+
 import com.commerce.backend.constants.ReportType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.Data;
 
 import java.util.Date;
@@ -19,7 +22,7 @@ public class UserReportedAds {
     private Long id;
 
     @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -35,6 +38,7 @@ public class UserReportedAds {
     private ReportReasons reason;
 
     @Column(name = "created_at")
+    @Type(type = "timestamp")
     private Date createdAt;
 
     @Column(name = "updated_at")

@@ -16,4 +16,5 @@ public interface ReportedAdsRepository extends JpaRepository<UserReportedAds, Lo
     Page<UserReportedAds> findAll(Pageable pageable);
     List<UserReportedAds> findByUserAndAds(User user, UserAds userAds);
     Page<UserReportedAds> findByUserAndReportType(User user, ReportType reportType, Pageable pageable);
+    UserReportedAds save(UserReportedAds ura);
 }

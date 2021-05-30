@@ -54,11 +54,12 @@ public class ReportAdsServiceImpl implements ReportAdsService{
 
     @Override
     public BasicResponse create(ReportRequest request) {
-        String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        User user = userService.findUserByMobileNumber(principle);
+       // String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        User user = userService.getCurrentUser();
         if(user == null || request.getAdId() == null || request.getType() == null){
             return resHelper.res(null , false, MessageType.Missing.getMessage(), null);
         }
+       
         UserAds userAds = userAdsRepo.findById(request.getAdId()).orElse(null);
         if(userAds != null) {
             List<UserReportedAds> reportAds = reportedAdsRepository.findByUserAndAds(user, userAds);
@@ -66,7 +67,7 @@ public class ReportAdsServiceImpl implements ReportAdsService{
                     .filter(ad -> ad.getReportType() == request.getType())
                     .count();
             if(reportCount > 0) {
-                return resHelper.res(null, false, MessageType.Fail.getMessage(), null);
+                return resHelper.res(null, true, MessageType.Success.getMessage(), null);
             }
             UserReportedAds reportedAds = new UserReportedAds();
             reportedAds.setUser(user);
@@ -79,7 +80,8 @@ public class ReportAdsServiceImpl implements ReportAdsService{
             }
             reportedAds.setReportType(request.getType());
             reportedAds.setCreatedAt(new Date());
-            ReportTypeVo vo = reportAdsConverter.apply(reportedAdsRepository.save(reportedAds));
+            reportedAds = reportedAdsRepository.save(reportedAds);
+            ReportTypeVo vo = reportAdsConverter.apply(reportedAds);
             return resHelper.res(vo, true, MessageType.Success.getMessage(), null);
         }
         return resHelper.res(null , false, MessageType.Fail.getMessage(), null);

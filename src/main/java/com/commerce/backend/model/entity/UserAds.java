@@ -115,7 +115,7 @@ public class UserAds {
 	@Column(name = "total_item", insertable = false, updatable = false)
 	private long totalItem;
 
-	@JsonIgnore
+	@JsonManagedReference
 	@OneToMany
 	@JoinColumn(name = "ads_id")
 	private Set<UserReportedAds> userReportedAds;
