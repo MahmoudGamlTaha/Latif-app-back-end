@@ -2,6 +2,9 @@ package com.commerce.backend.model.entity;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Type;
 
 import com.commerce.backend.constants.ReportType;
@@ -22,18 +25,22 @@ public class UserReportedAds {
     private Long id;
 
     @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "type")
 	private ReportType reportType;
-
-    @ManyToOne(cascade = CascadeType.PERSIST)
+  //  @JsonBackReference
+  
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "ads_id")
-    private UserAds ads;
+    private UserAds reportedAds;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "reason", referencedColumnName = "id")
     private ReportReasons reason;
 

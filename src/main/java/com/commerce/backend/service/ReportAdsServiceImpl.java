@@ -62,16 +62,14 @@ public class ReportAdsServiceImpl implements ReportAdsService{
        
         UserAds userAds = userAdsRepo.findById(request.getAdId()).orElse(null);
         if(userAds != null) {
-            List<UserReportedAds> reportAds = reportedAdsRepository.findByUserAndAds(user, userAds);
-            Long reportCount = reportAds.stream()
-                    .filter(ad -> ad.getReportType() == request.getType())
-                    .count();
-            if(reportCount > 0) {
+            UserReportedAds reportAds = reportedAdsRepository.findByUserAndAds(user.getId(), userAds.getId());
+           
+            if(reportAds != null) {
                 return resHelper.res(null, true, MessageType.Success.getMessage(), null);
             }
             UserReportedAds reportedAds = new UserReportedAds();
             reportedAds.setUser(user);
-            reportedAds.setAds(userAds);
+            reportedAds.setReportedAds(userAds);
             if(request.getType().equals(ReportType.REPORT)){
                 ReportReasons reportReasons = reportReasonsRepository.findById(request.getReason()).orElse(null);
                 if(reportReasons != null) {
