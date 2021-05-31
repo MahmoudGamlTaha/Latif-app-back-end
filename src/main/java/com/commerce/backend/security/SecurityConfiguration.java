@@ -62,7 +62,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
            //     .antMatchers("/api/public/subscriptionTypes/**").hasRole("ADMIN")
            //     .antMatchers("/api/public/reasons/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/api/public/userRole/**").hasRole("ADMIN");
-
 //                .antMatchers("/api/public/blogCategory/**").hasRole("ADMIN");
                 //.antMatchers("/api/public/**").hasAuthority("ACCESS_TEST2")
                 //.anyRequest().authenticated()
