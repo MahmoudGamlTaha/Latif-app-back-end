@@ -25,17 +25,17 @@ public class ReportReasonsController  extends PublicApiController{
         return new ResponseEntity<>(reportReasonsService.getReasons(), HttpStatus.OK);
     }
 
-    @PostMapping("/reasons/create")
+    @PostMapping("/reasons/create/")
     public ResponseEntity<BasicResponse> createReasons(@RequestParam(name = "reason") String reason){
         return new ResponseEntity<>(reportReasonsService.createReason(reason), HttpStatus.OK);
     }
 
-    @PostMapping("/reasons/update")
+    @PostMapping("/reasons/update/")
     public ResponseEntity<BasicResponse> updateReasons(@RequestParam(name = "id") Long id, @RequestParam(name = "reason") String reason){
         return new ResponseEntity<>(reportReasonsService.updateReason(id, reason), HttpStatus.OK);
     }
 
-    @PostMapping("/reasons/remove")
+    @PostMapping("/reasons/remove/")
     public ResponseEntity<BasicResponse> removeReasons(@RequestParam(name = "id") Long id){
         return new ResponseEntity<>(reportReasonsService.removeReason(id), HttpStatus.OK);
     }
