@@ -103,7 +103,11 @@ public class BlogCacheServiceImpl implements BlogCacheService{
 
     public Page<Blog> findByCategory(Long category, Pageable pageable)
     {
-        return blogRepository.findByCategory(category, pageable);
+        BlogCategory blogCategory = blogCategoryRepository.findById(category).orElse(null);
+        if(blogCategory != null) {
+            return blogRepository.findByCategory(blogCategory, pageable);
+        }
+        return null;
     }
     @Override
     //@Cacheable(key = "#root.methodName")
