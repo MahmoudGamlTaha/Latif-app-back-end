@@ -263,4 +263,6 @@ public class UserServiceImpl implements UserService {
     public boolean isAuthorized(User user) {
         return getCurrentUser() == user;
     }
+    
+    
 }
