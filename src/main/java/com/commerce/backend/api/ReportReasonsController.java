@@ -20,7 +20,7 @@ public class ReportReasonsController  extends PublicApiController{
         this.reportReasonsService = reportReasonsService;
     }
 
-    @GetMapping("/reasons/")
+    @GetMapping("/reasons")
     public ResponseEntity<BasicResponse> reasons(){
         return new ResponseEntity<>(reportReasonsService.getReasons(), HttpStatus.OK);
     }
