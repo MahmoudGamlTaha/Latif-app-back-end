@@ -3,6 +3,7 @@ package com.commerce.backend.api;
 import com.commerce.backend.model.request.user.PasswordResetRequest;
 import com.commerce.backend.model.request.user.UpdateUserAddressRequest;
 import com.commerce.backend.model.request.user.UpdateUserRequest;
+import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.user.UserResponse;
 import com.commerce.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,9 @@ public class UserController extends ApiController {
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/account")
-    public ResponseEntity<UserResponse> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
-        UserResponse userResponse = userService.updateUser(updateUserRequest);
-        return new ResponseEntity<>(userResponse, HttpStatus.OK);
+    @PutMapping(value = "/account/update")
+    public ResponseEntity<BasicResponse> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
+        return new ResponseEntity<>(userService.updateUser(updateUserRequest), HttpStatus.OK);
     }
 
     @PutMapping(value = "/account/address")

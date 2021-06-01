@@ -189,5 +189,9 @@ public class UserAdsController extends PublicApiController {
         return new ResponseEntity<>(userAds, HttpStatus.OK);
     }*/
 
-    
+    @PostMapping("/ads/adActivation")
+    public ResponseEntity<BasicResponse> adActivation(@RequestParam(value = "id", required = true) Long id, @RequestParam(value = "activate", required = true) boolean activate) throws Exception {
+        BasicResponse res = userAdsService.adActivation(id, activate);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
 }

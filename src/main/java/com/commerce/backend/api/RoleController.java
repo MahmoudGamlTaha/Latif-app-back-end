@@ -8,20 +8,32 @@ import com.commerce.backend.service.RoleServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.validation.Valid;
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
 public class RoleController extends PublicApiController{
 
     private final RoleServiceImpl service;
-    
+    @Autowired
+    public RequestMappingHandlerMapping requestMappingHandlerMapping;
     @Autowired
     public RoleController(RoleServiceImpl service) {
         this.service = service;
     }
 
+    @RequestMapping("/endpoints")
+    public @ResponseBody
+    Object showEndpointsAction()
+    {
+        return requestMappingHandlerMapping.getHandlerMethods().keySet().stream().map(t ->
+                (t.getMethodsCondition().getMethods().size() == 0 ? "GET" : t.getMethodsCondition().getMethods().toArray()[0]) + " " +
+                        t.getPatternsCondition().getPatterns().toArray()[0]
+        ).toArray();
+    }
     @GetMapping("/roles")
     public List<RoleResponse> getRoles()
     {

@@ -8,7 +8,7 @@ public class ReportRequest {
 
     Long adId;
 
-    String reason;
+    Long reason;
 
     ReportType type;
 }

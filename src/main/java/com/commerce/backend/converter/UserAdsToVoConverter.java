@@ -138,7 +138,6 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		}
 		List<Object> extraInfo = new ArrayList<>();
 		if(entity.getType() == AdsType.PETS) {
-			extraInfo.add(new KeyResponse("barkingProblem",FieldsNames.barkingProblem, FieldsNames.barkingProblem_ar, checkValue(((UserPetAds)entity).getBarkingProblem(), SystemConstant.BOOLEAN)));
 			extraInfo.add(new KeyResponse("bread",FieldsNames.bread, FieldsNames.bread_ar, checkValue(((UserPetAds)entity).getBreed(), SystemConstant.BOOLEAN)));
 			extraInfo.add(new KeyResponse("food",FieldsNames.food, FieldsNames.food_ar, checkValue(((UserPetAds)entity).getFood(), SystemConstant.STRING)));
 			extraInfo.add(new KeyResponse("diseasesOrDisabilities",FieldsNames.diseasesOrDisabilities, FieldsNames.diseasesOrDisabilities_ar, checkValue(((UserPetAds)entity).getDiseasesDisabilities(), SystemConstant.BOOLEAN)));
@@ -159,7 +158,9 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 				userAdsVo.setCategoryName(categoryName);
 				userAdsVo.setCategoryNameAr(category.getNameAr());
 				userAdsVo.setCategoryId(category.getId());
-				
+				if(categoryName.equalsIgnoreCase("Dogs")){
+					extraInfo.add(new KeyResponse("barkingProblem",FieldsNames.barkingProblem, FieldsNames.barkingProblem_ar, checkValue(((UserPetAds)entity).getBarkingProblem(), SystemConstant.BOOLEAN)));
+				}
 			}
 		}else if(entity.getType() == AdsType.SERVICE) {
 			extraInfo.add(new KeyResponse("AllowAtHome",FieldsNames.AllowAtHome, FieldsNames.AllowAtHome_ar, ((UserServiceAds)entity).getAllowServiceAtHome()));
@@ -169,6 +170,9 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 				userAdsVo.setCategoryName(categoryName);
 				userAdsVo.setCategoryNameAr(category.getNameAr());
 				userAdsVo.setCategoryId(category.getId());
+				if(categoryName.equalsIgnoreCase("delivery")){
+					extraInfo.add(new KeyResponse("driver_method",FieldsNames.driver_method, FieldsNames.driver_method_ar, ((UserServiceAds)entity).getDriverMethods()));
+				}
 			}
 		}else if(entity.getType() == AdsType.PET_CARE) {
 			extraInfo.add(new KeyResponse("AllowAtHome",FieldsNames.AllowAtHome, FieldsNames.AllowAtHome_ar, ((UserMedicalAds)entity).getAllowServiceAtHome()));

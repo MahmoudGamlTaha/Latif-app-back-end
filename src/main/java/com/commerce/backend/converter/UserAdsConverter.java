@@ -15,6 +15,7 @@ import com.commerce.backend.model.request.userAds.AdsFiltrationRequest;
 import com.commerce.backend.model.request.userAds.DynamicAdsRequest;
 
 import com.commerce.backend.model.request.userAds.UpdateAdRequest;
+import com.commerce.backend.service.UserService;
 import com.fasterxml.jackson.databind.jsontype.DefaultBaseTypeLimitingValidator;
 
 import org.locationtech.jts.geom.Geometry;
@@ -63,6 +64,9 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
     
     @Autowired
     private CityRepository cityRepository;
+
+    @Autowired
+    private UserService userService;
 	
 	private final static GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), SystemConstant.COORDINATE_SYSTEM); 
     @Override
@@ -102,7 +106,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         }
      
         entity.setName(String.valueOf( getHashMapKeyWithCheck(hashedData,"name", -1)));
-      //  entity.setCode(String.valueOf(hashedData.get("code")));
+        entity.setCode(String.valueOf(hashedData.get("code")));
         entity.setDescription(String.valueOf( getHashMapKeyWithCheck(hashedData,"description", -1)));
         entity.setShortDescription(String.valueOf( getHashMapKeyWithCheck(hashedData,"short_description", -1)));
       //  entity.setActive(Boolean.parseBoolean(String.valueOf(getHashMapKeyWithCheck(hashedData,"active", 1))));
@@ -121,7 +125,7 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         
         coordinate.x = entity.getLongitude();
         coordinate.y = entity.getLatitude();
-        
+
         String pointStr = String.format("POINT (%s %s)",entity.getLongitude(), entity.getLatitude());
         entity.setCoordinates(wktToGeometry(pointStr));
         Object itemImage = getHashMapKeyWithCheck(hashedData,"images", 2);
@@ -160,12 +164,12 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         		
         	}
         }
-        User user = new User();
+        /*User user = new User();
         String userId =  String.valueOf(getHashMapKeyWithCheck(hashedData,"created_by", 0));
         userId = userId.equals("0")? "1" : userId;
-        user.setId(Long.parseLong(userId));
+        user.setId(Long.parseLong(userId));*/
         
-        entity.setCreatedBy(user);
+        entity.setCreatedBy(userService.getCurrentUser());
 
         if(request.getType() == AdsType.PETS || request.getType() == AdsType.Dogs)
         {

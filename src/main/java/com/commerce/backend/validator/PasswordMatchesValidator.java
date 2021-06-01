@@ -1,6 +1,7 @@
 package com.commerce.backend.validator;
 
 
+import com.commerce.backend.model.dto.UserDto;
 import com.commerce.backend.model.request.user.PasswordForgotValidateRequest;
 import com.commerce.backend.model.request.user.PasswordResetRequest;
 import com.commerce.backend.model.request.user.RegisterUserRequest;
@@ -25,6 +26,13 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
         } else if (obj instanceof PasswordForgotValidateRequest) {
             PasswordForgotValidateRequest passwordForgotValidateRequest = (PasswordForgotValidateRequest) obj;
             return passwordForgotValidateRequest.getNewPassword().equals(passwordForgotValidateRequest.getNewPasswordConfirm());
+        }else if(obj instanceof UserDto){
+            final UserDto user = (UserDto) obj;
+            if(user.getPassword() != null && user.getMatchingPassword() != null) {
+                return user.getPassword().equals(user.getMatchingPassword());
+            }else{
+                return false;
+            }
         }
 
         return false;

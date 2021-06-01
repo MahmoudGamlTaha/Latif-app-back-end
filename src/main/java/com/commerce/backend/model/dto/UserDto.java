@@ -26,6 +26,7 @@ public class UserDto {
     @Size(min = 1)
     private String username;
 
+    @NotNull
     //@ValidPassword
     private String password;
 
@@ -38,14 +39,19 @@ public class UserDto {
     @Size(min = 1)
     private String email;
 
+    @NotNull
     private String city;
 
+    @NotNull
     private String state;
 
+    @NotNull
     private String country;
 
+    @NotNull
     private String address;
 
+    @NotNull
     private String avatar;
 }
 
