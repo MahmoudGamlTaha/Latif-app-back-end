@@ -27,9 +27,6 @@ public class UserPermissions {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "slug")
-    private String slug;
-
     @Column(name = "http_method")
     private String httpMethod;
 
