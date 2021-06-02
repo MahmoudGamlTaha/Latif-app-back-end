@@ -24,11 +24,8 @@ public class UserPermissions {
     @SequenceGenerator(name = "permission_id", sequenceName = "permission_id", allocationSize = 1)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
-
-    @Column(name = "slug")
-    private String slug;
 
     @Column(name = "http_method")
     private String httpMethod;
