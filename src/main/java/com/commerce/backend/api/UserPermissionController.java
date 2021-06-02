@@ -23,6 +23,7 @@ public class UserPermissionController extends PublicApiController{
         this.userPermissionService = userPermissionService;
     }
 
+
     @GetMapping("/userPermission")
     public ResponseEntity<BasicResponse> getAll(@RequestParam Optional<Integer> page, @RequestParam Optional<Integer> pageSize){
         return new ResponseEntity<>(userPermissionService.getAll(page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE)), HttpStatus.OK);
