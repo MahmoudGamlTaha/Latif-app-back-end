@@ -19,17 +19,17 @@ public class AssignUserPermissionController extends PublicApiController{
         this.assignUserPermissionService = assignUserPermissionService;
     }
 
-    @GetMapping("/assignUserPermission/getByRoleId/")
+    @GetMapping("/assignUserPermission/getByRoleId")
     public ResponseEntity<BasicResponse> getByRoleId(@RequestParam Long roleId){
         return new ResponseEntity<>(assignUserPermissionService.getAll(roleId), HttpStatus.OK);
     }
 
-    @PostMapping("/assignUserPermission/create/")
+    @PostMapping("/assignUserPermission/create")
     public ResponseEntity<BasicResponse> create(@RequestBody AssignUserPermissionRequest assignUserPermission){
         return new ResponseEntity<>(assignUserPermissionService.create(assignUserPermission), HttpStatus.OK);
     }
 
-    @PostMapping("/assignUserPermission/remove/")
+    @PostMapping("/assignUserPermission/remove")
     public ResponseEntity<BasicResponse> remove(@RequestBody AssignUserPermissionRequest assignUserPermission){
         return new ResponseEntity<>(assignUserPermissionService.remove(assignUserPermission), HttpStatus.OK);
     }
