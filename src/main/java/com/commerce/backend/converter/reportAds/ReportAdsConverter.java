@@ -6,6 +6,8 @@ import com.commerce.backend.converter.user.UserResponseConverter;
 import com.commerce.backend.model.dto.ReportAdsVo;
 import com.commerce.backend.model.dto.ReportTypeVo;
 import com.commerce.backend.model.entity.UserReportedAds;
+
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +32,7 @@ public class ReportAdsConverter implements Function<UserReportedAds, ReportTypeV
             vo = new ReportAdsVo();
             ((ReportAdsVo)vo).setReason(userReportedAds.getReason());
         }
+        Hibernate.initialize(userReportedAds.getUser());
         vo.setUser(userResponseConverter.apply(userReportedAds.getUser()));
         vo.setAd(userReportedAds.getReportedAds());
         vo.setId(userReportedAds.getId());

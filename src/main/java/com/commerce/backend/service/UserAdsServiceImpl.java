@@ -76,7 +76,6 @@ public class UserAdsServiceImpl implements UserAdsService {
 
 
 
-
 		this.userPetsAdsRepository = userPetsAdsRepository;
 		this.userServiceAdsRepository = userServiceAdsRepository;
 		this.userItemsAdsRepository = userItemsAdsRepository;

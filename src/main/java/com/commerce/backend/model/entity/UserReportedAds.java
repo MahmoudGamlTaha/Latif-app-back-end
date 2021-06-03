@@ -32,8 +32,8 @@ public class UserReportedAds {
 
     @Column(name = "type")
 	private ReportType reportType;
-  //  @JsonBackReference
-  
+    
+    @JsonBackReference 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "ads_id")
