@@ -19,4 +19,5 @@ public class UserResponse {
     private String country;
     private Boolean emailVerified;
     private Date    RegistrationDate;
+    private String avatar;
 }

@@ -28,6 +28,8 @@ public class UserResponseConverter implements Function<User, UserResponse> {
 	        userResponse.setEmailVerified(user.getEmailVerified());
 	        userResponse.setId(user.getId());
 	        userResponse.setRegistrationDate(user.getRegistrationDate());
+	        userResponse.setAvatar(user.getAvatar());
+	        
     	}
         return userResponse;
     	
