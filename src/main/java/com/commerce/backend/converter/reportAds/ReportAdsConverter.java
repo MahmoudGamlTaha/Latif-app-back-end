@@ -32,7 +32,6 @@ public class ReportAdsConverter implements Function<UserReportedAds, ReportTypeV
             vo = new ReportAdsVo();
             ((ReportAdsVo)vo).setReason(userReportedAds.getReason());
         }
-        Hibernate.initialize(userReportedAds.getUser());
         vo.setUser(userResponseConverter.apply(userReportedAds.getUser()));
         vo.setAd(userReportedAds.getReportedAds());
         vo.setId(userReportedAds.getId());
