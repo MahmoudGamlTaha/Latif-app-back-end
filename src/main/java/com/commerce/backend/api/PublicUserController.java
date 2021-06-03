@@ -76,6 +76,7 @@ public class PublicUserController extends PublicApiController {
     	response.setMsg(MessageType.Success.getMessage());
     	UserResponse userResponse = this.userVOConverter.apply( userService.getCurrentUser());
     	map.put(MessageType.Data.getMessage(), userResponse);
+    	response.setSuccess(true);
     	response.setResponse(map);
     	return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);
     }
