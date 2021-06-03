@@ -2,6 +2,8 @@ package com.commerce.backend.converter.user;
 
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.response.user.UserResponse;
+
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Function;

@@ -76,7 +76,6 @@ public class UserAdsServiceImpl implements UserAdsService {
 
 
 
-
 		this.userPetsAdsRepository = userPetsAdsRepository;
 		this.userServiceAdsRepository = userServiceAdsRepository;
 		this.userItemsAdsRepository = userItemsAdsRepository;
@@ -233,10 +232,10 @@ public class UserAdsServiceImpl implements UserAdsService {
 	@Override
 	public BasicResponse myAds(Integer page, Integer size) {
 		Pageable pageable = PageRequest.of(page, size);
-		String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-		User user = userService.findUserByMobileNumber(principle);
+		///String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+		User user = userService.getCurrentUser();
 		if(user != null){
-			Page<UserAds> ads = customUserAdsRepo.findByCreatedByAndActiveTrue(user, pageable);
+			Page<UserAds> ads = customUserAdsRepo.findCreateByUser(user.getId(), pageable);
 			List<UserAdsVO> collect = new ArrayList<>();
 			ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 			return resHelper.res(collect , true, MessageType.Success.getMessage(), pageable);
