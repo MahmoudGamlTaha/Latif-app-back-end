@@ -27,7 +27,7 @@ public class BlogResponse {
     private UserResponse user;
     private Date createdDate;
     private boolean externalLink;
-    private boolean active;
+    private Boolean active;
     public BlogResponse(Blog blog) {
         this.id = blog.getId();
         this.title = blog.getTitle();

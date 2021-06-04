@@ -124,6 +124,7 @@ public class BlogCacheServiceImpl implements BlogCacheService{
                     .description(blog.getDescription())
                     .category(category)
                     .userId(userService.getCurrentUser())
+                    .active(blog.getActive())
                     .path(path + "blogs")
                     .externalLink(external)
                     .date(new Date())
