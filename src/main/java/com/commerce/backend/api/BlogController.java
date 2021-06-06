@@ -41,15 +41,15 @@ public class BlogController extends PublicApiController{
         return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/blogs/getById")
-    public ResponseEntity<BasicResponse> getBlogById(@RequestParam(required = true) Long id)
+    @GetMapping("/blogs/id={id}")
+    public ResponseEntity<BasicResponse> getBlogById(@PathVariable Long id)
     {
         BasicResponse response = blogServiceImpl.getBlogById(id);
         return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/blogs/search")
-    public BasicResponse search(@RequestParam(required = true) String keyword, @RequestParam(required = false) Integer page)
+    @GetMapping({"/blogs/keyword={keyword}/page={page}", "/blogs/keyword={keyword}"})
+    public BasicResponse search(@PathVariable String keyword, @PathVariable(required = false) Integer page)
     { 
     	page = page == null?0:page;
         Pageable pageable = PageRequest.of(page, SystemConstant.MOBILE_PAGE_SIZE);
@@ -80,9 +80,9 @@ public class BlogController extends PublicApiController{
     	HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
         return new ResponseEntity<BasicResponse>( response, status);
     }
-    
-    @GetMapping("/blogs/blog-by-category")
-    public ResponseEntity<BasicResponse> blogByCategory(@RequestParam(value = "categoryId") Long category, @RequestParam(value = "page") Optional<Integer> page, @RequestParam(value = "size") Optional<Integer> size ){
+
+    @PostMapping("/blogs/blog-by-category/id={category}")
+    public ResponseEntity<BasicResponse> blogByCategory(@PathVariable Long category, @PathVariable(required = false) Optional<Integer> page, @PathVariable(required = false) Optional<Integer> size ){
     	Pageable pageable = PageRequest.of(page.orElse(0), size.orElse(SystemConstant.MOBILE_PAGE_SIZE));
     	BasicResponse response  = blogServiceImpl.findBlogByCategory(category, pageable);
     	HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
