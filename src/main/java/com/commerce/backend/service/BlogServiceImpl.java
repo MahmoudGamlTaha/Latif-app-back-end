@@ -2,8 +2,8 @@ package com.commerce.backend.service;
 
 import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.converter.blog.BlogResponseConverter;
-import com.commerce.backend.dao.BlogCategoryRepository;
 import com.commerce.backend.dao.BlogRepository;
+import com.commerce.backend.helper.resHelper;
 import com.commerce.backend.model.entity.Blog;
 import com.commerce.backend.model.request.blog.BlogRequest;
 import com.commerce.backend.model.request.blog.UpdateBlogRequest;
@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -28,13 +27,17 @@ public class BlogServiceImpl implements BlogService{
 
     private final BlogResponseConverter blogResponseConverter;
     private final BlogCacheServiceImpl blogCacheService;
+    private final BlogRepository blogRepository;
+    private final UserService userService;
 
 
     @Autowired
-    public BlogServiceImpl(BlogResponseConverter blogResponseConverter, BlogCacheServiceImpl blogCacheService)
+    public BlogServiceImpl(BlogResponseConverter blogResponseConverter, BlogCacheServiceImpl blogCacheService, BlogRepository blogRepository, UserService userService)
     {
         this.blogCacheService = blogCacheService;
         this.blogResponseConverter = blogResponseConverter;
+        this.blogRepository = blogRepository;
+        this.userService = userService;
     }
 
 
@@ -188,4 +191,20 @@ public class BlogServiceImpl implements BlogService{
 		}
 		return response; 
 	}
+
+    @Override
+    public BasicResponse activateBlog(Long id, boolean active) {
+        if(id != null){
+            Blog blog = blogRepository.findById(id).orElse(null);
+            assert blog != null;
+            if(userService.isAuthorized(blog.getUserId()) || userService.isAdmin()) {
+                blog.setActive(active);
+                BlogResponse blogResponse = blogResponseConverter.apply(blogRepository.save(blog));
+                return resHelper.res(blogResponse, true, MessageType.Success.getMessage(), null);
+            }else{
+                return resHelper.res(null, false, MessageType.NotAuthorized.getMessage(), null);
+            }
+        }
+        return resHelper.res(null, false, MessageType.Fail.getMessage(), null);
+    }
 }

@@ -20,4 +20,6 @@ public interface BlogService {
     BasicResponse deleteBlog(Long id);
     BasicResponse update(UpdateBlogRequest blog, boolean external, List<MultipartFile> images, List<String> externImage ) throws IOException;
     BasicResponse findBlogByCategory(Long category, Pageable page);
+
+    BasicResponse activateBlog(Long id, boolean active);
 }
