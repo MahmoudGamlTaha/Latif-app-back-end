@@ -21,15 +21,15 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-//@DiscriminatorColumn(name ="type", discriminatorType = DiscriminatorType.STRING)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name ="type", discriminatorType = DiscriminatorType.STRING)
 public class SystemSetting {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sys_sequence")
 	@SequenceGenerator(name="sys_sequence", sequenceName= "sys_sequence", allocationSize = 1)
      private Long id; 
 	 
-	@Column(name = "type")
+	@Column(name = "type", insertable = false, updatable = false)
 	private String type; 
 	
 	@Column(name = "value")

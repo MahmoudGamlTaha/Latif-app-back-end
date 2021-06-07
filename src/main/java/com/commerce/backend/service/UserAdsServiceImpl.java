@@ -98,41 +98,6 @@ public class UserAdsServiceImpl implements UserAdsService {
 	public BasicResponse getAll(AdsType type, LocationRequest location, Integer page, Integer size, String sort, Long category, Float minPrice,
 								Float maxPrice) {
 		try {
-/* <<<<<<< complete_form_bulider
-		Pageable pageable = PageRequest.of(page, size);
-		 BasicResponse response = new BasicResponse();
-		 HashMap<String, Object> hashMap = new HashMap<String, Object>();
-		
-		if(type == AdsType.ACCESSORIES) {
-			Page<UserAccAds> userAccAds = this.userItemsAdsRepository.findAll(pageable);
-			 response.setMsg("success");
-			 response.setSuccess(true);
-			 hashMap.put("count", userAccAds.getSize());
-			 hashMap.put("data", userAccAds);
-		}
-		else if(type == AdsType.PET_CARE) {
-		    Page<UserMedicalAds> userMedicalAds = this.userMedicalAdsRepository.findAll(pageable);
-		     hashMap.put("count", userMedicalAds.getSize());
-			 hashMap.put("data", userMedicalAds);
-		}
-		else if(type == AdsType.PETS) {
-			Page<UserPetAds> userPetAds = this.userPetsAdsRepository.findAll(pageable);
-			
-			hashMap.put("count", userPetAds.getSize());
-			 hashMap.put("data", userPetAds);
-		} 
-		else if(type == AdsType.SERVICE) {
-		    List<UserServiceAds> userServiceAds =  this.userServiceAdsRepository.findAllMobile();
-		    
-		    List<UserAdsVO> userAds =   userServiceAds.stream()
-		    .map(userAdsToVoConverter)
-		    .collect(Collectors.toList());
-		    hashMap.put("count", userServiceAds.size());				    
-			hashMap.put("data", userAds );
-		}
-		 response.setResponse(hashMap);
-		 return response;
-=======*/
 			Pageable pageable = PageRequest.of(page, size);
 			List<UserAdsVO> collect = new ArrayList<>();
 			if(location != null)
@@ -195,7 +160,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 
 		BasicResponse response = res(collect, true, pageable); 
 		if(single != null) {
-		 response.getResponse().put(MessageType.TotalItems.getMessage(), single.getTotalItem());
+		 response.getResponse().put(MessageType.TotalItems.getMessage(), ads.size());
 		 response.getResponse().put(MessageType.TotalPages.getMessage(), single.getTotalPage() + 1);
 		}
 		 return response;

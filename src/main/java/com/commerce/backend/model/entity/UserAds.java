@@ -8,6 +8,8 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Type;
@@ -25,13 +27,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-@SqlResultSetMapping( //
-	    name = "user_ads", //
-	    classes = @ConstructorResult(targetClass = UserAds.class, //
-	        columns = { //
-	            @ColumnResult(name = "total_item", type = long.class), //
-	            @ColumnResult(name = "total_page", type = long.class) //
-	        }))
+@SqlResultSetMapping(
+        name = "UserAds",
+        entities = @EntityResult(
+                entityClass = UserAds.class,
+                fields = {
+                    @FieldResult(name = "total_page", column = "total_page"),
+                    @FieldResult(name = "totalItem", column = "total_item")}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -106,10 +108,12 @@ public class UserAds {
 	//@OneToMany(cascade = CascadeType.ALL)
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Set<UserAdsImage> userAdsImage = new HashSet<UserAdsImage>();
+	
 	@Transient
 	@Setter(AccessLevel.PRIVATE)
-	@Column(name = "total_page", insertable = false, updatable = false)
+	@Formula(value = "total_page")
 	 private long totalPage;
+	
 	@Transient
 	@Setter(AccessLevel.PRIVATE)
 	@Column(name = "total_item", insertable = false, updatable = false)
