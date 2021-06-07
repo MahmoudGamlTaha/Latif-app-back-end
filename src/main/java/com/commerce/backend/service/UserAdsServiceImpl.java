@@ -76,7 +76,6 @@ public class UserAdsServiceImpl implements UserAdsService {
 
 
 
-
 		this.userPetsAdsRepository = userPetsAdsRepository;
 		this.userServiceAdsRepository = userServiceAdsRepository;
 		this.userItemsAdsRepository = userItemsAdsRepository;
@@ -99,41 +98,6 @@ public class UserAdsServiceImpl implements UserAdsService {
 	public BasicResponse getAll(AdsType type, LocationRequest location, Integer page, Integer size, String sort, Long category, Float minPrice,
 								Float maxPrice) {
 		try {
-/* <<<<<<< complete_form_bulider
-		Pageable pageable = PageRequest.of(page, size);
-		 BasicResponse response = new BasicResponse();
-		 HashMap<String, Object> hashMap = new HashMap<String, Object>();
-		
-		if(type == AdsType.ACCESSORIES) {
-			Page<UserAccAds> userAccAds = this.userItemsAdsRepository.findAll(pageable);
-			 response.setMsg("success");
-			 response.setSuccess(true);
-			 hashMap.put("count", userAccAds.getSize());
-			 hashMap.put("data", userAccAds);
-		}
-		else if(type == AdsType.PET_CARE) {
-		    Page<UserMedicalAds> userMedicalAds = this.userMedicalAdsRepository.findAll(pageable);
-		     hashMap.put("count", userMedicalAds.getSize());
-			 hashMap.put("data", userMedicalAds);
-		}
-		else if(type == AdsType.PETS) {
-			Page<UserPetAds> userPetAds = this.userPetsAdsRepository.findAll(pageable);
-			
-			hashMap.put("count", userPetAds.getSize());
-			 hashMap.put("data", userPetAds);
-		} 
-		else if(type == AdsType.SERVICE) {
-		    List<UserServiceAds> userServiceAds =  this.userServiceAdsRepository.findAllMobile();
-		    
-		    List<UserAdsVO> userAds =   userServiceAds.stream()
-		    .map(userAdsToVoConverter)
-		    .collect(Collectors.toList());
-		    hashMap.put("count", userServiceAds.size());				    
-			hashMap.put("data", userAds );
-		}
-		 response.setResponse(hashMap);
-		 return response;
-=======*/
 			Pageable pageable = PageRequest.of(page, size);
 			List<UserAdsVO> collect = new ArrayList<>();
 			if(location != null)
@@ -196,7 +160,7 @@ public class UserAdsServiceImpl implements UserAdsService {
 
 		BasicResponse response = res(collect, true, pageable); 
 		if(single != null) {
-		 response.getResponse().put(MessageType.TotalItems.getMessage(), single.getTotalItem());
+		 response.getResponse().put(MessageType.TotalItems.getMessage(), ads.size());
 		 response.getResponse().put(MessageType.TotalPages.getMessage(), single.getTotalPage() + 1);
 		}
 		 return response;
@@ -233,10 +197,10 @@ public class UserAdsServiceImpl implements UserAdsService {
 	@Override
 	public BasicResponse myAds(Integer page, Integer size) {
 		Pageable pageable = PageRequest.of(page, size);
-		String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-		User user = userService.findUserByMobileNumber(principle);
+		///String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+		User user = userService.getCurrentUser();
 		if(user != null){
-			Page<UserAds> ads = customUserAdsRepo.findByCreatedByAndActiveTrue(user, pageable);
+			Page<UserAds> ads = customUserAdsRepo.findCreateByUser(user.getId(), pageable);
 			List<UserAdsVO> collect = new ArrayList<>();
 			ads.forEach((ad) -> collect.add(userAdsToVoConverter.apply(ad)));
 			return resHelper.res(collect , true, MessageType.Success.getMessage(), pageable);

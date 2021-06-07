@@ -118,30 +118,41 @@ public class BlogCacheServiceImpl implements BlogCacheService{
         BasicResponse response = new BasicResponse();
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
         BlogCategory category = blogCategoryRepository.findById(blog.getCategory()).orElse(null);
-        if(category != null) {
-            Blog entity = Blog.builder()
-                    .title(blog.getTitle())
-                    .description(blog.getDescription())
-                    .category(category)
-                    .userId(userService.getCurrentUser())
-                    .active(blog.getActive())
-                    .path(path + "blogs")
-                    .externalLink(external)
-                    .date(new Date())
-                    .created_at(new Date())
-                    .build();
-            Set<BlogImage> blogImages = new HashSet<BlogImage>();
-            if (external && paths != null) {
-                entity.setPath(String.valueOf(paths));
-                paths.forEach(path -> {
-                    BlogImage image = new BlogImage();
-                    image.setBlog(entity);
-                    image.setCreatedAt(new Date());
-                    image.setExternalLink(entity.isExternalLink());
-                    image.setImage(path);
-                    blogImages.add(image);
-                    entity.setImage(path);
-                });
+
+        User user = this.userRepository.findById(blog.getUserId()).orElse(null);
+        Blog entity = Blog.builder()
+                .title(blog.getTitle())
+                .description(blog.getDescription())
+                .category(category)
+                .active(true)
+                .userId(user)
+                .path(path + "blogs")
+                .externalLink(external)
+                .date(new Date())
+                .created_at(new Date())
+                .build();
+        Set<BlogImage> blogImages = new HashSet<BlogImage>();
+        if(external && paths!= null){
+            entity.setPath(String.valueOf(paths));
+            paths.forEach(path -> {
+            BlogImage image = new BlogImage();
+            image.setBlog(entity);
+            image.setCreatedAt(new Date());
+            image.setExternalLink(entity.isExternalLink());
+            image.setImage(path);
+            blogImages.add(image);
+            entity.setImage(path);
+            });
+        }
+        if(files != null && !external) {
+            files.forEach(imageFile -> {BlogImage image = new BlogImage();
+            image.setBlog(entity);
+            image.setCreatedAt(new Date());
+            image.setExternalLink(entity.isExternalLink());
+            String fileName = storageService.save(imageFile);
+            if(entity.getImage() == null) {
+            	 entity.setImage(fileName); 	
+
             }
             if (files != null && !external) {
                 files.forEach(imageFile -> {

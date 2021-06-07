@@ -25,15 +25,15 @@ public class UserReportedAds {
     private Long id;
 
     @JsonBackReference
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "type")
 	private ReportType reportType;
-  //  @JsonBackReference
-  
+    
+    @JsonBackReference 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinColumn(name = "ads_id")

@@ -128,6 +128,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			user.setAvatar(entity.getCreatedBy().getAvatar());
 			user.setPhone(entity.getCreatedBy().getMobile());
 			user.setRegistrationDate(entity.getCreatedAt());
+
 			Set<UserAds> ads = entity.getCreatedBy().getAds();
 			if(ads != null) {
 			user.setAdsCount(ads.size());
