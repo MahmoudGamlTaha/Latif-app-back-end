@@ -1,4 +1,4 @@
-/*package com.commerce.backend.model.entity;
+package com.commerce.backend.model.entity;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -13,4 +13,3 @@ import lombok.Setter;
 @DiscriminatorValue(SystemConstant.Policy)
 public class Policy extends SystemSetting {
 }
-*/
