@@ -11,13 +11,13 @@ import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.model.entity.Blog;
 import com.commerce.backend.model.entity.BlogCategory;
 import com.commerce.backend.model.entity.BlogImage;
+import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.request.blog.BlogRequest;
 import com.commerce.backend.model.request.blog.UpdateBlogRequest;
 import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.blog.BlogResponse;
 
 import com.commerce.backend.service.FilesStorageService;
-import com.commerce.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
@@ -40,20 +40,18 @@ public class BlogCacheServiceImpl implements BlogCacheService{
     private final FilesStorageService storageService;
     private final BlogImageRepository blogImageRepository;
     private final BlogResponseConverter converter;
-    private final UserRepository userRepository;
-    private final UserService userService;
+    private final UserRepository userRepository; 
     @Value("${swagger.host.path}")
     private String path;
 
     @Autowired
-    public BlogCacheServiceImpl(BlogRepository blogRepository, BlogCategoryRepository blogCategoryRepository, FilesStorageService storageService, BlogImageRepository blogImageRepository, BlogResponseConverter converter, UserRepository userRepository, UserService userService) {
+    public BlogCacheServiceImpl(BlogRepository blogRepository, BlogCategoryRepository blogCategoryRepository, FilesStorageService storageService, BlogImageRepository blogImageRepository, BlogResponseConverter converter,UserRepository userRepository) {
         this.blogRepository = blogRepository;
         this.blogCategoryRepository = blogCategoryRepository;
         this.storageService = storageService;
         this.blogImageRepository = blogImageRepository;
         this.converter = converter;
 		this.userRepository = userRepository;
-        this.userService = userService;
     }
 
     /**
@@ -115,17 +113,16 @@ public class BlogCacheServiceImpl implements BlogCacheService{
     //@Cacheable(key = "#root.methodName")
     public BasicResponse saveBlog(BlogRequest blog, List<String> paths, boolean external,  List<MultipartFile> files)
     {
-        BasicResponse response = new BasicResponse();
-        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+    	BasicResponse response = new BasicResponse();
+    	HashMap<String, Object> hashMap = new HashMap<String, Object>();
         BlogCategory category = blogCategoryRepository.findById(blog.getCategory()).orElse(null);
-
         User user = this.userRepository.findById(blog.getUserId()).orElse(null);
         Blog entity = Blog.builder()
                 .title(blog.getTitle())
                 .description(blog.getDescription())
                 .category(category)
-                .active(true)
                 .userId(user)
+                .active(true)
                 .path(path + "blogs")
                 .externalLink(external)
                 .date(new Date())
@@ -152,50 +149,33 @@ public class BlogCacheServiceImpl implements BlogCacheService{
             String fileName = storageService.save(imageFile);
             if(entity.getImage() == null) {
             	 entity.setImage(fileName); 	
-
             }
-            if (files != null && !external) {
-                files.forEach(imageFile -> {
-                    BlogImage image = new BlogImage();
-                    image.setBlog(entity);
-                    image.setCreatedAt(new Date());
-                    image.setExternalLink(entity.isExternalLink());
-                    String fileName = storageService.save(imageFile);
-                    if (entity.getImage() == null) {
-                        entity.setImage(fileName);
-                    }
-                    image.setImage(fileName);
-                    blogImages.add(image);
-                });
-
-            }
-            entity.setBlogImage(blogImages);
-            Blog blogEntity = blogRepository.save(entity);
-            BlogResponse basicResponse = converter.apply(blogEntity);
-          /*  if(files != null) {
-                if (files.size() > 1) {
-                    List<BlogImage> ImagesList = new ArrayList<>();
-                    for (int i = 1; i < files.size(); i++) {
-                        String fName = storageService.save(files.get(i));
-                        ImagesList.add(BlogImage.builder()
-                                .blog(blogEntity)
-                                .image(fName)
-                                .createdAt(new Date())
-                                .build());
-                    }
-                    blogImageRepository.saveAll(ImagesList);
-                }
-            }*/
-            hashMap.put(MessageType.Data.getMessage(), basicResponse);
-            response.setResponse(hashMap);
-            response.setSuccess(true);
-            return response;
-        }else {
-            response.setResponse(null);
-            response.setSuccess(false);
-            response.setMsg(MessageType.Missing.getMessage());
-            return response;
+            image.setImage(fileName);
+            blogImages.add(image);
+            });
+           
         }
+        entity.setBlogImage(blogImages);
+        Blog blogEntity = blogRepository.save(entity);
+        BlogResponse basicResponse = converter.apply(blogEntity);
+      /*  if(files != null) {
+            if (files.size() > 1) {
+                List<BlogImage> ImagesList = new ArrayList<>();
+                for (int i = 1; i < files.size(); i++) {
+                    String fName = storageService.save(files.get(i));
+                    ImagesList.add(BlogImage.builder()
+                            .blog(blogEntity)
+                            .image(fName)
+                            .createdAt(new Date())
+                            .build());
+                }
+                blogImageRepository.saveAll(ImagesList);
+            }
+        }*/
+        hashMap.put(MessageType.Data.getMessage(), basicResponse);
+        response.setResponse(hashMap);
+        response.setSuccess(true);
+        return response ;
     }
 
     @Override
@@ -223,21 +203,20 @@ public class BlogCacheServiceImpl implements BlogCacheService{
                 });
             }
             if(external){
-            	if(externImage != null) {
-                    externImage.forEach(path -> {
-                        BlogImage image = new BlogImage();
-                        image.setBlog(blog);
-                        image.setCreatedAt(new Date());
-                        image.setExternalLink(blog.isExternalLink());
-                        image.setImage(path);
-                        fileImages.add(image);
-                        blog.setImage(path);
-                    });
-                }
+            	
+            	externImage.forEach(path -> {
+                BlogImage image = new BlogImage();
+                image.setBlog(blog);
+                image.setCreatedAt(new Date());
+                image.setExternalLink(blog.isExternalLink());
+                image.setImage(path);
+                fileImages.add(image);
+                blog.setImage(path);
+                });
             }
             blog.setUpdated_at(new Date());
             blogRepository.save(blog);
-            return converter.apply(blog);
+            return new BlogResponse(blog);
         }else{
             throw new ResourceNotFoundException("Not Found");
         }
