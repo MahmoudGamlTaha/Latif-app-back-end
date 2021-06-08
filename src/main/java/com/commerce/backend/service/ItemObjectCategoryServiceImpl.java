@@ -130,6 +130,7 @@ public class ItemObjectCategoryServiceImpl implements ItemObjectCategoryService 
 		ItemObjectCategory objectCategory = itemObjectCategoryCacheService.updateItemCategory(request);
 		responseValue.put(MessageType.Data.getMessage(), objectCategory);
 		response.setMsg(MessageType.Success.getMessage());
+		response.setResponse(responseValue);
 		response.setSuccess(true);
 		return response;
 	}
