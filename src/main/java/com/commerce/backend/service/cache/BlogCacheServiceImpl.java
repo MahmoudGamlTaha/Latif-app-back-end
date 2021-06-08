@@ -216,7 +216,7 @@ public class BlogCacheServiceImpl implements BlogCacheService{
             }
             blog.setUpdated_at(new Date());
             blogRepository.save(blog);
-            return new BlogResponse(blog);
+            return converter.apply(blog);
         }else{
             throw new ResourceNotFoundException("Not Found");
         }
