@@ -124,9 +124,10 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 			category.setParent(parent);
 			catReponse = this.itemObjectRepository.save(category);	
 			keyResponse.put(MessageType.Data.getMessage(), catReponse);
-			basicRes.setSuccess(true);
+		
 			basicRes.setResponse(keyResponse);
 		}
+		basicRes.setSuccess(true);
 	     ItemObjectCategoryResponse itemObjectCategoryRes =  this.itemObjectCategoryResponseConverter.apply(catReponse);
 		 keyResponse.put(MessageType.Data.getMessage(), itemObjectCategoryRes);
 		 basicRes.setResponse(keyResponse);
