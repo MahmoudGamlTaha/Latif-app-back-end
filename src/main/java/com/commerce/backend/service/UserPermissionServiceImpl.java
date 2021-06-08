@@ -66,8 +66,8 @@ public class UserPermissionServiceImpl implements UserPermissionService{
             boolean userPermissionExists = userPermissionsRepository.existsUserPermissionsByHttpPath(userPermissionRequest.getHttpPath());
             if(!userPermissionExists) {
                 UserPermissions userPermissions = new UserPermissions();
-                userPermissions.setHttpMethod(userPermissionRequest.getHttpMethod());
-                userPermissions.setHttpPath(userPermissionRequest.getHttpPath());
+                userPermissions.setHttpMethod(userPermissionRequest.getHttpMethod().toUpperCase());
+                userPermissions.setHttpPath(userPermissionRequest.getHttpPath()+"*//**");
                 userPermissions.setName(UUID.randomUUID().toString());
                 userPermissions.setCreated_at(new Date());
                 userPermissionsRepository.save(userPermissions);

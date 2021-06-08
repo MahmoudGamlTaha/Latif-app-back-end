@@ -38,4 +38,6 @@ public class BlogRequest {
     
     boolean is_external;
 
+    Boolean active;
+
 }

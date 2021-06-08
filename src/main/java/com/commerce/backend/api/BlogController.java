@@ -63,7 +63,7 @@ public class BlogController extends PublicApiController{
     }
 
     @PostMapping("/blogs/update")
-    public ResponseEntity<BasicResponse> updateBlog(@ModelAttribute @Valid UpdateBlogRequest blogRequest,
+    public ResponseEntity<BasicResponse> updateBlog(@RequestBody @Valid UpdateBlogRequest blogRequest,
     		                        @RequestParam(value = "external", required = false, defaultValue = "true") Boolean external,
                                     @RequestParam(value = "images", required = false) ArrayList<MultipartFile> images,
                                     @RequestParam(value = "images", required = false) ArrayList<String> externImages ) throws IOException {
@@ -80,12 +80,20 @@ public class BlogController extends PublicApiController{
     	HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
         return new ResponseEntity<BasicResponse>( response, status);
     }
-    
+
     @PostMapping("/blogs/blog-by-category/id={category}")
     public ResponseEntity<BasicResponse> blogByCategory(@PathVariable Long category, @PathVariable(required = false) Optional<Integer> page, @PathVariable(required = false) Optional<Integer> size ){
     	Pageable pageable = PageRequest.of(page.orElse(0), size.orElse(SystemConstant.MOBILE_PAGE_SIZE));
     	BasicResponse response  = blogServiceImpl.findBlogByCategory(category, pageable);
     	HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<BasicResponse>( response, status);
+    }
+
+    @PostMapping("/blogs/activate")
+    public ResponseEntity<BasicResponse> activateBlog(@RequestParam(value = "id") Long id, @RequestParam(value = "active") boolean active)
+    {
+        BasicResponse response  = blogServiceImpl.activateBlog(id, active);
+        HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
         return new ResponseEntity<BasicResponse>( response, status);
     }
 }
