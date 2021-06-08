@@ -31,7 +31,7 @@ public class BlogResponseConverter implements Function<Blog, BlogResponse> {
 		    		blogResponse.getImages().add(image.getImage());});
            
 		    }
-		    blogResponse.setActive(blog.getActive());
+		    blogResponse.setActive(true);
 		    blogResponse.setDescription(blog.getDescription());
 		    blogResponse.setImage(blog.getImage());
 		    blogResponse.setPath(blog.getPath());
