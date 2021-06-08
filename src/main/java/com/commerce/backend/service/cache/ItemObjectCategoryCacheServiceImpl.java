@@ -88,6 +88,7 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 			 category.setParent(parent);
 			 catReponse = this.petCategoryRepository.save((PetCategory)category);
 			basicRes.setMsg(MessageType.Success.getMessage());
+			basicRes.setSuccess(true);
 			keyResponse.put(MessageType.Data.getMessage(), catReponse);
 			basicRes.setResponse(keyResponse);
 		   
@@ -123,6 +124,7 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 			category.setParent(parent);
 			catReponse = this.itemObjectRepository.save(category);	
 			keyResponse.put(MessageType.Data.getMessage(), catReponse);
+			basicRes.setSuccess(true);
 			basicRes.setResponse(keyResponse);
 		}
 	     ItemObjectCategoryResponse itemObjectCategoryRes =  this.itemObjectCategoryResponseConverter.apply(catReponse);
