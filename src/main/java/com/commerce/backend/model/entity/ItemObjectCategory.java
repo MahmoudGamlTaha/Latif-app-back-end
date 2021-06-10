@@ -1,6 +1,7 @@
 package com.commerce.backend.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -62,6 +63,11 @@ public class ItemObjectCategory {
     
     @Column(name = "is_external_link")
     private Boolean isExternalLink;
+
+    @ManyToMany(mappedBy = "interestCategories", cascade = CascadeType.PERSIST)
+    @NotFound(action = NotFoundAction.IGNORE)
+    @JsonIgnore(value = true)
+    private Set<User> users;
     
     public void addChild(ItemObjectCategory itemObjectCategory) {
     	this.getChild().add(itemObjectCategory);

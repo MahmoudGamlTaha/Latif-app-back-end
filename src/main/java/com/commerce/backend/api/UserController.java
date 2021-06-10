@@ -52,4 +52,9 @@ public class UserController extends ApiController {
         Boolean status = userService.getVerificationStatus();
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/usersList")
+    public ResponseEntity<BasicResponse> getUsersList(Long roleId) {
+        return new ResponseEntity<>(userService.getUsersList(roleId), HttpStatus.OK);
+    }
 }
