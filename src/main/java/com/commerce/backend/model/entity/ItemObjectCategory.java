@@ -54,7 +54,7 @@ public class ItemObjectCategory {
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<ItemObjectCategory> child = new HashSet<ItemObjectCategory>();
     
-    @Column(name = "type", insertable = false, updatable = false)
+    @Column(name = "type")
     private Integer type;
     
     @Column(name = "active")

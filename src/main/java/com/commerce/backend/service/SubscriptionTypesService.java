@@ -9,4 +9,5 @@ public interface SubscriptionTypesService {
     BasicResponse create(SubscriptionTypeRequest request);
     BasicResponse delete(Long id);
     BasicResponse update(SubscriptionTypeRequest request, Long id);
+    
 }
