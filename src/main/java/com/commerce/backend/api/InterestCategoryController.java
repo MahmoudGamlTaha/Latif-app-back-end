@@ -19,22 +19,22 @@ public class InterestCategoryController extends PublicApiController{
         this.userService = userService;
     }
 
-    @GetMapping(value = "/myInterestCategories")
+    @GetMapping(value = "/my-interest-categories")
     public ResponseEntity<BasicResponse> getUserInterestCategories() {
         return new ResponseEntity<>(userService.getUserInterestCategories(), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/interestCategories/create")
+    @PostMapping(value = "/interest-categories/create")
     public ResponseEntity<BasicResponse> createInterestCategories(Long categoryId) {
         return new ResponseEntity<>(userService.createInterestCategories(categoryId), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/interestCategories/remove")
+    @PostMapping(value = "/interest-categories/remove")
     public ResponseEntity<BasicResponse> removeInterestCategories(Long categoryId) {
         return new ResponseEntity<>(userService.removeInterestCategories(categoryId), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/UsersInterestCategories")
+    @PostMapping(value = "/users-interest-categories")
     public ResponseEntity<BasicResponse> getUsersInterestCategories(Long categoryId) {
         return new ResponseEntity<>(userService.getUsersInterestCategories(), HttpStatus.OK);
     }
