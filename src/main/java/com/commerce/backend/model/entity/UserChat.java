@@ -27,10 +27,10 @@ public class UserChat {
     private UUID id;
 	
 	@Column(name = "receiver_id")
-	private User reciverId;
+	private Long reciverId;
 	
 	@Column(name = "sender_id")
-	private User senderId;
+	private Long senderId;
 	
 	@Column(name = "message_text")
 	private String message;
