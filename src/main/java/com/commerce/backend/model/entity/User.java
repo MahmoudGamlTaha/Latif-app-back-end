@@ -106,4 +106,13 @@ public class User {
   @OneToMany
   @JoinColumn(name = "user_id")
   private Set<UserReportedAds> userReportedAds;
+
+  @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+  @JoinTable(
+          name = "user_interset_category",
+          joinColumns = {@JoinColumn(name = "user_id")},
+          inverseJoinColumns = {@JoinColumn(name = "category_id")}
+  )
+  @NotFound(action = NotFoundAction.IGNORE)
+  private Set<ItemObjectCategory> interestCategories  = new HashSet<>();
 }

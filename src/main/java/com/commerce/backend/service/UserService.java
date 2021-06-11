@@ -42,4 +42,14 @@ public interface UserService {
     User getCurrentUser();
 
     boolean isAuthorized(User user);
+
+    BasicResponse getUsersList(Long roleId);
+
+    BasicResponse getUserInterestCategories();
+
+    BasicResponse createInterestCategories(Long categoryId);
+
+    BasicResponse removeInterestCategories(Long categoryId);
+
+    BasicResponse getUsersInterestCategories();
 }
