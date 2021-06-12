@@ -3,6 +3,8 @@ package com.commerce.backend.dao;
 import com.commerce.backend.model.entity.Role;
 import com.commerce.backend.model.entity.User;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -16,11 +18,18 @@ import javax.transaction.Transactional;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
+    @Query("SELECT u FROM User u")
+	Page<User> findAll(Pageable page);
+	
     Optional<User> findByEmail(String email);
+    
     Optional<User> findById(Long id);
+    
     Boolean existsByEmail(String email);
+    
     User findByMobile(String mobile);
     List<User> findUsersByRoles(Role roles);
+   
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value="Update users SET active = :active where id = :user_id", nativeQuery = true)

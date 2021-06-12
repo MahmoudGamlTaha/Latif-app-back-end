@@ -1,6 +1,8 @@
 package com.commerce.backend.service;
 
 
+import org.springframework.data.domain.Pageable;
+
 import com.commerce.backend.model.dto.UserDto;
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.request.user.PasswordResetRequest;
@@ -44,7 +46,9 @@ public interface UserService {
     boolean isAuthorized(User user);
 
     BasicResponse getUsersList(Long roleId);
-
+   
+    BasicResponse getUsersList(Pageable pageable);
+    
     BasicResponse getUserInterestCategories();
 
     BasicResponse createInterestCategories(Long categoryId);
