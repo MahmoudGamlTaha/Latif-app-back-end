@@ -35,6 +35,9 @@ public class SystemSetting {
 	@Column(name = "value")
 	private String description;
 	
+	@Column(name = "value_ar")
+	private String descriptionAr;
+	
 	@Column(name = "created_at")
 	private Date createdAt;
 	

@@ -18,4 +18,7 @@ public class ReportReasons {
 
     @Column(name = "value")
     private String value;
+    
+    @Column(name = "value_ar")
+    private String valueAr;
 }
