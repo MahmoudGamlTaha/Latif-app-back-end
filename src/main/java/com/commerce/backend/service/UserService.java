@@ -52,4 +52,6 @@ public interface UserService {
     BasicResponse removeInterestCategories(Long categoryId);
 
     BasicResponse getUsersInterestCategories();
+    
+    Object activateUser(Long userId, boolean activate);
 }

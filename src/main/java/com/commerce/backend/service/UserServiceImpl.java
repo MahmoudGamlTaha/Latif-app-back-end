@@ -359,4 +359,14 @@ public class UserServiceImpl implements UserService {
         }
         return resHelper.res(null, true, MessageType.NotAuthorized.getMessage(), null);
     }
+
+	@Override
+	public Object activateUser(Long userId, boolean active) {
+		Object sucess = null;
+		if(isAdmin()) {
+			sucess = this.userRepository.activateUser(userId, active);	
+           sucess = true; 
+		}
+		return sucess;
+	}
 }

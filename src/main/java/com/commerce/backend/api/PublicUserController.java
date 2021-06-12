@@ -80,10 +80,5 @@ public class PublicUserController extends PublicApiController {
     	response.setResponse(map);
     	return new ResponseEntity<BasicResponse>(response, HttpStatus.OK);
     }
-    public ResponseEntity<BasicResponse>getUserList(){
-    	BasicResponse response = new BasicResponse();
-    	HashMap<String, Object> map = new HashMap<String, Object>();
-    //	map.put(MessageType.Data.getMessage(), userService.);
-    	return null;
-    }
+  
 }

@@ -69,6 +69,8 @@ public class ItemObjectCategory {
     @JsonIgnore(value = true)
     private Set<User> users;
     
+    @Column(name = "show_interest")
+    private Boolean showInterest;
     public void addChild(ItemObjectCategory itemObjectCategory) {
     	this.getChild().add(itemObjectCategory);
     }

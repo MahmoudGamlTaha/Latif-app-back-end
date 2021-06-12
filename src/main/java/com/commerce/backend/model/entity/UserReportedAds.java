@@ -41,6 +41,7 @@ public class UserReportedAds {
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "reason", referencedColumnName = "id")
     private ReportReasons reason;
 
