@@ -27,7 +27,7 @@ public class ApplicationSetting extends PublicApiController{
 		 Policy policy = this.policyService.find();
 		 HashMap<String, Object> mapResponse = new HashMap<String, Object>();
 		 if(policy != null) {
-		 mapResponse.put(MessageType.Data.getMessage(), policy.getDescription());
+		   mapResponse.put(MessageType.Data.getMessage(), policy.getDescription());
 		 }
 		 response.setMsg(MessageType.Success.getMessage());
 		 response.setSuccess(true);

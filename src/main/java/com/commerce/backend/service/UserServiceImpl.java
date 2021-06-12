@@ -2,18 +2,23 @@ package com.commerce.backend.service;
 
 import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.converter.user.UserResponseConverter;
+import com.commerce.backend.dao.ItemObjectCategoryRepository;
 import com.commerce.backend.dao.RoleRepository;
 import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.error.exception.InvalidArgumentException;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.helper.resHelper;
+import com.commerce.backend.model.dto.ItemObjectCategoryVO;
 import com.commerce.backend.model.dto.UserDto;
+import com.commerce.backend.model.entity.ItemObjectCategory;
+import com.commerce.backend.model.entity.Role;
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.request.user.PasswordResetRequest;
 import com.commerce.backend.model.request.user.RegisterUserRequest;
 import com.commerce.backend.model.request.user.UpdateUserAddressRequest;
 import com.commerce.backend.model.request.user.UpdateUserRequest;
 import com.commerce.backend.model.response.BasicResponse;
+import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 import com.commerce.backend.model.response.user.UserResponse;
 import com.commerce.backend.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +28,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.commerce.backend.converter.category.ItemObjectCategoryResponseConverter;
 
 import java.util.*;
 
@@ -32,15 +38,19 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserResponseConverter userResponseConverter;
+    private final ItemObjectCategoryRepository itemObjectCategoryRepository;
+    private final ItemObjectCategoryResponseConverter ItemObjectCategoryResponseConverter;
     private RoleRepository roleRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
-                           UserResponseConverter userResponseConverter, RoleRepository roleRepository) {
+                           UserResponseConverter userResponseConverter, ItemObjectCategoryRepository itemObjectCategoryRepository, com.commerce.backend.converter.category.ItemObjectCategoryResponseConverter itemObjectCategoryResponseConverter, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userResponseConverter = userResponseConverter;
+        this.itemObjectCategoryRepository = itemObjectCategoryRepository;
+        ItemObjectCategoryResponseConverter = itemObjectCategoryResponseConverter;
         this.roleRepository = roleRepository;
     }
 
@@ -263,6 +273,100 @@ public class UserServiceImpl implements UserService {
     public boolean isAuthorized(User user) {
         return getCurrentUser() == user;
     }
-    
-    
+
+    @Override
+    public BasicResponse getUsersList(Long roleId) {
+        if(roleId != null && isAdmin()) {
+            Role role = roleRepository.findById(roleId).orElse(null);
+            if(role != null) {
+                List<User> users = userRepository.findUsersByRoles(role);
+                List<UserResponse> userVO = new ArrayList<>();
+                users.forEach(user -> userVO.add(userResponseConverter.apply(user)));
+                return resHelper.res(userVO, true, MessageType.Success.getMessage(), null);
+            }
+            return resHelper.res(null, false, MessageType.NotFound.getMessage(), null);
+        }
+        return resHelper.res(null, false, MessageType.Fail.getMessage(), null);
+    }
+
+    @Override
+    public BasicResponse getUserInterestCategories() {
+        User user = getCurrentUser();
+        if(user != null) {
+            return resHelper.res(user.getInterestCategories(), true, MessageType.Success.getMessage(), null);
+        }
+        return resHelper.res(null, true, MessageType.NotAuthorized.getMessage(), null);
+    }
+
+    @Override
+    public BasicResponse createInterestCategories(Long categoryId) {
+        User user = getCurrentUser();
+        if(user != null) {
+            ItemObjectCategory itemObjectCategory = itemObjectCategoryRepository.findById(categoryId).orElse(null);
+            if(itemObjectCategory != null) {
+                Set<ItemObjectCategory> itemObjectCategorySet = user.getInterestCategories();
+                boolean exists = itemObjectCategorySet.contains(itemObjectCategory);
+                if(!exists) {
+                    itemObjectCategorySet.add(itemObjectCategory);
+                    user.setInterestCategories(itemObjectCategorySet);
+                    userRepository.save(user);
+                    List<ItemObjectCategoryResponse> itemObjectCategoryVOS = new ArrayList<>();
+                    user.getInterestCategories().forEach(category -> itemObjectCategoryVOS.add(ItemObjectCategoryResponseConverter.apply(category)));
+                    return resHelper.res(itemObjectCategoryVOS, true, MessageType.Success.getMessage(), null);
+                }
+                return resHelper.res("Category Already Exists !", true, MessageType.Fail.getMessage(), null);
+            }
+            return resHelper.res(null, true, MessageType.NotFound.getMessage(), null);
+        }
+        return resHelper.res(null, true, MessageType.NotAuthorized.getMessage(), null);
+    }
+
+    @Override
+    public BasicResponse removeInterestCategories(Long categoryId) {
+        User user = getCurrentUser();
+        if(user != null) {
+            ItemObjectCategory itemObjectCategory = itemObjectCategoryRepository.findById(categoryId).orElse(null);
+            if(itemObjectCategory != null) {
+                Set<ItemObjectCategory> itemObjectCategorySet = user.getInterestCategories();
+                boolean exists = itemObjectCategorySet.contains(itemObjectCategory);
+                if(exists) {
+                    itemObjectCategorySet.remove(itemObjectCategory);
+                    user.setInterestCategories(itemObjectCategorySet);
+                    userRepository.save(user);
+                    List<ItemObjectCategoryResponse> itemObjectCategoryVOS = new ArrayList<>();
+                    user.getInterestCategories().forEach(category -> itemObjectCategoryVOS.add(ItemObjectCategoryResponseConverter.apply(category)));
+                    return resHelper.res(itemObjectCategoryVOS, true, MessageType.Success.getMessage(), null);
+                }
+            }
+            return resHelper.res(null, true, MessageType.NotFound.getMessage(), null);
+        }
+        return resHelper.res(null, true, MessageType.NotAuthorized.getMessage(), null);
+    }
+
+    @Override
+    public BasicResponse getUsersInterestCategories() {
+        if(isAdmin()) {
+            List<ItemObjectCategory> itemObjectCategory = itemObjectCategoryRepository.findAll();
+            HashMap<Long, List<UserResponse>> UsersList = new HashMap<>();
+            itemObjectCategory.forEach(category -> {
+                if(category.getUsers().size() != 0) {
+                    List<UserResponse> tt = new ArrayList<>();
+                    category.getUsers().forEach(user -> tt.add(userResponseConverter.apply(user)));
+                    UsersList.put(category.getId(), tt);
+                }
+            });
+            return resHelper.res(UsersList, true, MessageType.Success.getMessage(), null);
+        }
+        return resHelper.res(null, true, MessageType.NotAuthorized.getMessage(), null);
+    }
+
+	@Override
+	public Object activateUser(Long userId, boolean active) {
+		Object sucess = null;
+		if(isAdmin()) {
+			sucess = this.userRepository.activateUser(userId, active);	
+           sucess = true; 
+		}
+		return sucess;
+	}
 }

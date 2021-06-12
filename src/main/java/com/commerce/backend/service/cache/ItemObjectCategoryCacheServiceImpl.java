@@ -29,6 +29,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+
 
 @Service
 @CacheConfig(cacheNames = "item_category")
@@ -39,17 +43,20 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
     private final ServiceCategoryRepository serviceCategoryRepository;
     private final ItemCategoryRepository itemCategoryRepository;
     private final ItemObjectCategoryResponseConverter itemObjectCategoryResponseConverter;
+    @PersistenceContext
+    private final EntityManager entityManager;
 
     @Autowired
     public ItemObjectCategoryCacheServiceImpl(ItemObjectCategoryRepository productCategoryRepository,
     		PetCategoryRepository petCategoryRepository, ItemCategoryRepository itemCategoryRepository,
     		ItemObjectCategoryResponseConverter itemObjectCategoryResponseConverter,
-    		ServiceCategoryRepository serviceCategoryRepository) {
+    		ServiceCategoryRepository serviceCategoryRepository, EntityManager entityManager) {
         this.itemObjectRepository = productCategoryRepository;
         this.petCategoryRepository = petCategoryRepository;
         this.itemCategoryRepository = itemCategoryRepository;
         this.itemObjectCategoryResponseConverter = itemObjectCategoryResponseConverter;
         this.serviceCategoryRepository = serviceCategoryRepository;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -67,7 +74,8 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 	public List<ItemCategory> findItemCategories() {
 		return this.itemCategoryRepository.findAllByOrderByName();
 	}
-
+    
+	@Transactional
 	@Override
 	public BasicResponse createItemObjectCategory(CategoryRequest request) {
 	    ItemObjectCategory category = null;
@@ -122,9 +130,10 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 			Optional<ItemObjectCategory> itemCategory = this.itemObjectRepository.findById(request.getCatParent());
 			ItemObjectCategory parent = itemCategory.isPresent()?itemCategory.get(): null;
 			category.setParent(parent);
-			catReponse = this.itemObjectRepository.save(category);	
-			keyResponse.put(MessageType.Data.getMessage(), catReponse);
+			this.entityManager.persist(category);
 		
+			keyResponse.put(MessageType.Data.getMessage(), category);
+		    basicRes.setSuccess(true);
 			basicRes.setResponse(keyResponse);
 		}
 		basicRes.setSuccess(true);

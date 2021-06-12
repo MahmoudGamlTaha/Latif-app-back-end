@@ -56,8 +56,15 @@ public class CategoryController extends PublicApiController {
         return new ResponseEntity<>(accCategories, HttpStatus.OK);
     }
     
-    @GetMapping(value = {"/category/{page}","/category"})
+    @GetMapping(value = {"/category/page={page}","/category"})
     public ResponseEntity<BasicResponse> getAllCategories(@PathVariable(value="page", required = false) Optional<Integer> page) {
+    	Pageable pageable = PageRequest.of(page.orElse(0), SystemConstant.MOBILE_PAGE_SIZE);
+         BasicResponse response = itemObjectCategoryService.findAllByOrderByName(pageable);
+     	HttpStatus status = response.getMsg() != MessageType.Success.getMessage()?HttpStatus.BAD_REQUEST: HttpStatus.OK;
+    	return new ResponseEntity<BasicResponse>(response, status);
+    }
+    @GetMapping(value = {"/category-interest/page={page}","/category-interest"})
+    public ResponseEntity<BasicResponse> getInterestCategories(@PathVariable(value="page", required = false) Optional<Integer> page) {
     	Pageable pageable = PageRequest.of(page.orElse(0), SystemConstant.MOBILE_PAGE_SIZE);
          BasicResponse response = itemObjectCategoryService.findAllByOrderByName(pageable);
      	HttpStatus status = response.getMsg() != MessageType.Success.getMessage()?HttpStatus.BAD_REQUEST: HttpStatus.OK;
