@@ -35,6 +35,19 @@ public class ApplicationSetting extends PublicApiController{
 		return response;
 	}
 	
+	@GetMapping("/policies")
+	public BasicResponse getPolicies() {
+		BasicResponse response = new BasicResponse();
+		 Policy policy = this.policyService.find();
+		 HashMap<String, Object> mapResponse = new HashMap<String, Object>();
+		 if(policy != null) {
+		   mapResponse.put(MessageType.Data.getMessage(), policy);
+		 }
+		 response.setMsg(MessageType.Success.getMessage());
+		 response.setSuccess(true);
+		 response.setResponse(mapResponse);
+		return response;
+	}
 	@GetMapping("/external")
 	public BasicResponse getExternalLink() {
 		BasicResponse response = new BasicResponse();

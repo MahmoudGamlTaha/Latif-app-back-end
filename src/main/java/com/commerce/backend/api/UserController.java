@@ -1,6 +1,7 @@
 package com.commerce.backend.api;
 
 import com.commerce.backend.constants.MessageType;
+import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.helper.resHelper;
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.request.user.PasswordResetRequest;
@@ -10,11 +11,14 @@ import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.user.UserResponse;
 import com.commerce.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -61,6 +65,11 @@ public class UserController extends ApiController {
     @GetMapping(value = "/usersList")
     public ResponseEntity<BasicResponse> getUsersList(Long roleId) {
         return new ResponseEntity<>(userService.getUsersList(roleId), HttpStatus.OK);
+    }
+    @GetMapping(value = "/usersList/all")
+    public ResponseEntity<BasicResponse> getUsers(@RequestParam(value = "page") Optional<Integer> page) {
+    	Pageable pagable = PageRequest.of(page.orElse(0), SystemConstant.MOBILE_PAGE_SIZE);
+        return new ResponseEntity<>(userService.getUsersList(pagable), HttpStatus.OK);
     }
     @PostMapping(value = "/activate-user")
     public ResponseEntity<BasicResponse> activateUser(Long user_id, boolean active){

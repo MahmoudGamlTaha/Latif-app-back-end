@@ -26,11 +26,12 @@ public class ReportReasonsServiceImpl implements ReportReasonsService{
     }
 
     @Override
-    public BasicResponse createReason(String reason) {
+    public BasicResponse createReason(String reason, String reasonAr) {
         if(userService.isAdmin()) {
             if (reason != null) {
                 ReportReasons reportReasons = new ReportReasons();
                 reportReasons.setValue(reason);
+                reportReasons.setValueAr(reasonAr);
                 return resHelper.res(reportReasonsRepository.save(reportReasons), true, MessageType.Success.getMessage(), null);
             }
         }else{
@@ -40,12 +41,13 @@ public class ReportReasonsServiceImpl implements ReportReasonsService{
     }
 
     @Override
-    public BasicResponse updateReason(Long id, String reason) {
+    public BasicResponse updateReason(Long id, String reason, String reasonAr) {
         if(userService.isAdmin()) {
             if (reason != null && id != null) {
                 ReportReasons reportReasons = reportReasonsRepository.findById(id).orElse(null);
                 if (reportReasons != null) {
                     reportReasons.setValue(reason);
+                    reportReasons.setValueAr(reasonAr);
                     return resHelper.res(reportReasonsRepository.save(reportReasons), true, MessageType.Success.getMessage(), null);
                 }
             }

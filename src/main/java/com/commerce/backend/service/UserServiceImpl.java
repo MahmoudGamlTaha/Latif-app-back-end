@@ -22,6 +22,8 @@ import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 import com.commerce.backend.model.response.user.UserResponse;
 import com.commerce.backend.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -369,4 +371,16 @@ public class UserServiceImpl implements UserService {
 		}
 		return sucess;
 	}
+	
+	  @Override
+	    public BasicResponse getUsersList(Pageable pageable) {
+	        if( isAdmin()) {
+	                Page<User> users = userRepository.findAll(pageable);
+	                List<UserResponse> userVO = new ArrayList<>();
+	                users.forEach(user -> userVO.add(userResponseConverter.apply(user)));
+	                return resHelper.res(userVO, true, MessageType.Success.getMessage(), pageable);
+	          
+	        }
+	        return resHelper.res(null, false, MessageType.Fail.getMessage(), pageable);
+	    }
 }
