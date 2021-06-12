@@ -3,7 +3,6 @@ package com.commerce.backend.api;
 import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.helper.resHelper;
-import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.request.user.PasswordResetRequest;
 import com.commerce.backend.model.request.user.UpdateUserAddressRequest;
 import com.commerce.backend.model.request.user.UpdateUserRequest;

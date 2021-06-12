@@ -1,6 +1,8 @@
 package com.commerce.backend.service;
 
 
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 
 import com.commerce.backend.model.dto.UserDto;
@@ -51,7 +53,7 @@ public interface UserService {
     
     BasicResponse getUserInterestCategories();
 
-    BasicResponse createInterestCategories(Long categoryId);
+    BasicResponse createInterestCategories(List<Long> categoryId);
 
     BasicResponse removeInterestCategories(Long categoryId);
 
