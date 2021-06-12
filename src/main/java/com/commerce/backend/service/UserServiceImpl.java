@@ -301,9 +301,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BasicResponse createInterestCategories(Long categoryId) {
+    public BasicResponse createInterestCategories(List<Long> categories) {
         User user = getCurrentUser();
         if(user != null) {
+        	categories.forEach(categoryId -> {
             ItemObjectCategory itemObjectCategory = itemObjectCategoryRepository.findById(categoryId).orElse(null);
             if(itemObjectCategory != null) {
                 Set<ItemObjectCategory> itemObjectCategorySet = user.getInterestCategories();
@@ -311,15 +312,15 @@ public class UserServiceImpl implements UserService {
                 if(!exists) {
                     itemObjectCategorySet.add(itemObjectCategory);
                     user.setInterestCategories(itemObjectCategorySet);
-                    userRepository.save(user);
+                   
+                }}});
+        	        userRepository.save(user);
                     List<ItemObjectCategoryResponse> itemObjectCategoryVOS = new ArrayList<>();
-                    user.getInterestCategories().forEach(category -> itemObjectCategoryVOS.add(ItemObjectCategoryResponseConverter.apply(category)));
+                    user.getInterestCategories().forEach(category -> 
+                    itemObjectCategoryVOS.add(ItemObjectCategoryResponseConverter.apply(category)));
                     return resHelper.res(itemObjectCategoryVOS, true, MessageType.Success.getMessage(), null);
-                }
-                return resHelper.res("Category Already Exists !", true, MessageType.Fail.getMessage(), null);
-            }
-            return resHelper.res(null, true, MessageType.NotFound.getMessage(), null);
-        }
+                
+       }
         return resHelper.res(null, true, MessageType.NotAuthorized.getMessage(), null);
     }
 
