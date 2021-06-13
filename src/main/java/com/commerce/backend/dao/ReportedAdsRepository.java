@@ -14,9 +14,9 @@ import java.util.List;
 
 @Repository
 public interface ReportedAdsRepository extends JpaRepository<UserReportedAds, Long> {
-	 @Query(value="SELECT ur.* FROM user_reported_ads ur WHERE ur.type = 'REPORT'", countQuery = "SELECT count(*) from user_reported_ads ur WHERE ur.type = 'REPORT'",
+	 @Query(value="SELECT ur.* FROM user_reported_ads ur WHERE ur.type = 1", countQuery = "SELECT count(*) from user_reported_ads ur WHERE ur.type = 1",
 			 nativeQuery = true)
-     Page<UserReportedAds> findAll(Pageable pageable);
+     Page<UserReportedAds> findAllReport(Pageable pageable);
     
 	 @Query(value="SELECT ur.* FROM user_reported_ads ur WHERE ur.user_id = ?1 AND ur.ads_id = ?2", nativeQuery = true)
      UserReportedAds findByUserAndAds(Long user, Long userAds);

@@ -46,7 +46,7 @@ public class ReportAdsServiceImpl implements ReportAdsService{
     @Override
     public BasicResponse getAll(Integer page, Integer pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
-        Page<UserReportedAds> reportedAds = reportedAdsRepository.findAll(pageable);
+        Page<UserReportedAds> reportedAds = reportedAdsRepository.findAllReport(pageable);
         List<ReportTypeVo> collect = new ArrayList<>();
         reportedAds.getContent().forEach((ad)-> collect.add(reportAdsConverter.apply(ad)));
         return resHelper.res(collect, true, MessageType.Success.getMessage(), pageable);
