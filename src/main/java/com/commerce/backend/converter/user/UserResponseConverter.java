@@ -29,6 +29,9 @@ public class UserResponseConverter implements Function<User, UserResponse> {
 	        userResponse.setId(user.getId());
 	        userResponse.setRegistrationDate(user.getRegistrationDate());
 	        userResponse.setAvatar(user.getAvatar());
+	        userResponse.setActive(user.isActive());
+	        userResponse.setProdCount(user.getAds().size());
+	        
 	        
     	}
         return userResponse;
