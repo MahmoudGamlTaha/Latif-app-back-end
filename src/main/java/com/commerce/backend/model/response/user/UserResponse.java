@@ -20,4 +20,8 @@ public class UserResponse {
     private Boolean emailVerified;
     private Date    RegistrationDate;
     private String avatar;
+    private Boolean active;
+    private String roleId;
+    private Integer prodCount;
+    
 }
