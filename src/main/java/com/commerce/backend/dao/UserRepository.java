@@ -18,7 +18,7 @@ import javax.transaction.Transactional;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
-    @Query("SELECT u FROM User u")
+    @Query("SELECT u FROM User u order by registrationDate desc")
 	Page<User> findAll(Pageable page);
 	
     Optional<User> findByEmail(String email);
