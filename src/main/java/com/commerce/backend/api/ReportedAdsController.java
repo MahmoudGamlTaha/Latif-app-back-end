@@ -22,7 +22,7 @@ public class ReportedAdsController extends PublicApiController{
         this.reportAdsService = reportAdsService;
     }
 
-    @GetMapping(value = "/reportedAds/")
+    @GetMapping(value = "/reportedAds/reported-ads")
     public ResponseEntity<BasicResponse> getAll(@RequestParam(value ="page", required = false) Optional<Integer> page,
                                                 @RequestParam(value ="pageSize", required= false) Optional<Integer>  pageSize){
         return new ResponseEntity<>(reportAdsService.getAll(page.orElse(0), pageSize.orElse(SystemConstant.MOBILE_PAGE_SIZE)), HttpStatus.OK);

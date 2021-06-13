@@ -48,7 +48,7 @@ public class ReportAdsServiceImpl implements ReportAdsService{
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<UserReportedAds> reportedAds = reportedAdsRepository.findAll(pageable);
         List<ReportTypeVo> collect = new ArrayList<>();
-        reportedAds.forEach((ad)-> collect.add(reportAdsConverter.apply(ad)));
+        reportedAds.getContent().forEach((ad)-> collect.add(reportAdsConverter.apply(ad)));
         return resHelper.res(collect, true, MessageType.Success.getMessage(), pageable);
     }
 
