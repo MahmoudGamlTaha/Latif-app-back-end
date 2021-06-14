@@ -1,6 +1,9 @@
 package com.commerce.backend.model.response.user;
 
 import java.util.Date;
+import java.util.Set;
+
+import com.commerce.backend.model.entity.Role;
 
 import lombok.Data;
 
@@ -21,7 +24,7 @@ public class UserResponse {
     private Date    RegistrationDate;
     private String avatar;
     private Boolean active;
-    private String roleId;
+    private Set<Role> role;
     private Integer prodCount;
     
 }
