@@ -29,6 +29,7 @@ public class RoleController extends PublicApiController{
     public @ResponseBody
     Object showEndpointsAction()
     {
+    	
         return requestMappingHandlerMapping.getHandlerMethods().keySet().stream().map(t ->
                 (t.getMethodsCondition().getMethods().size() == 0 ? "GET" : t.getMethodsCondition().getMethods().toArray()[0]) + " " +
                         t.getPatternsCondition().getPatterns().toArray()[0]
@@ -47,12 +48,12 @@ public class RoleController extends PublicApiController{
     }
 
     @PostMapping("/roles/create")
-    public RoleResponse create(@ModelAttribute @Valid RoleRequest role) throws Exception {
+    public RoleResponse create(@RequestBody @Valid RoleRequest role) throws Exception {
         return service.createRole(role);
     }
 
     @PostMapping("/roles/update")
-    public RoleResponse update(@ModelAttribute @Valid RoleRequestUpdate role) throws Exception {
+    public RoleResponse update(@RequestBody @Valid RoleRequestUpdate role) throws Exception {
         return service.update(role);
     }
 

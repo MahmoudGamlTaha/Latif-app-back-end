@@ -8,7 +8,6 @@ import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.error.exception.InvalidArgumentException;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.helper.resHelper;
-import com.commerce.backend.model.dto.ItemObjectCategoryVO;
 import com.commerce.backend.model.dto.UserDto;
 import com.commerce.backend.model.entity.ItemObjectCategory;
 import com.commerce.backend.model.entity.Role;
@@ -21,6 +20,8 @@ import com.commerce.backend.model.response.BasicResponse;
 import com.commerce.backend.model.response.category.ItemObjectCategoryResponse;
 import com.commerce.backend.model.response.user.UserResponse;
 import com.commerce.backend.security.UserDetailsImpl;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,11 +44,14 @@ public class UserServiceImpl implements UserService {
     private final ItemObjectCategoryRepository itemObjectCategoryRepository;
     private final ItemObjectCategoryResponseConverter ItemObjectCategoryResponseConverter;
     private RoleRepository roleRepository;
+    
+    @Autowired
+    private FirebaseMessaging firebaseMessage;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
-                           UserResponseConverter userResponseConverter, ItemObjectCategoryRepository itemObjectCategoryRepository, com.commerce.backend.converter.category.ItemObjectCategoryResponseConverter itemObjectCategoryResponseConverter, RoleRepository roleRepository) {
+                           UserResponseConverter userResponseConverter, ItemObjectCategoryRepository itemObjectCategoryRepository, ItemObjectCategoryResponseConverter itemObjectCategoryResponseConverter, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userResponseConverter = userResponseConverter;

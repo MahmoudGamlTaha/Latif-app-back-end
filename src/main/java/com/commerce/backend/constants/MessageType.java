@@ -11,7 +11,8 @@ public enum MessageType {
 	NotAuthorized("notAuthorized"),
 	NotFound("notFound"),
 	NullValue("nullValue"),
-	TotalPages("totalPages");
+	TotalPages("totalPages"),
+	NEW_MESSAGE("new message");
 	private String message;
 	
 	public String getMessage() {

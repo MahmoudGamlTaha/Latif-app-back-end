@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.commerce.backend.dao.UserRepository;
+import com.commerce.backend.dao.VerificationTokenRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +28,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final UserDetailsServiceImpl userDetailsService;
     private final UserRepository userRepository;
     private final UserPermissionsRepository userPermissionsRepository;
+    
+    @Autowired 
+    VerificationTokenRepository verificationTokenRepository;
 
     @Autowired
     public SecurityConfiguration(UserDetailsServiceImpl userDetailsService, UserRepository userRepository, UserPermissionsRepository userPermissionsRepository) {
@@ -56,7 +61,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
-                    .addFilter(new JwtAuthenticationFilter(authenticationManager()))
+                    .addFilter(new JwtAuthenticationFilter(authenticationManager(), this.verificationTokenRepository))
                     .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
                     .authorizeRequests()
                     .antMatchers(HttpMethod.valueOf(m.getHttpMethod()), m.getHttpPath())
