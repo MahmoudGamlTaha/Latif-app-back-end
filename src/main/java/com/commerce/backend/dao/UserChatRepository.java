@@ -12,5 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 @Repository
 public interface UserChatRepository extends JpaRepository<UserChat, UUID> {
  Page<UserChat> getUserChatByReciverId(Long user_id, Pageable page);
- Page<UserChat> getUserChatBySenderId(Long user_id, Pageable page); 
+ Page<UserChat> getUserChatBySenderId(Long user_id, Pageable page);
+ 
+ Page<UserChat> getUserChatBySenderReciverAds(Long sender, Long reciver, Pageable page);
 }

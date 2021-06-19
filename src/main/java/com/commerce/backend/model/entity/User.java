@@ -8,6 +8,7 @@ import lombok.ToString;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -93,7 +94,7 @@ public class User {
   @NotFound(action = NotFoundAction.IGNORE)
   private Set<SubscriptionTypes> subscriptions = new HashSet<>();
 
-  @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+  @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   @JoinTable(
           name = "user_roles",
           joinColumns = {@JoinColumn(name = "user_id")},
@@ -106,7 +107,13 @@ public class User {
   @OneToMany
   @JoinColumn(name = "user_id")
   private Set<UserReportedAds> userReportedAds;
-
+  
+  @JsonManagedReference
+  @OneToMany
+  @JoinColumn(name = "user_id")
+  @NotFound(action = NotFoundAction.IGNORE)
+  private Set<VerificationToken> token;
+  
   @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
   @JoinTable(
           name = "user_interset_category",

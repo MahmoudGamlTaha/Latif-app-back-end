@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "user_chat")
+@Table(name = "user_chats")
 public class UserChat {
 	
 	@Id
@@ -34,6 +34,9 @@ public class UserChat {
 	
 	@Column(name = "message_text")
 	private String message;
+	
+	@Column(name = "ad_id")
+	private Long itemId;
 	
 	@Column(name = "created_at")
 	private Date createAt;

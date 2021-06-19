@@ -8,6 +8,8 @@ public class SystemConstant {
   public final static Integer STRING = 2;
   public final static Integer BOOLEAN = 3;
   public final static String Policy = "POLICY";
+  public final static String APP_NAME = "latifapp";
+  public final static String DEFAULT_IMAGE = "https://res.cloudinary.com/highcoder/image/upload/v1624121402/profile_o0r8mc.jpg";
   @Deprecated
   public final static String USER_ADS_SELECTION = "user_ads.id, user_ads.category_id,user_ads.code,"
   		+ " user_ads.price, user_ads.date_of_birth, user_ads.breed,"
