@@ -33,7 +33,6 @@ public class UserResponseConverter implements Function<User, UserResponse> {
 	        userResponse.setRole(user.getRoles());
 	        userResponse.setProdCount(user.getAds().size());
 	        
-	        
     	}
         return userResponse;
     	

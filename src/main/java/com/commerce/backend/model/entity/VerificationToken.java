@@ -24,11 +24,17 @@ public class VerificationToken {
     @Column(name = "token")
     private String token;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
     @Column(name = "expiry_date")
     private Date expiryDate;
+    
+    @Column(name = "firebase_token")
+    private String firebaseToken;
+    
+    @Column(name = "device")
+     private String device;
 
 }
