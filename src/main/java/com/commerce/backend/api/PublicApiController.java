@@ -11,7 +11,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import com.commerce.backend.model.response.BasicResponse;
 
-import javax.persistence.EntityExistsException;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,9 @@ public abstract class PublicApiController {
          response.setSuccess(false);
     	return new ResponseEntity<BasicResponse>(response, HttpStatus.NOT_ACCEPTABLE);
     }
+    
    
+  
     @ExceptionHandler(Exception.class)
     public ResponseEntity<BasicResponse> handleGeneralException(Exception ex){
     	 BasicResponse response = new BasicResponse();

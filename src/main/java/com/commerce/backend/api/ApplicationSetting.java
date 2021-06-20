@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.commerce.backend.constants.MessageType;
@@ -34,7 +35,14 @@ public class ApplicationSetting extends PublicApiController{
 		 response.setResponse(mapResponse);
 		return response;
 	}
-	
+	@PostMapping("/policy/update")
+	public BasicResponse policyUpdate() {
+		BasicResponse response = new BasicResponse();
+		 Policy policy = this.policyService.find();
+		 HashMap<String, Object> mapResponse = new HashMap<String, Object>();
+		 return response;
+		
+	}
 	@GetMapping("/policies")
 	public BasicResponse getPolicies() {
 		BasicResponse response = new BasicResponse();

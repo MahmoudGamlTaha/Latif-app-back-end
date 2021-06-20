@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.model.response.BasicResponse;
 
@@ -58,5 +59,12 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         response.setMsg(ex.getMessage());
         response.setSuccess(false);
    	return new ResponseEntity<BasicResponse>(response, HttpStatus.NOT_ACCEPTABLE);
+	}
+	@ExceptionHandler(TokenExpiredException.class)
+	public ResponseEntity<BasicResponse> tokenExpiredException(TokenExpiredException ex) {
+	 	 BasicResponse response = new BasicResponse();
+		response.setMsg(ex.getMessage());
+	        response.setSuccess(false);
+	   	return new ResponseEntity<BasicResponse>(response, HttpStatus.BAD_REQUEST);
 	}
 }

@@ -1,8 +1,10 @@
 package com.commerce.backend.security;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.model.entity.User;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,7 +27,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         super(authenticationManager);
         this.userRepository = userRepository;
     }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String header = request.getHeader(JwtProperties.HEADER_STRING);
@@ -35,13 +36,17 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             chain.doFilter(request, response);
             return;
         }
-
+try {
         // If header is present, try grab user principal from database and perform authorization
         Authentication authentication = getMobilePasswordAuthentication(request);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Continue filter execution
         chain.doFilter(request, response);
+}catch(TokenExpiredException ex) {
+	response.getWriter().write("\"msg\":\"Token Expired please login again\"");
+	response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+}
     }
     public static class Tex{
         public boolean val = true;
