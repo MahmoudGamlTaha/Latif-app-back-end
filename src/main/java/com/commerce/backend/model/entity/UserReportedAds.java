@@ -44,7 +44,10 @@ public class UserReportedAds {
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "reason", referencedColumnName = "id")
     private ReportReasons reason;
-
+    
+    @Column(name = "other")
+    private String otherReason;
+    
     @Column(name = "created_at")
     @Type(type = "timestamp")
     private Date createdAt;

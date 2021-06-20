@@ -75,6 +75,9 @@ public class ReportAdsServiceImpl implements ReportAdsService{
                 if(reportReasons != null) {
                     reportedAds.setReason(reportReasons);
                 }
+                if(request.getOtherReson() != null) {
+                	reportedAds.setOtherReason(request.getOtherReson());
+                }
             }
             reportedAds.setReportType(request.getType());
             reportedAds.setCreatedAt(new Date());

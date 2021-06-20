@@ -9,6 +9,8 @@ public class ReportRequest {
     Long adId;
 
     Long reason;
-
+    
+    String otherReson;
+    
     ReportType type;
 }
