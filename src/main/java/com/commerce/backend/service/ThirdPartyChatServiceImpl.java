@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,7 @@ import com.commerce.backend.dao.UserAdsRepositoryCustom;
 import com.commerce.backend.dao.UserChatRepository;
 import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.helper.MessageRequest;
+import com.commerce.backend.model.entity.SystemSetting;
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.entity.UserAds;
 import com.commerce.backend.model.entity.UserChat;
@@ -79,8 +82,9 @@ public class ThirdPartyChatServiceImpl implements ThirdPartyChatService {
 
 	@Override
 	public Page<UserChat> findChatBySenderAndReciverAndAds(Long reciver, Long sender, Long ads) {
-		
-		return null;
+		Pageable pagable = PageRequest.of(0, SystemConstant.MOBILE_PAGE_SIZE); 
+		Page<UserChat> chating =  this.userChatRepository.getUserChatBySenderIdAndReciverIdAndItemId(sender, reciver, ads, pagable);
+		return chating;
 	}
 	
     @Transactional

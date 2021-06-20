@@ -14,6 +14,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface UserChatRepository extends JpaRepository<UserChat, UUID> {
  Page<UserChat> getUserChatByReciverId(Long user_id, Pageable page);
  Page<UserChat> getUserChatBySenderId(Long user_id, Pageable page);
- @Query(value="SELECT uc FROM UserChat uc WHERE uc.senderId = ?1 AND uc.reciverId = ?2", countQuery = "SELECT count(*) FROM UserChat uc  WHERE uc.senderId = ?1 AND uc.reciverId = ?2")
- Page<UserChat> getUserChatBySenderIdAndReciverIdAndItemId(Long sender, Long reciver, Pageable page);
+ @Query(value="SELECT uc FROM UserChat uc WHERE uc.senderId = ?1 AND uc.reciverId = ?2  and ad_id = ?3 order by createAt desc", countQuery = "SELECT count(*) FROM UserChat uc  WHERE uc.senderId = ?1 AND uc.reciverId = ?2")
+ Page<UserChat> getUserChatBySenderIdAndReciverIdAndItemId(Long sender, Long reciver,Long ads, Pageable page);
 }
