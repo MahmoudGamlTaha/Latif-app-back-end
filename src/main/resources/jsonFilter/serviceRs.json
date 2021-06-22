@@ -1,5 +1,5 @@
 {"form":[
-{"name": "city", "type": "url_option","label": "City", "label_ar": "مكان الاعلان","url":"/api/public/cites", "required": true},
+{"name": "city", "type": "url_option","label": "City", "label_ar": "المدينة","url":"/api/public/cites", "required": true},
   {"name": "category", "type": "url_option", "label": "Category", "url":"/api/public/cat-by-adType/type=3" , "required": true},
   {"name": "name","type": "string", "label": "Name", "required": true},
   {"name": "allow_at_home", "type": "boolean","label": "delivery to home", "required": true},

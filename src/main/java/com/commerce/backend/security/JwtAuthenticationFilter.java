@@ -93,6 +93,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write("{\"" +JwtProperties.HEADER_STRING+ "\":\"" + token + "\"}");
     }
+   @Override
+   protected void unsuccessfulAuthentication(HttpServletRequest request,
+			HttpServletResponse response, AuthenticationException failed)
+			throws IOException, ServletException {
+	   response.setContentType("application/json");
+	   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	   response.getWriter().write("{\"msg\":\"Wrong UserName or password\"}");
+   }
+    
     private Date calculateExpiryDate() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Timestamp(cal.getTime().getTime()));

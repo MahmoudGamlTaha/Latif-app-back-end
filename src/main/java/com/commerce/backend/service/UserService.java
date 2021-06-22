@@ -25,7 +25,7 @@ public interface UserService {
 
     User findByEmail(String email);
 
-    boolean userExists(String email);
+    boolean userExists(String email, String mobile);
 
     BasicResponse updateUser(UpdateUserRequest updateUserRequest);
 

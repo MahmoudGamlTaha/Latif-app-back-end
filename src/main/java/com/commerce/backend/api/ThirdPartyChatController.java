@@ -1,6 +1,7 @@
 package com.commerce.backend.api;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,12 +14,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.helper.ChatHistoryRequest;
+import com.commerce.backend.helper.ChatRoom;
 import com.commerce.backend.helper.MessageRequest;
 import com.commerce.backend.helper.resHelper;
 import com.commerce.backend.model.entity.User;
@@ -36,7 +39,7 @@ public class ThirdPartyChatController extends PublicApiController{
 	@Autowired
 	UserService userService;
 	
-	@GetMapping(value = {"/chat/history", "/chat/history?page={page}"})
+	@GetMapping(value = {"/chat/history/list", "/chat/history/list?page={page}"})
 	@ResponseBody
 	public BasicResponse getChatHistory(@RequestBody ChatHistoryRequest chatRequest, @PathVariable(required = false) Integer page) {
 		BasicResponse response = new BasicResponse();
@@ -49,6 +52,34 @@ public class ThirdPartyChatController extends PublicApiController{
 		return response;
 	}
 	
+	@GetMapping(value = {"/chat/my-chat"})
+	@ResponseBody
+	public BasicResponse getUserChat(@RequestBody ChatHistoryRequest chatRequest, @PathVariable(required = false) Integer page) {
+		BasicResponse response = new BasicResponse();
+		HashMap<String, Object> Messages = new HashMap<String, Object>();
+		Pageable pagable = PageRequest.of(page, SystemConstant.MOBILE_PAGE_SIZE);
+		Page<UserChat> chatting = this.thirdPartyChatService
+				         .findChatBySenderAndReciverAndAds(chatRequest.getReciver(), chatRequest.getSender(), chatRequest.getAds());
+	
+		resHelper.res(chatting, true, MessageType.Success.getMessage(), pagable);
+		return response;
+	}
+	@GetMapping(value = {"/chat/history", "/chat/history?page={page}"})
+	@ResponseBody
+	public BasicResponse getChatRoom(@RequestBody ChatRoom room, @RequestParam(required = false) Optional<Integer> page) {
+		User user = this.userService.getCurrentUser(); 
+		if(user == null ) {
+			
+		}
+		BasicResponse response = new BasicResponse();
+		HashMap<String, Object> Messages = new HashMap<String, Object>();
+		Pageable pagable = PageRequest.of(page.orElse(0), SystemConstant.MOBILE_PAGE_SIZE);
+		Page<UserChat> chatting = this.thirdPartyChatService
+				         .findChatByRoom(room, pagable);
+	
+		response = resHelper.res(chatting.getContent(), true, MessageType.Success.getMessage(), pagable);
+		return response;
+	}
 	@PostMapping(value = "/chat/snd-msg")
 	public BasicResponse sendNotification(@RequestBody MessageRequest request) throws Exception {
 		//secure api
@@ -57,11 +88,10 @@ public class ThirdPartyChatController extends PublicApiController{
 			OAuth2Error err = new OAuth2Error(OAuth2ErrorCodes.ACCESS_DENIED);
 			throw new OAuth2AuthenticationException(err, "Noting To Do");
 		}
-		assert(user.getId() == request.getSender());
 		
         BasicResponse response = new BasicResponse();
         HashMap<String, Object> mapResponse = new HashMap<String,Object>();
-        String res = this.thirdPartyChatService.sendChatMessage(request);
+        Object res = this.thirdPartyChatService.sendChatMessage(request);
         mapResponse.put(MessageType.Data.getMessage(), res);
         response.setMsg(MessageType.Success.getMessage());
         response.setSuccess(true);

@@ -62,9 +62,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(RegisterUserRequest registerUserRequest) {
-        if (userExists(registerUserRequest.getEmail())) {
-            throw new InvalidArgumentException("An account already exists with this email");
+        if (userExists(registerUserRequest.getEmail(), registerUserRequest.getPhone())) {
+            throw new InvalidArgumentException("An account already exists");
         }
+        
 
         User user = new User();
         user.setEmail(registerUserRequest.getEmail());
@@ -130,8 +131,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean userExists(String email) {
-        return userRepository.existsByEmail(email);
+    public boolean userExists(String email, String mobile) {
+        return userRepository.existsByEmail(email) || userRepository.findByMobile(mobile) != null;
     }
 
     @Override

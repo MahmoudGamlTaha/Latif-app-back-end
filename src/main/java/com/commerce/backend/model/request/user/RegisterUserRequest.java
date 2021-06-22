@@ -35,5 +35,13 @@ public class RegisterUserRequest {
 	@Size(min = 5, max = 50)
 	private String passwordRepeat;
 	
-	//private Long city;
+	private Long city;
+	
+	private Long country;
+	
+	private String longitude;
+
+	private String latitude;
+	
+	private String address;
 }

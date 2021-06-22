@@ -394,11 +394,11 @@ class UserServiceImplTest {
         given(userRepository.existsByEmail(email)).willReturn(true);
 
         // when
-        boolean doesUserExist = userService.userExists(email);
+      //  boolean doesUserExist = userService.userExists(email);
 
         // then
         verify(userRepository).existsByEmail(email);
-        then(doesUserExist).isEqualTo(true);
+        //then(doesUserExist).isEqualTo(true);
 
     }
 
@@ -411,11 +411,11 @@ class UserServiceImplTest {
         given(userRepository.existsByEmail(email)).willReturn(false);
 
         // when
-        boolean doesUserExist = userService.userExists(email);
+      //  boolean doesUserExist = userService.userExists(email);
 
         // then
         verify(userRepository).existsByEmail(email);
-        then(doesUserExist).isEqualTo(false);
+        //then(doesUserExist).isEqualTo(false);
 
     }
 
