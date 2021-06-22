@@ -10,4 +10,5 @@ public class MessageRequest {
    String message;
    String device_id;
    String device_model;
+   String room;
 }

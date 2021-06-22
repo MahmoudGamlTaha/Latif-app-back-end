@@ -6,6 +6,7 @@ import com.commerce.backend.converter.reportAds.ReportAdsConverter;
 import com.commerce.backend.dao.CustomUserAdsRepo;
 import com.commerce.backend.dao.ReportReasonsRepository;
 import com.commerce.backend.dao.ReportedAdsRepository;
+import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.helper.resHelper;
 import com.commerce.backend.model.dto.ReportTypeVo;
 import com.commerce.backend.model.entity.ReportReasons;
@@ -33,14 +34,17 @@ public class ReportAdsServiceImpl implements ReportAdsService{
     private final UserService userService;
     private final CustomUserAdsRepo userAdsRepo;
     private final ReportReasonsRepository reportReasonsRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ReportAdsServiceImpl(ReportedAdsRepository reportedAdsRepository, ReportAdsConverter reportAdsConverter, UserService userService, CustomUserAdsRepo userAdsRepo, ReportReasonsRepository reportReasonsRepository) {
+    public ReportAdsServiceImpl(ReportedAdsRepository reportedAdsRepository, ReportAdsConverter reportAdsConverter, UserService userService, CustomUserAdsRepo userAdsRepo, 
+    		ReportReasonsRepository reportReasonsRepository, UserRepository userRepository) {
         this.reportedAdsRepository = reportedAdsRepository;
         this.reportAdsConverter = reportAdsConverter;
         this.userService = userService;
         this.userAdsRepo = userAdsRepo;
         this.reportReasonsRepository = reportReasonsRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -55,7 +59,7 @@ public class ReportAdsServiceImpl implements ReportAdsService{
     @Override
     public BasicResponse create(ReportRequest request) {
        // String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        User user = userService.getCurrentUser();
+        User user = userRepository.findById(request.getUser_id()).orElse(null);
         if(user == null || request.getAdId() == null || request.getType() == null){
             return resHelper.res(null , false, MessageType.Missing.getMessage(), null);
         }

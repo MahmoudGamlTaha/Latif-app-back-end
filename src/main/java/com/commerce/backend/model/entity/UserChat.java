@@ -38,6 +38,12 @@ public class UserChat {
 	@Column(name = "ad_id")
 	private Long itemId;
 	
+	@Column(name = "room")
+	private String room;
+	
+	@Column(name = "device_model")
+	private String deviceModel;
+	
 	@Column(name = "created_at")
 	private Date createAt;
 }

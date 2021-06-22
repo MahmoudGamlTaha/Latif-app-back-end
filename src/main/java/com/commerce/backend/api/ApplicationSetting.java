@@ -37,7 +37,7 @@ public class ApplicationSetting extends PublicApiController{
 	}
 	@PostMapping("/policy/update")
 	public BasicResponse policyUpdate() {
-		BasicResponse response = new BasicResponse();
+		 BasicResponse response = new BasicResponse();
 		 Policy policy = this.policyService.find();
 		 HashMap<String, Object> mapResponse = new HashMap<String, Object>();
 		 return response;
