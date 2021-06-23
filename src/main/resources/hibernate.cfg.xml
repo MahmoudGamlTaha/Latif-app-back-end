@@ -11,10 +11,10 @@
 <hibernate-configuration>
 	<session-factory>
 
-   		<property name="connection.url">jdbc:postgresql://ec2-3-215-57-87.compute-1.amazonaws.com:5432/d5lbesludlrktt</property> <!-- BD Mane -->
+   		<property name="connection.url">jdbc:postgresql://ec2-34-233-114-40.compute-1.amazonaws.com:5432/d9jf464q2ll2e8</property> <!-- BD Mane -->
    		<property name="connection.driver_class">org.postgresql.Driver</property> <!-- DB Driver -->
-   		<property name="connection.username">rsgymqhtclbrsp</property> <!-- DB User -->
-   		<property name="connection.password">78c1fd94bb9536016817229d554b7be520b53753ee86da88381505ef5badb22d</property> <!-- DB Password -->
+   		<property name="connection.username">bcugsjfmpqnakc</property> <!-- DB User -->
+   		<property name="connection.password">a5358f35be87db39f9893e3f65cb5ad92746d4a7cdb6af54ca74756312053966</property> <!-- DB Password -->
    		
    		<property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property> <!-- DB Dialect -->
    		<property name="hbm2ddl.auto">update</property> <!-- create / create-drop / update -->

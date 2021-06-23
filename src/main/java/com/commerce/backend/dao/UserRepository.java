@@ -22,7 +22,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	Page<User> findAll(Pageable page);
 	
     Optional<User> findByEmail(String email);
-    
+    @Query("SELECT u FROM User u WHERE u.id = ?1")
     Optional<User> findById(Long id);
     
     Boolean existsByEmail(String email);
