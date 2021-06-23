@@ -65,12 +65,13 @@ public class ThirdPartyChatController extends PublicApiController{
 		resHelper.res(chatting, true, MessageType.Success.getMessage(), pagable);
 		return response;
 	}
-	@GetMapping(value = {"/chat/history?room={room}", "/chat/history?room={room}&page={page}"})
+	@GetMapping(value = {"/chat/history", "/chat/history?room={room}&page={page}"})
 	@ResponseBody
-	public BasicResponse getChatRoom(String room, @RequestParam(required = false) Optional<Integer> page) {
+	public BasicResponse getChatRoom(@RequestParam(required = true) String room, @RequestParam(required = false) Optional<Integer> page) {
 		User user = this.userService.getCurrentUser(); 
 		if(user == null ) {
-		  throw new UsernameNotFoundException("User Not Found");	
+			OAuth2Error err = new OAuth2Error(OAuth2ErrorCodes.ACCESS_DENIED);
+			throw new OAuth2AuthenticationException(err, "Noting To Do");	
 		}
 		ChatRoom chatRoom = new ChatRoom();
 		chatRoom.setRoom(room);

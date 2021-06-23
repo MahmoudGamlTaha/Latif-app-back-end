@@ -104,7 +104,7 @@ public class ThirdPartyChatServiceImpl implements ThirdPartyChatService {
 	}
     @Transactional
 	@Override
-	public BatchResponse sendChatMessage(MessageRequest request) throws Exception {
+	public Object sendChatMessage(MessageRequest request) throws Exception {
 		// TODO Auto-generated method stub
     	 User sender = this.userRepository.findById(request.getSender()).orElse(null);
        UserAds ads =  userAdsRepo.findById(request.getAd_item()).orElse(null);
@@ -134,7 +134,7 @@ public class ThirdPartyChatServiceImpl implements ThirdPartyChatService {
 	        return this.SendMessagesToReceviers(receivers, sender, ads, request);
 	}
     
-    private BatchResponse SendMessagesToReceviers(List<Long> receivers, User sender, UserAds ads, MessageRequest request) throws FirebaseMessagingException {
+    private Object SendMessagesToReceviers(List<Long> receivers, User sender, UserAds ads, MessageRequest request) throws FirebaseMessagingException {
     	 
     	Notification notification = Notification
 	                .builder()
@@ -176,8 +176,9 @@ public class ThirdPartyChatServiceImpl implements ThirdPartyChatService {
 	                .build();
          messages.add(message);
          });
-         
-	        return firebaseMessage.sendAll(messages);
+       
+	        BatchResponse batchresponse = firebaseMessage.sendAll(messages);
+	        return data.get("chat_room");
     }
     
     private UserChat saveInternalyMessage(MessageRequest request) {
