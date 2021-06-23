@@ -99,7 +99,9 @@ public class ThirdPartyChatServiceImpl implements ThirdPartyChatService {
 		Page<UserChat> chating =  this.userChatRepository.findChatByRoom(room.getRoom(), pagable);
 		return chating;
 	}
-	
+	public Page<UserChat> findChatRooms(){
+		return null;
+	}
     @Transactional
 	@Override
 	public BatchResponse sendChatMessage(MessageRequest request) throws Exception {

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
@@ -64,18 +65,19 @@ public class ThirdPartyChatController extends PublicApiController{
 		resHelper.res(chatting, true, MessageType.Success.getMessage(), pagable);
 		return response;
 	}
-	@GetMapping(value = {"/chat/history", "/chat/history?page={page}"})
+	@GetMapping(value = {"/chat/history?room={room}", "/chat/history?room={room}&page={page}"})
 	@ResponseBody
-	public BasicResponse getChatRoom(@RequestBody ChatRoom room, @RequestParam(required = false) Optional<Integer> page) {
+	public BasicResponse getChatRoom(String room, @RequestParam(required = false) Optional<Integer> page) {
 		User user = this.userService.getCurrentUser(); 
 		if(user == null ) {
-			
+		  throw new UsernameNotFoundException("User Not Found");	
 		}
+		ChatRoom chatRoom = new ChatRoom();
+		chatRoom.setRoom(room);
 		BasicResponse response = new BasicResponse();
-		HashMap<String, Object> Messages = new HashMap<String, Object>();
 		Pageable pagable = PageRequest.of(page.orElse(0), SystemConstant.MOBILE_PAGE_SIZE);
 		Page<UserChat> chatting = this.thirdPartyChatService
-				         .findChatByRoom(room, pagable);
+				         .findChatByRoom(chatRoom, pagable);
 	
 		response = resHelper.res(chatting.getContent(), true, MessageType.Success.getMessage(), pagable);
 		return response;
