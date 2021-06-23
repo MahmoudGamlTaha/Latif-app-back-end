@@ -23,7 +23,7 @@ public interface UserChatRepository extends JpaRepository<UserChat, UUID> {
  
    @Query(value = "SELECT * FROM  user_chats uc WHERE (uc.sender_id = ?1 AND uc.receiver_id = ?2  and uc.ad_id = ?3) OR (uc.sender_id = ?2 AND uc.receiver_id = ?1  and uc.ad_id = ?3) AND uc.room NOTNULL LIMIT 1", nativeQuery = true)
    UserChat getChatRoom(Long sender, Long reciver,Long ads);
- 
+   @Query(value= "SELECT uc FROM UserChat uc WHERE uc.room = ?1 ORDER BY createAt desc", countQuery="SELECT COUNT(*) from UserChat uc WHERE uc.room = ?1")
    Page<UserChat> findChatByRoom(String room ,Pageable page);
    
    @Query(value = "SELECT distinct on( uc.receiver_id) receiver_id ,uc.id, uc.device_model, uc.sender_id , uc.created_at, uc.message_text, uc.ad_id,uc.room FROM user_chats uc WHERE uc.room = ?1 AND uc.receiver_id != ?2", nativeQuery = true)
