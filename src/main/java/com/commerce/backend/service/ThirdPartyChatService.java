@@ -16,6 +16,6 @@ public interface ThirdPartyChatService {
    Page<UserChat> findChatByReciverId(Long userId);
    Page<UserChat> findChatBySenderAndReciver(Long Reciver);
    Page<UserChat> findChatBySenderAndReciverAndAds(Long reciver,Long sender, Long ads);
-   BatchResponse sendChatMessage(MessageRequest request) throws Exception;
+   Object sendChatMessage(MessageRequest request) throws Exception;
    Page<UserChat> findChatByRoom(ChatRoom room, Pageable pagable);
 }
