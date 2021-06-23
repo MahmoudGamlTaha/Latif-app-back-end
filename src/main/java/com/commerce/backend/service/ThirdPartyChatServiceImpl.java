@@ -20,6 +20,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
+import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.stereotype.Service;
 
 import com.commerce.backend.api.PublicApiController;
@@ -59,6 +62,9 @@ public class ThirdPartyChatServiceImpl implements ThirdPartyChatService {
 	
 	@Autowired
 	CustomUserAdsRepo userAdsRepo;
+	
+	@Autowired
+	UserService userService;
 	
 	FirebaseMessaging firebaseMessage;
     FirebaseAuth firebaseAuth;
@@ -227,5 +233,26 @@ public class ThirdPartyChatServiceImpl implements ThirdPartyChatService {
     	//String token = requestMessage.getRecevier().toString()+"-"+requestMessage.getSender().toString()+requestMessage.getAd_item();
     	return 	UUID.randomUUID().toString();
     }
+
+	@Override
+	public Page<UserChat> checkExistHistory(Long ads, Pageable pagable) throws AccountNotFoundException {
+		User user = this.userService.getCurrentUser();
+		if(user == null) {
+		throw new AccountNotFoundException("Not found chat");
+		}
+		return 	this.userChatRepository.getChatByAds(user.getId(), user.getId(), ads, pagable);
+	}
+
+	@Override
+	public Page<UserChat> findNextPageByMessageId(String messageId, Pageable pagable) {
+		User user = this.userService.getCurrentUser(); 
+		if(user == null ) {
+			OAuth2Error err = new OAuth2Error(OAuth2ErrorCodes.ACCESS_DENIED);
+			throw new OAuth2AuthenticationException(err, "Noting To Do");	
+		}
+		System.out.print("USER ID:"+user.getId());
+		return this.userChatRepository.findNextChat(UUID.fromString(messageId), user.getId(), pagable);
+		
+	}
 
 }

@@ -3,6 +3,8 @@ package com.commerce.backend.api;
 import java.util.HashMap;
 import java.util.Optional;
 
+import javax.security.auth.login.AccountNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +27,7 @@ import com.commerce.backend.helper.ChatHistoryRequest;
 import com.commerce.backend.helper.ChatRoom;
 import com.commerce.backend.helper.MessageRequest;
 import com.commerce.backend.helper.resHelper;
+import com.commerce.backend.model.entity.SystemSetting;
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.entity.UserChat;
 import com.commerce.backend.model.response.BasicResponse;
@@ -100,5 +103,21 @@ public class ThirdPartyChatController extends PublicApiController{
         response.setSuccess(true);
         response.setResponse(mapResponse);
 		return response;
+	}
+	
+	@GetMapping(value = "/chat/check-chat-ads")
+	public BasicResponse checkOldChatsOnAds(@RequestParam Long ads) throws AccountNotFoundException {
+		Pageable pageable = PageRequest.of(0, SystemConstant.MOBILE_PAGE_SIZE);
+		 Page<UserChat> chat = this.thirdPartyChatService.checkExistHistory(ads, pageable);
+		 return resHelper.res(chat, true, MessageType.Success.getMessage(), pageable);
+		
+	}
+	
+	@GetMapping(value = "/chat/next-page-by-id")
+	public BasicResponse getNextPageBaseOnMessage(@RequestParam String message_id) throws AccountNotFoundException {
+		Pageable pageable = PageRequest.of(0, SystemConstant.MOBILE_PAGE_SIZE);
+		 Page<UserChat> chat = this.thirdPartyChatService.findNextPageByMessageId(message_id, pageable);
+		 return resHelper.res(chat, true, MessageType.Success.getMessage(), pageable);
+		
 	}
 }
