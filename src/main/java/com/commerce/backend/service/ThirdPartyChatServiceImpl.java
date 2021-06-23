@@ -110,12 +110,21 @@ public class ThirdPartyChatServiceImpl implements ThirdPartyChatService {
        List<Long> receivers = new LinkedList<Long>();
          if(request.getRecevier() == null || request.getRecevier() == 0){
         	 List<UserChat> chatReciever = this.userChatRepository.findReciverByChatRoom(request.getRoom(), sender.getId());
-            if(chatReciever == null) {
-            	throw new AccountNotFoundException("Not found chat");
-            }
+            if(chatReciever.isEmpty()) {
+            	chatReciever = this.userChatRepository.findReciverByChatRoom(request.getRoom());
+            	
+            	 chatReciever.stream().forEach((userChat) ->{
+            		 if(userChat.getSenderId() != sender.getId())
+                	   receivers.add(userChat.getSenderId());
+                 });  
+            	 if(chatReciever.isEmpty()) {
+                 	throw new AccountNotFoundException("Not found chat");
+                 	}
+            }else {
         	 chatReciever.stream().forEach((userChat) ->{
             	 receivers.add(userChat.getReciverId());
              });  
+            }
          }else {
         	 receivers.add(request.getRecevier());
          }
@@ -146,7 +155,7 @@ public class ThirdPartyChatServiceImpl implements ThirdPartyChatService {
         
          List<Message> messages  = new LinkedList<Message>();
          // push---------- --------------
-         receivers.stream().forEach((userId)->{ 
+         receivers.stream().forEach((userId) -> { 
          User receiver = this.userRepository.findById(userId).orElse(null);
          Hibernate.initialize(receiver.getToken());
          if(receiver == null || ( receiver != null && receiver.getToken().size() == 0)) {

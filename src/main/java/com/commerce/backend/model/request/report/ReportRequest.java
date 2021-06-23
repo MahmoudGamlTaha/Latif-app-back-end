@@ -10,9 +10,7 @@ public class ReportRequest {
 
     Long reason;
     
-    Long user_id;
-    
-    String otherReson;
+    String otherReason;
     
     ReportType type;
 }

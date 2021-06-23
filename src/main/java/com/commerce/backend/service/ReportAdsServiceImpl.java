@@ -59,7 +59,7 @@ public class ReportAdsServiceImpl implements ReportAdsService{
     @Override
     public BasicResponse create(ReportRequest request) {
        // String principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        User user = userRepository.findById(request.getUser_id()).orElse(null);
+        User user = this.userService.getCurrentUser();
         if(user == null || request.getAdId() == null || request.getType() == null){
             return resHelper.res(null , false, MessageType.Missing.getMessage(), null);
         }
@@ -75,12 +75,14 @@ public class ReportAdsServiceImpl implements ReportAdsService{
             reportedAds.setUser(user);
             reportedAds.setReportedAds(userAds);
             if(request.getType().equals(ReportType.REPORT)){
-                ReportReasons reportReasons = reportReasonsRepository.findById(request.getReason()).orElse(null);
+              if(request.getReason() != null) {
+            	ReportReasons reportReasons = reportReasonsRepository.findById(request.getReason()).orElse(null);
                 if(reportReasons != null) {
                     reportedAds.setReason(reportReasons);
                 }
-                if(request.getOtherReson() != null) {
-                	reportedAds.setOtherReason(request.getOtherReson());
+              }
+                if(request.getOtherReason() != null) {
+                	reportedAds.setOtherReason(request.getOtherReason());
                 }
             }
             reportedAds.setReportType(request.getType());

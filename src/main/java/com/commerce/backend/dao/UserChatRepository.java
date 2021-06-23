@@ -28,4 +28,7 @@ public interface UserChatRepository extends JpaRepository<UserChat, UUID> {
    
    @Query(value = "SELECT distinct on( uc.receiver_id) receiver_id ,uc.id, uc.device_model, uc.sender_id , uc.created_at, uc.message_text, uc.ad_id,uc.room FROM user_chats uc WHERE uc.room = ?1 AND uc.receiver_id != ?2", nativeQuery = true)
    List<UserChat> findReciverByChatRoom(String room, Long sender);
+   
+   @Query(value = "SELECT distinct on( uc.receiver_id) receiver_id ,uc.id, uc.device_model, uc.sender_id , uc.created_at, uc.message_text, uc.ad_id,uc.room FROM user_chats uc WHERE uc.room = ?1", nativeQuery = true)
+   List<UserChat> findReciverByChatRoom(String room);
 }
