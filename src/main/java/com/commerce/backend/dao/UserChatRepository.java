@@ -23,6 +23,10 @@ public interface UserChatRepository extends JpaRepository<UserChat, UUID> {
  
    @Query(value = "SELECT * FROM  user_chats uc WHERE (uc.sender_id = ?1 AND uc.receiver_id = ?2  and uc.ad_id = ?3) OR (uc.sender_id = ?2 AND uc.receiver_id = ?1  and uc.ad_id = ?3) AND uc.room NOTNULL LIMIT 1", nativeQuery = true)
    UserChat getChatRoom(Long sender, Long reciver,Long ads);
+   
+   @Query(value = "SELECT * FROM  user_chats uc WHERE (uc.sender_id = ?1 AND uc.receiver_id = ?2  and uc.ad_id = ?3) OR (uc.sender_id = ?2 AND uc.receiver_id = ?1  and uc.ad_id = ?3) AND uc.room NOTNULL ORDER BY created_at desc", nativeQuery = true)
+   Page<UserChat> getChatByAds(Long sender, Long reciver,Long ads, Pageable page);
+   
    @Query(value= "SELECT uc FROM UserChat uc WHERE uc.room = ?1 ORDER BY createAt desc", countQuery="SELECT COUNT(*) from UserChat uc WHERE uc.room = ?1")
    Page<UserChat> findChatByRoom(String room ,Pageable page);
    
@@ -31,4 +35,7 @@ public interface UserChatRepository extends JpaRepository<UserChat, UUID> {
    
    @Query(value = "SELECT distinct on( uc.receiver_id) receiver_id ,uc.id, uc.device_model, uc.sender_id , uc.created_at, uc.message_text, uc.ad_id,uc.room FROM user_chats uc WHERE uc.room = ?1", nativeQuery = true)
    List<UserChat> findReciverByChatRoom(String room);
+   
+   @Query(value= "SELECT uc FROM UserChat uc WHERE uc.senderId = ?2 OR uc.reciverId = ?2  and uc.createAt < (SELECT uc.createAt FROM UserChat uc where uc.id = ?1) ORDER BY createAt desc", countQuery="SELECT count(*) FROM UserChat uc WHERE uc.senderId = ?2 OR uc.reciverId = ?2 AND uc.createAt < (SELECT uc.createAt FROM UserChat uc where uc.id = ?1)")
+   Page<UserChat> findNextChat(UUID messageId, Long user ,Pageable page);
 }

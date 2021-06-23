@@ -1,6 +1,8 @@
 package com.commerce.backend.service;
 
 
+import javax.security.auth.login.AccountNotFoundException;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,4 +20,8 @@ public interface ThirdPartyChatService {
    Page<UserChat> findChatBySenderAndReciverAndAds(Long reciver,Long sender, Long ads);
    Object sendChatMessage(MessageRequest request) throws Exception;
    Page<UserChat> findChatByRoom(ChatRoom room, Pageable pagable);
+   //
+   Page<UserChat> checkExistHistory(Long ads, Pageable pagable) throws AccountNotFoundException; 
+   
+   Page<UserChat> findNextPageByMessageId(String rowID, Pageable pagable);
 }
