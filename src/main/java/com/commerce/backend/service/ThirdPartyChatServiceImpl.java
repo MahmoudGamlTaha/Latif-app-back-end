@@ -1,6 +1,5 @@
 package com.commerce.backend.service;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,17 +24,14 @@ import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.stereotype.Service;
 
-import com.commerce.backend.api.PublicApiController;
 import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.constants.SystemConstant;
 import com.commerce.backend.dao.CustomUserAdsRepo;
-import com.commerce.backend.dao.UserAdsRepository;
-import com.commerce.backend.dao.UserAdsRepositoryCustom;
+
 import com.commerce.backend.dao.UserChatRepository;
 import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.helper.ChatRoom;
 import com.commerce.backend.helper.MessageRequest;
-import com.commerce.backend.model.entity.SystemSetting;
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.entity.UserAds;
 import com.commerce.backend.model.entity.UserChat;
@@ -76,8 +72,9 @@ public class ThirdPartyChatServiceImpl implements ThirdPartyChatService {
 	
     @Override
 	public Page<UserChat> findChatBySenderId(Long userId) {
-		// TODO Auto-generated method stub
-		return null;
+    	Pageable page = PageRequest.of(0, SystemConstant.MOBILE_PAGE_SIZE);
+    	 Page<UserChat> resData = this.userChatRepository.findChatRoom(userId, page);
+    	 return resData;
 	}
 
 	@Override
@@ -250,7 +247,6 @@ public class ThirdPartyChatServiceImpl implements ThirdPartyChatService {
 			OAuth2Error err = new OAuth2Error(OAuth2ErrorCodes.ACCESS_DENIED);
 			throw new OAuth2AuthenticationException(err, "Noting To Do");	
 		}
-		System.out.print("USER ID:"+user.getId());
 		return this.userChatRepository.findNextChat(UUID.fromString(messageId), user.getId(), pagable);
 		
 	}

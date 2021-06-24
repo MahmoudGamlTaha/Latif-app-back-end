@@ -1,7 +1,9 @@
 package com.commerce.backend.api;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.security.auth.login.AccountNotFoundException;
 
@@ -9,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
@@ -58,14 +59,18 @@ public class ThirdPartyChatController extends PublicApiController{
 	
 	@GetMapping(value = {"/chat/my-chat"})
 	@ResponseBody
-	public BasicResponse getUserChat(@RequestBody ChatHistoryRequest chatRequest, @PathVariable(required = false) Integer page) {
+	public BasicResponse getUserChat(@RequestParam(required = false) Optional<Integer> page) {
 		BasicResponse response = new BasicResponse();
-		HashMap<String, Object> Messages = new HashMap<String, Object>();
-		Pageable pagable = PageRequest.of(page, SystemConstant.MOBILE_PAGE_SIZE);
+		Pageable pagable = PageRequest.of(page.orElse(0), SystemConstant.MOBILE_PAGE_SIZE);
+		User user = this.userService.getCurrentUser(); 
+		if(user == null ) {
+			OAuth2Error err = new OAuth2Error(OAuth2ErrorCodes.ACCESS_DENIED);
+			throw new OAuth2AuthenticationException(err, "Noting To Do");	
+		}
 		Page<UserChat> chatting = this.thirdPartyChatService
-				         .findChatBySenderAndReciverAndAds(chatRequest.getReciver(), chatRequest.getSender(), chatRequest.getAds());
+				         .findChatBySenderId(user.getId());
 	
-		resHelper.res(chatting, true, MessageType.Success.getMessage(), pagable);
+		response = resHelper.res(chatting.getContent(), true, MessageType.Success.getMessage(), pagable);
 		return response;
 	}
 	@GetMapping(value = {"/chat/history", "/chat/history?room={room}&page={page}"})
@@ -82,15 +87,18 @@ public class ThirdPartyChatController extends PublicApiController{
 		Pageable pagable = PageRequest.of(page.orElse(0), SystemConstant.MOBILE_PAGE_SIZE);
 		Page<UserChat> chatting = this.thirdPartyChatService
 				         .findChatByRoom(chatRoom, pagable);
-	
-		response = resHelper.res(chatting.getContent(), true, MessageType.Success.getMessage(), pagable);
+	    List<UserChat> userChats = chatting.getContent();
+	   userChats = userChats.stream().filter(line->{
+	    	return (line.getReciverId() == user.getId() || line.getSenderId() == user.getId());
+	    }).collect(Collectors.toList());
+		response = resHelper.res(userChats, true, MessageType.Success.getMessage(), pagable);
 		return response;
 	}
 	@PostMapping(value = "/chat/snd-msg")
 	public BasicResponse sendNotification(@RequestBody MessageRequest request) throws Exception {
 		//secure api
 		User user = this.userService.getCurrentUser();
-		if(user == null) {
+		if(user == null || (user != null && user.getId() != request.getSender())) {
 			OAuth2Error err = new OAuth2Error(OAuth2ErrorCodes.ACCESS_DENIED);
 			throw new OAuth2AuthenticationException(err, "Noting To Do");
 		}

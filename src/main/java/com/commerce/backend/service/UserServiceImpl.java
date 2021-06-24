@@ -44,9 +44,6 @@ public class UserServiceImpl implements UserService {
     private final ItemObjectCategoryRepository itemObjectCategoryRepository;
     private final ItemObjectCategoryResponseConverter ItemObjectCategoryResponseConverter;
     private RoleRepository roleRepository;
-    
-    @Autowired
-    private FirebaseMessaging firebaseMessage;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
