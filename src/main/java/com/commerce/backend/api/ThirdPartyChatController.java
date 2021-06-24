@@ -61,6 +61,7 @@ public class ThirdPartyChatController extends PublicApiController{
 	@ResponseBody
 	public BasicResponse getUserChat(@RequestParam(required = false) Optional<Integer> page) {
 		BasicResponse response = new BasicResponse();
+		
 		Pageable pagable = PageRequest.of(page.orElse(0), SystemConstant.MOBILE_PAGE_SIZE);
 		User user = this.userService.getCurrentUser(); 
 		if(user == null ) {
@@ -68,7 +69,7 @@ public class ThirdPartyChatController extends PublicApiController{
 			throw new OAuth2AuthenticationException(err, "Noting To Do");	
 		}
 		Page<UserChat> chatting = this.thirdPartyChatService
-				         .findChatBySenderId(user.getId());
+				         .findChatBySenderId(user.getId(), pagable);
 	
 		response = resHelper.res(chatting.getContent(), true, MessageType.Success.getMessage(), pagable);
 		return response;
@@ -116,15 +117,18 @@ public class ThirdPartyChatController extends PublicApiController{
 	@GetMapping(value = "/chat/check-chat-ads")
 	public BasicResponse checkOldChatsOnAds(@RequestParam Long ads) throws AccountNotFoundException {
 		Pageable pageable = PageRequest.of(0, SystemConstant.MOBILE_PAGE_SIZE);
-		 Page<UserChat> chat = this.thirdPartyChatService.checkExistHistory(ads, pageable);
-		 return resHelper.res(chat, true, MessageType.Success.getMessage(), pageable);
+		 UserChat chat = this.thirdPartyChatService.checkExistHistory(ads, pageable);
+		 if(chat == null) {
+			 chat = new UserChat();
+		 }
+		 return resHelper.res(chat.getRoom(), true, MessageType.Success.getMessage(), pageable);
 		
 	}
 	
 	@GetMapping(value = "/chat/next-page-by-id")
-	public BasicResponse getNextPageBaseOnMessage(@RequestParam String message_id) throws AccountNotFoundException {
+	public BasicResponse getNextPageBaseOnMessage(@RequestParam String message_id, @RequestParam String room) throws AccountNotFoundException {
 		Pageable pageable = PageRequest.of(0, SystemConstant.MOBILE_PAGE_SIZE);
-		 Page<UserChat> chat = this.thirdPartyChatService.findNextPageByMessageId(message_id, pageable);
+		 Page<UserChat> chat = this.thirdPartyChatService.findNextPageByMessageId(message_id, room, pageable);
 		 return resHelper.res(chat, true, MessageType.Success.getMessage(), pageable);
 		
 	}

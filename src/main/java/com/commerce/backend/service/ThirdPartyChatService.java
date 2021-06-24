@@ -14,14 +14,14 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 
 
 public interface ThirdPartyChatService {
-   Page<UserChat> findChatBySenderId(Long userId);
+   Page<UserChat> findChatBySenderId(Long userId, Pageable page);
    Page<UserChat> findChatByReciverId(Long userId);
    Page<UserChat> findChatBySenderAndReciver(Long Reciver);
    Page<UserChat> findChatBySenderAndReciverAndAds(Long reciver,Long sender, Long ads);
    Object sendChatMessage(MessageRequest request) throws Exception;
    Page<UserChat> findChatByRoom(ChatRoom room, Pageable pagable);
    //
-   Page<UserChat> checkExistHistory(Long ads, Pageable pagable) throws AccountNotFoundException; 
+   UserChat checkExistHistory(Long ads, Pageable pagable) throws AccountNotFoundException; 
    
-   Page<UserChat> findNextPageByMessageId(String rowID, Pageable pagable);
+   Page<UserChat> findNextPageByMessageId(String rowID, String room, Pageable pagable);
 }

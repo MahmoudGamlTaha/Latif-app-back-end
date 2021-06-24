@@ -8,8 +8,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -46,4 +49,12 @@ public class UserChat {
 	
 	@Column(name = "created_at")
 	private Date createAt;
+	
+	@JsonInclude()
+	@Transient
+	private String reciverName;
+	
+	@JsonInclude()
+	@Transient
+	private String reciverImage;
 }

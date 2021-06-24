@@ -71,8 +71,8 @@ public class ThirdPartyChatServiceImpl implements ThirdPartyChatService {
     }
 	
     @Override
-	public Page<UserChat> findChatBySenderId(Long userId) {
-    	Pageable page = PageRequest.of(0, SystemConstant.MOBILE_PAGE_SIZE);
+	public Page<UserChat> findChatBySenderId(Long userId, Pageable page) {
+    	
     	 Page<UserChat> resData = this.userChatRepository.findChatRoom(userId, page);
     	 return resData;
 	}
@@ -232,22 +232,22 @@ public class ThirdPartyChatServiceImpl implements ThirdPartyChatService {
     }
 
 	@Override
-	public Page<UserChat> checkExistHistory(Long ads, Pageable pagable) throws AccountNotFoundException {
+	public UserChat checkExistHistory(Long ads, Pageable pagable) throws AccountNotFoundException {
 		User user = this.userService.getCurrentUser();
 		if(user == null) {
 		throw new AccountNotFoundException("Not found chat");
 		}
-		return 	this.userChatRepository.getChatByAds(user.getId(), user.getId(), ads, pagable);
+		return 	this.userChatRepository.existsChatByAds(user.getId(), user.getId(), ads);
 	}
 
 	@Override
-	public Page<UserChat> findNextPageByMessageId(String messageId, Pageable pagable) {
+	public Page<UserChat> findNextPageByMessageId(String messageId, String room, Pageable pagable) {
 		User user = this.userService.getCurrentUser(); 
 		if(user == null ) {
 			OAuth2Error err = new OAuth2Error(OAuth2ErrorCodes.ACCESS_DENIED);
 			throw new OAuth2AuthenticationException(err, "Noting To Do");	
 		}
-		return this.userChatRepository.findNextChat(UUID.fromString(messageId), user.getId(), pagable);
+		return this.userChatRepository.findNextChat(UUID.fromString(messageId), user.getId(), room, pagable);
 		
 	}
 
