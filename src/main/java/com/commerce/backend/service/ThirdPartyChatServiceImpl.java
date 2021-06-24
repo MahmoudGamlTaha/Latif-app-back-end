@@ -73,7 +73,7 @@ public class ThirdPartyChatServiceImpl implements ThirdPartyChatService {
     @Override
 	public Page<UserChat> findChatBySenderId(Long userId, Pageable page) {
     	
-    	 Page<UserChat> resData = this.userChatRepository.findChatRoom(userId,page.getOffset(), page);
+    	 Page<UserChat> resData = this.userChatRepository.findChatRoom(userId, page);
     	 return resData;
 	}
 

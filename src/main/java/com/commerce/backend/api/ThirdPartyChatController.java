@@ -62,7 +62,7 @@ public class ThirdPartyChatController extends PublicApiController{
 	public BasicResponse getUserChat(@RequestParam(required = false) Optional<Integer> page) {
 		BasicResponse response = new BasicResponse();
 		
-		Pageable pagable = PageRequest.of(page.orElse(1), SystemConstant.MOBILE_PAGE_SIZE);
+		Pageable pagable = PageRequest.of(page.orElse(0), SystemConstant.MOBILE_PAGE_SIZE);
 		User user = this.userService.getCurrentUser(); 
 		if(user == null ) {
 			OAuth2Error err = new OAuth2Error(OAuth2ErrorCodes.ACCESS_DENIED);

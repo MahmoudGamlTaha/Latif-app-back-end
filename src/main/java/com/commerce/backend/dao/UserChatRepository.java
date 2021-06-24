@@ -40,5 +40,5 @@ public interface UserChatRepository extends JpaRepository<UserChat, UUID> {
    Page<UserChat> findNextChat(UUID messageId, Long user, String room, Pageable page);
    
    @Query(value = "SELECT distinct on(room) uc.room,uc.id, uc.device_model, uc.sender_id , uc.created_at, uc.message_text, uc.ad_id,uc.room, uc.receiver_id FROM user_chats uc WHERE uc.receiver_id = ?1 OR uc.sender_id = ?1", nativeQuery = true, countQuery="SELECT COUNT(*) from user_chats uc WHERE uc.receiver_id = ?1 OR uc.sender_id = ?1")
-   Page<UserChat> findChatRoom(Long user, Long offset ,Pageable pageable);
+   Page<UserChat> findChatRoom(Long user,Pageable pageable);
 }
