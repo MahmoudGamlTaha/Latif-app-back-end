@@ -1,6 +1,7 @@
 package com.commerce.backend.api;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,10 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.constants.SystemConstant;
+import com.commerce.backend.converter.UserChatToVOConverter;
 import com.commerce.backend.helper.ChatHistoryRequest;
 import com.commerce.backend.helper.ChatRoom;
 import com.commerce.backend.helper.MessageRequest;
 import com.commerce.backend.helper.resHelper;
+import com.commerce.backend.model.dto.UserChatVO;
 import com.commerce.backend.model.entity.SystemSetting;
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.entity.UserChat;
@@ -44,6 +47,9 @@ public class ThirdPartyChatController extends PublicApiController{
 	@Autowired
 	UserService userService;
 	
+	@Autowired
+	UserChatToVOConverter userChatConverter;
+	
 	@GetMapping(value = {"/chat/history/list", "/chat/history/list?page={page}"})
 	@ResponseBody
 	public BasicResponse getChatHistory(@RequestBody ChatHistoryRequest chatRequest, @PathVariable(required = false) Integer page) {
@@ -52,7 +58,7 @@ public class ThirdPartyChatController extends PublicApiController{
 		Pageable pagable = PageRequest.of(page, SystemConstant.MOBILE_PAGE_SIZE);
 		Page<UserChat> chatting = this.thirdPartyChatService
 				         .findChatBySenderAndReciverAndAds(chatRequest.getReciver(), chatRequest.getSender(), chatRequest.getAds());
-	
+	    
 		resHelper.res(chatting, true, MessageType.Success.getMessage(), pagable);
 		return response;
 	}
@@ -70,10 +76,12 @@ public class ThirdPartyChatController extends PublicApiController{
 		}
 		Page<UserChat> chatting = this.thirdPartyChatService
 				         .findChatBySenderId(user.getId(), pagable);
-	
-		response = resHelper.res(chatting.getContent(), true, MessageType.Success.getMessage(), pagable);
+		List<UserChatVO> userChatVOs = new LinkedList<UserChatVO>();
+		chatting.forEach(chat -> userChatVOs.add(userChatConverter.apply(chat)));
+		response = resHelper.res(userChatVOs, true, MessageType.Success.getMessage(), pagable);
 		return response;
 	}
+	@Deprecated
 	@GetMapping(value = {"/chat/history", "/chat/history?room={room}&page={page}"})
 	@ResponseBody
 	public BasicResponse getChatRoom(@RequestParam(required = true) String room, @RequestParam(required = false) Optional<Integer> page) {
@@ -126,10 +134,34 @@ public class ThirdPartyChatController extends PublicApiController{
 	}
 	
 	@GetMapping(value = "/chat/next-page-by-id")
-	public BasicResponse getNextPageBaseOnMessage(@RequestParam String message_id, @RequestParam String room) throws AccountNotFoundException {
+	public BasicResponse getChatByRoomMessage(@RequestParam(required =false) String message_id, @RequestParam String room) throws AccountNotFoundException {
 		Pageable pageable = PageRequest.of(0, SystemConstant.MOBILE_PAGE_SIZE);
-		 Page<UserChat> chat = this.thirdPartyChatService.findNextPageByMessageId(message_id, room, pageable);
-		 return resHelper.res(chat, true, MessageType.Success.getMessage(), pageable);
+		User user = this.userService.getCurrentUser(); 
+		if(user == null ) {
+			OAuth2Error err = new OAuth2Error(OAuth2ErrorCodes.ACCESS_DENIED);
+			throw new OAuth2AuthenticationException(err, "Noting To Do");	
+		}
+		if(message_id != null) { 
+		Page<UserChat> chatting = this.thirdPartyChatService.findNextPageByMessageId(message_id, room, pageable);
+		
+		List<UserChatVO> userChatVOs = new LinkedList<UserChatVO>();
+		chatting.forEach(chat -> userChatVOs.add(userChatConverter.apply(chat)));
+		 return resHelper.res(userChatVOs, true, MessageType.Success.getMessage(), pageable);
+		
+		}
+		ChatRoom chatRoom = new ChatRoom();
+		chatRoom.setRoom(room);
+		Page<UserChat> chatting = this.thirdPartyChatService
+		         .findChatByRoom(chatRoom, pageable);
+			List<UserChat> userChats = chatting.getContent();
+			userChats = userChats.stream().filter(line->{
+				return (line.getReciverId() == user.getId() || line.getSenderId() == user.getId());
+			}).collect(Collectors.toList());
+			
+			List<UserChatVO> userChatVOs = new LinkedList<UserChatVO>();
+			userChats.forEach(chat -> userChatVOs.add(userChatConverter.apply(chat)));
+			BasicResponse response = resHelper.res(userChatVOs, true, MessageType.Success.getMessage(), pageable);
+			return response;
 		
 	}
 }
