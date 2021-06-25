@@ -21,4 +21,6 @@ public class UserChatVO {
 	private Date createAt;
 	
 	private String reciverName;
+	
+	private String reciverImage;
 }
