@@ -22,4 +22,5 @@ public interface ItemObjectCategoryCacheService {
     BasicResponse createItemObjectCategory(CategoryRequest request);
     ItemObjectCategory deleteItemObjectCategory(Long id);
     ItemObjectCategory updateItemCategory(CategoryUpdateRequest request);
+    List<ItemObjectCategory> findCategoriesByParent(Integer id);
 }

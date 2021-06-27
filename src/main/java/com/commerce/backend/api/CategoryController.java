@@ -43,6 +43,16 @@ public class CategoryController extends PublicApiController {
     	HttpStatus status = response.getMsg() != MessageType.Success.getMessage()?HttpStatus.BAD_REQUEST: HttpStatus.OK;
     	return new ResponseEntity<BasicResponse>(response, status);
     }
+    
+    @GetMapping(value = {"/cat-by-parent/parent={ParentId}", "/cat-by-adType/type={adtypeId}/{page}"})
+    @ResponseBody
+    public ResponseEntity<BasicResponse> getCategoriesByParent(@PathVariable("adtypeId") Integer ParentId, 
+    		                                                   @PathVariable(required = false) Optional<Integer> page){
+    	BasicResponse response = this.itemObjectCategoryService.findAllByTypeId(ParentId, page.orElse(0));
+    	HttpStatus status = response.getMsg() != MessageType.Success.getMessage()?HttpStatus.BAD_REQUEST: HttpStatus.OK;
+    	return new ResponseEntity<BasicResponse>(response, status);
+    }
+    
     @GetMapping(value = "/pet-category")
     public ResponseEntity<List<ItemObjectCategoryResponse>> getPetCategories() {
         List<ItemObjectCategoryResponse> productCategories = itemObjectCategoryService.findPetsCategories();

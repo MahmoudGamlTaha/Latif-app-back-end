@@ -71,11 +71,14 @@ public class UserServiceImpl implements UserService {
         user.setMobile(registerUserRequest.getPhone());
         user.setActive(true);
         user.setRegistrationDate(new Date());
+        user.setAddress(registerUserRequest.getAddress());
         String[] names = registerUserRequest.getName().split(" ");
    
         user.setFirstName(names[0]);
         if(names.length > 1) {
         user.setLastName(names[1]);
+        }else {
+        	user.setLastName("");
         }
         return userRepository.save(user);
     }

@@ -19,5 +19,6 @@ public interface ItemObjectCategoryRepository extends JpaRepository<ItemObjectCa
 	
    @Where(clause ="active = true")
     Page<ItemObjectCategory> findByType(Integer type, Pageable page);
-  
+    
+   
 }

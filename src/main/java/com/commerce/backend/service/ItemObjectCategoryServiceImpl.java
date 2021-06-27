@@ -134,5 +134,15 @@ public class ItemObjectCategoryServiceImpl implements ItemObjectCategoryService 
 		response.setSuccess(true);
 		return response;
 	}
+
+	@Override
+	public List<ItemObjectCategoryResponse> findAllByParent(Integer parent) {
+	List<ItemObjectCategory> itemCategories = itemObjectCategoryCacheService.findCategoriesByParent(parent);
+		
+		return itemCategories
+				.stream()
+				.map(itemObjectCategoryResponseConverter)
+				.collect(Collectors.toList());
+	}
 	
 }
