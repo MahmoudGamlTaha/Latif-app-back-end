@@ -26,7 +26,7 @@ public interface UserChatRepository extends JpaRepository<UserChat, UUID> {
    
    @Query(value = "SELECT * FROM  user_chats uc WHERE (uc.sender_id = ?1 OR uc.receiver_id = ?2)  and uc.ad_id = ?3 AND uc.room NOTNULL ORDER BY created_at desc LIMIT 1", nativeQuery = true)
    UserChat existsChatByAds(Long sender, Long reciver,Long ads);
-   
+   @Deprecated
    @Query(value= "SELECT uc FROM UserChat uc WHERE uc.room = ?1 ORDER BY createAt desc", countQuery="SELECT COUNT(*) from UserChat uc WHERE uc.room = ?1")
    Page<UserChat> findChatByRoom(String room ,Pageable page);
    
