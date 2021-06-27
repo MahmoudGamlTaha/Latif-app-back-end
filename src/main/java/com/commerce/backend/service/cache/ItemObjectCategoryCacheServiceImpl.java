@@ -248,4 +248,10 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 		this.itemObjectRepository.save(category);
 		return category;
 	}
+
+	@Override
+	public List<ItemObjectCategory> findCategoriesByParent(Integer id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
