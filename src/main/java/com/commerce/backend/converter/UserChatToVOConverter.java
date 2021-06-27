@@ -9,7 +9,6 @@ import com.commerce.backend.dao.UserRepository;
 import com.commerce.backend.model.dto.UserChatVO;
 import com.commerce.backend.model.entity.User;
 import com.commerce.backend.model.entity.UserChat;
-import com.commerce.backend.service.UserService;
 @Component
 public class UserChatToVOConverter implements Function<UserChat, UserChatVO> {
      
