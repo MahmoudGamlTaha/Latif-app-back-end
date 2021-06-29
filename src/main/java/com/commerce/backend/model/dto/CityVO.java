@@ -6,6 +6,6 @@ import lombok.Data;
 public class CityVO {
   private String cityAr;
   private String city;
-  private Long countryId;
+  private Long country;
   private boolean active;
 }

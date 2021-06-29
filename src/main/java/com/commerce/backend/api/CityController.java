@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +26,7 @@ import com.commerce.backend.model.dto.UrlOptionVO;
 import com.commerce.backend.model.entity.Cites;
 import com.commerce.backend.model.entity.Country;
 import com.commerce.backend.model.response.BasicResponse;
+import com.commerce.backend.service.UserService;
 
 @RestController
 public class CityController extends PublicApiController {
@@ -37,6 +40,9 @@ public class CityController extends PublicApiController {
 	@Autowired
 	private UrlOptionVOConverter urlOptionVoConverter;
 	
+	@Autowired
+	private UserService userService;
+	// for mobile create form
 	@GetMapping(value = "/cites")
 	public BasicResponse cites() {
 	    BasicResponse response = new BasicResponse();
@@ -52,20 +58,33 @@ public class CityController extends PublicApiController {
 	    response.setResponse(responseMap);
 	   return response;
    }
-	@PostMapping(value = "city/create")
-	public BasicResponse create(CityVO city) {
-		BasicResponse response = new BasicResponse();
-		HashMap<String, Object>  responseMap = new HashMap<String, Object>();
-		Cites cities = new Cites();
-		Country country = this.countryRepository.findById(city.getCountryId()).orElse(null);
-		
-		cities.setActive(city.isActive());
-		cities.setCountry(country);
-		cities.setCityAr(city.getCityAr());
-		cities.setCityEn(city.getCity());
-		response = resHelper.res(cities, true, MessageType.Success.getMessage(), null);
-		return response;
-	}
+	@GetMapping(value = "/cites-list")
+	public BasicResponse activeCites() {
+	    BasicResponse response = new BasicResponse();
+	    response.setMsg(MessageType.Success.getMessage());
+	    
+	    HashMap<String, Object> responseMap = new HashMap<String, Object>();
+	    
+	    List<Cites> allCities = this.cityReposioty.findByActive(true);
+	    
+	    responseMap.put(MessageType.Data.getMessage(), allCities);
+	    response.setResponse(responseMap);
+	   return response;
+   }
+	
+	@GetMapping(value = "/cites-all")
+	public BasicResponse allCites() {
+	    BasicResponse response = new BasicResponse();
+	    response.setMsg(MessageType.Success.getMessage());
+	    
+	    HashMap<String, Object> responseMap = new HashMap<String, Object>();
+	    
+	    List<Cites> allCities = this.cityReposioty.findAll();
+	    
+	    responseMap.put(MessageType.Data.getMessage(), allCities);
+	    response.setResponse(responseMap);
+	   return response;
+   }
 	
 	@PostMapping(value = "country/create")
 	@ResponseBody
@@ -75,12 +94,32 @@ public class CityController extends PublicApiController {
 	    country.setActive(countryVO.isActive());
 	    country.setNameAr(countryVO.getCountry());
 	    country.setNameEn(countryVO.getCountryAr());
+	    country.setLanguage(countryVO.getLanguage());
 	    country = this.countryRepository.save(country);
 		response.setMsg(MessageType.Data.getMessage());
-    	resHelper.res(country, true, MessageType.Success.getMessage(), null);
+		response = resHelper.res(country, true, MessageType.Success.getMessage(), null);
+		return response;
+	}
+	@PostMapping(value = "cites/create")
+	@ResponseBody
+	public BasicResponse createCity(@RequestBody CityVO cityVO) {
+		BasicResponse response = new BasicResponse();
+		Country country = this.countryRepository.findById(cityVO.getCountry()).orElse(null);
+		if(country == null) {
+			throw new EntityNotFoundException("country not found");
+		}
+		Cites city = new Cites();
+	    city.setActive(cityVO.isActive());
+	    city.setCityEn(cityVO.getCity());
+	    city.setCityAr(cityVO.getCityAr());
+	    city.setCountry(country);
+	    city = this.cityReposioty.save(city);
+		response.setMsg(MessageType.Data.getMessage());
+		response = resHelper.res(city, true, MessageType.Success.getMessage(), null);
 		return response;
 	}
 	@PostMapping(value = "country/disable")
+	@ResponseBody
 	public BasicResponse disableCountry(CountryVO city) {
 		BasicResponse response = new BasicResponse();
 		HashMap<String, Object>  responseMap = new HashMap<String, Object>();
@@ -88,6 +127,16 @@ public class CityController extends PublicApiController {
 		response.setMsg(MessageType.Data.getMessage());
 		response.setSuccess(true);
 		response.setResponse(responseMap);
+		return response;
+	}
+	
+	@GetMapping(value = "city/find-by-country-id")
+	public BasicResponse findCityInCountry(@RequestParam Long country) {
+		BasicResponse response = new BasicResponse();
+		Country countryObj = new Country();
+		countryObj.setId(country);
+		List<Cites> cites = this.cityReposioty.findByCounty(countryObj);
+		response = resHelper.res(cites, true, MessageType.Success.getMessage(), null);
 		return response;
 	}
 	
