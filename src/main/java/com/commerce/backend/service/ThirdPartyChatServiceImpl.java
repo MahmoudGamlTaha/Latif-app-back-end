@@ -143,6 +143,7 @@ public class ThirdPartyChatServiceImpl implements ThirdPartyChatService {
 	                .builder()
 	                .setTitle(MessageType.NEW_MESSAGE.getMessage())
 	                .setBody(request.getMessage())
+	   
 	                .build();
     	
     	Map<String, String> data = new HashMap<String, String>();
@@ -153,6 +154,7 @@ public class ThirdPartyChatServiceImpl implements ThirdPartyChatService {
          data.put("prod_name", ads.getName());
          data.put("message", request.getMessage());
          data.put("prod_id", String.valueOf(ads.getId()));
+         data.put("sender_id", String.valueOf(sender.getId()));
         
        
       //   Date maxDate = receiver.getToken().stream().filter(emp -> emp.getExpiryDate() != null).map(VerificationToken::getExpiryDate).max(Date::compareTo).get();

@@ -149,9 +149,9 @@ public class UserServiceImpl implements UserService {
                 if(updateUserRequest.getLastName() != null) {
                     user.setLastName(updateUserRequest.getLastName());
                 }
-                //if(updateUserRequest.getPhone() != null) {
-                //    user.setMobile(updateUserRequest.getPhone());
-                //}
+                if(updateUserRequest.getPhone() != null) {
+                    user.setMobile(updateUserRequest.getPhone());
+                }
                 if(updateUserRequest.getEmail() != null) {
                     user.setEmail(updateUserRequest.getEmail());
                 }
