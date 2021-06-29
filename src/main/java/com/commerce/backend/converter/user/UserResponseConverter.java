@@ -17,8 +17,10 @@ public class UserResponseConverter implements Function<User, UserResponse> {
 	        userResponse = new UserResponse();
 	        userResponse.setEmail(user.getEmail());
 	        userResponse.setFirstName(user.getFirstName());
-	        userResponse.setLastName(user.getLastName());
-	        userResponse.setAddress(user.getAddress());
+	        String lname = user.getLastName() == null? "" : user.getLastName();
+	        userResponse.setLastName(lname);
+	        String address = user.getAddress() == null? "" : user.getAddress();
+	        userResponse.setAddress(address);
 	        userResponse.setCity(user.getCity());
 	        userResponse.setState(user.getState());
 	        userResponse.setZip(user.getZip());
@@ -32,7 +34,6 @@ public class UserResponseConverter implements Function<User, UserResponse> {
 	        userResponse.setActive(user.isActive());
 	        userResponse.setRole(user.getRoles());
 	        userResponse.setProdCount(user.getAds().size());
-	        
     	}
         return userResponse;
     	
