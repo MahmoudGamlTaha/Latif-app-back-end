@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ public class CustomUserAdsCriteriaHelper {
 	private UserService userService; 
 	
 	@SuppressWarnings("unchecked")
-	
+	@Transactional
 	public List<UserAds> findNearestByCategory(AdsType type, Double longitude, Double latitude, Integer distance, Pageable pageable, Long category){
 		if(longitude == null || latitude == null) {
 			return this.find(type, pageable, category, null);
