@@ -1,6 +1,6 @@
 {"form":[
-  {"name": "category", "type": "url_option", "label": "Category", "url":"/api/public/cat-by-adType/type=1" , "required": true,"requiredcond":""},
-  {"name": "city", "type": "url_option","label": "City", "label_ar": "مكان الاعلان","url":"/api/public/cites", "required": true,"requiredcond":""},
+  {"name": "category", "type": "url_option", "label": "Category", "url":"/api/public/cat-by-adType/type=1" , "required": true,  "requiredcond":""},
+  {"name": "type", "type": "url_option_val", "value":"category", "label": "type", "url":"/category/get-categories-by-parent?id=?" , "required": true,  "requiredcond":""}, 
   {"name": "selling_type", "type": "radiobutton","label": "Type", "options":[{"label":"Selling", "code":"Selling"}, {"label":"Adopt", "code":"Adopt"}, {"label":"Lost", "code":"Lost"}, {"label":"Mating", "code":"Mating"}], "required": true,"requiredcond":""},
   {"name": "name","type": "string", "label": "Name", "label_ar": "الاسم", "required": true,"requiredcond":""},
   {"name": "description", "type": "string","label": "Description", "label_ar":"الوصف", "required": true,"requiredcond":""},

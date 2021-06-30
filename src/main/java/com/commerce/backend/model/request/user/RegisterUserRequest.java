@@ -35,7 +35,7 @@ public class RegisterUserRequest {
 	@Size(min = 5, max = 50)
 	private String passwordRepeat;
 	
-	private String city;
+	private Long city;
 	
 	private Long country;
 	

@@ -20,5 +20,7 @@ public interface ItemObjectCategoryRepository extends JpaRepository<ItemObjectCa
    @Where(clause ="active = true")
     Page<ItemObjectCategory> findByType(Integer type, Pageable page);
     
+   @Query(value = "SELECT * FROM item_category WHERE parent_id = ?1 ", nativeQuery = true)
+   List<ItemObjectCategory> findByCategory(Long category);
    
 }

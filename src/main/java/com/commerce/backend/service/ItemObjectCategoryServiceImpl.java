@@ -136,7 +136,7 @@ public class ItemObjectCategoryServiceImpl implements ItemObjectCategoryService 
 	}
 
 	@Override
-	public List<ItemObjectCategoryResponse> findAllByParent(Integer parent) {
+	public List<ItemObjectCategoryResponse> findAllByParent(Long parent) {
 	List<ItemObjectCategory> itemCategories = itemObjectCategoryCacheService.findCategoriesByParent(parent);
 		
 		return itemCategories

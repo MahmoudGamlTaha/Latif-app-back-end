@@ -100,6 +100,7 @@ public class CityController extends PublicApiController {
 		response = resHelper.res(country, true, MessageType.Success.getMessage(), null);
 		return response;
 	}
+	
 	@PostMapping(value = "cites/create")
 	@ResponseBody
 	public BasicResponse createCity(@RequestBody CityVO cityVO) {
@@ -118,9 +119,10 @@ public class CityController extends PublicApiController {
 		response = resHelper.res(city, true, MessageType.Success.getMessage(), null);
 		return response;
 	}
+	
 	@PostMapping(value = "country/disable")
 	@ResponseBody
-	public BasicResponse disableCountry(CountryVO city) {
+	public BasicResponse disableCountry(@RequestParam Long country, @RequestParam boolean active){
 		BasicResponse response = new BasicResponse();
 		HashMap<String, Object>  responseMap = new HashMap<String, Object>();
 		
@@ -154,7 +156,7 @@ public class CityController extends PublicApiController {
 	@GetMapping(value = "/countries")
 	public BasicResponse CountryList(CountryVO city) {
 		BasicResponse response = new BasicResponse();
-	    List<Country> countries = this.countryRepository.findCountry();
+	    List<Country> countries = this.countryRepository.findActiveCountries();
 	    response = resHelper.res(countries, true, MessageType.Success.getMessage(), null);
 		return response;
 	}

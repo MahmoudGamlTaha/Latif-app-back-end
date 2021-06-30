@@ -250,8 +250,8 @@ public class ItemObjectCategoryCacheServiceImpl implements ItemObjectCategoryCac
 	}
 
 	@Override
-	public List<ItemObjectCategory> findCategoriesByParent(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ItemObjectCategory> findCategoriesByParent(Long id) {
+		
+		return this.itemObjectRepository.findByCategory(id);
 	}
 }
