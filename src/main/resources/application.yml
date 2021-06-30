@@ -2,7 +2,6 @@ logging:
   level:
     org:
       hibernate:
-        SQL: DEBUG
         Type:
          Descriptor:
           sql:
@@ -26,12 +25,12 @@ spring:
   jackson:
     date-format: MMMM dd yyyy / HH:mm
   jpa:
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.spatial.dialect.postgis.PostgisDialect
         format_sql: true
-        show-sql: true
+        show-sql: false
       #  naming:
      #   physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl #org.hibernate.cfg.ImprovedNamingStrategy
   mail:
