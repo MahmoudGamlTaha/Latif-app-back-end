@@ -2,6 +2,7 @@ package com.commerce.backend.service;
 
 import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.converter.user.UserResponseConverter;
+import com.commerce.backend.dao.CityRepository;
 import com.commerce.backend.dao.ItemObjectCategoryRepository;
 import com.commerce.backend.dao.RoleRepository;
 import com.commerce.backend.dao.UserRepository;
@@ -9,6 +10,7 @@ import com.commerce.backend.error.exception.InvalidArgumentException;
 import com.commerce.backend.error.exception.ResourceNotFoundException;
 import com.commerce.backend.helper.resHelper;
 import com.commerce.backend.model.dto.UserDto;
+import com.commerce.backend.model.entity.Cites;
 import com.commerce.backend.model.entity.ItemObjectCategory;
 import com.commerce.backend.model.entity.Role;
 import com.commerce.backend.model.entity.User;
@@ -44,17 +46,23 @@ public class UserServiceImpl implements UserService {
     private final ItemObjectCategoryRepository itemObjectCategoryRepository;
     private final ItemObjectCategoryResponseConverter ItemObjectCategoryResponseConverter;
     private RoleRepository roleRepository;
+    private final CityRepository cityRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
-                           UserResponseConverter userResponseConverter, ItemObjectCategoryRepository itemObjectCategoryRepository, ItemObjectCategoryResponseConverter itemObjectCategoryResponseConverter, RoleRepository roleRepository) {
+                           UserResponseConverter userResponseConverter, 
+                           ItemObjectCategoryRepository itemObjectCategoryRepository, 
+                           ItemObjectCategoryResponseConverter itemObjectCategoryResponseConverter, 
+                           RoleRepository roleRepository,
+                           CityRepository cityRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userResponseConverter = userResponseConverter;
         this.itemObjectCategoryRepository = itemObjectCategoryRepository;
         ItemObjectCategoryResponseConverter = itemObjectCategoryResponseConverter;
         this.roleRepository = roleRepository;
+        this.cityRepository = cityRepository;
     }
 
     @Override
@@ -72,6 +80,11 @@ public class UserServiceImpl implements UserService {
         user.setActive(true);
         user.setRegistrationDate(new Date());
         user.setAddress(registerUserRequest.getAddress());
+        Cites city= this.cityRepository.findById(registerUserRequest.getCity()).orElse(null);
+        if(city != null) {
+        user.setCity(city.getCityAr());
+        user.setCountry(city.getCountry().getNameAr());
+        }        
         String[] names = registerUserRequest.getName().split(" ");
    
         user.setFirstName(names[0]);
