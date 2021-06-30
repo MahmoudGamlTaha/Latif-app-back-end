@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 public interface ItemObjectCategoryService {
 	ItemObjectCategory findById(Long id);
     BasicResponse findAllByTypeId(Integer id, Integer page);
-    List<ItemObjectCategoryResponse> findAllByParent(Integer parent);
+    List<ItemObjectCategoryResponse> findAllByParent(Long parent);
 	public BasicResponse findByCategoryId(Long id);
 	BasicResponse findAllByOrderByName(Pageable page);
     List<ItemObjectCategoryResponse> findPetsCategories();

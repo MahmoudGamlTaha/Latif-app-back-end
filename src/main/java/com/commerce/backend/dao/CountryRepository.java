@@ -12,12 +12,15 @@ import com.commerce.backend.model.entity.Country;
 public interface CountryRepository extends JpaRepository<Country, Long> {
 	
 	@Query(value= "SELECT c FROM Country c WHERE c.active = true")
-	List<Country> findCountry();
+	List<Country> findActiveCountries();
 	
 	@Query(value = "SELECT c from Country c")
 	List<Country> findAllCountry();
 	
 	@Query(value = "DELETE FROM Country c where c.id = ?1")
-    Integer DeleteCountry(Long id);
+    Integer deleteCountry(Long id);
+	
+	@Query(value = "UPDATE Country C SET C.active = ?2 WHERE C.id = ?1 ")
+	Integer activateCountry(Long id, boolean active);
 	
 }

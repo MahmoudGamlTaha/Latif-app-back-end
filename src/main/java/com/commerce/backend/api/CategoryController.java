@@ -2,6 +2,7 @@ package com.commerce.backend.api;
 
 import com.commerce.backend.constants.MessageType;
 import com.commerce.backend.constants.SystemConstant;
+import com.commerce.backend.helper.resHelper;
 import com.commerce.backend.model.request.category.CategoryRequest;
 import com.commerce.backend.model.request.category.CategoryUpdateRequest;
 import com.commerce.backend.model.response.BasicResponse;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -90,7 +92,12 @@ public class CategoryController extends PublicApiController {
     	BasicResponse itemCategory = itemObjectCategoryService.createItemObjectCategory(request);
     	return new ResponseEntity<>(itemCategory, HttpStatus.OK);
     }
-    
+    @GetMapping(value = "/category/get-categories-by-parent")
+     public ResponseEntity<BasicResponse> getCategoriesByParent(@RequestParam Long id){
+     List<ItemObjectCategoryResponse> response = this.itemObjectCategoryService.findAllByParent(id);
+     BasicResponse basicResponse = resHelper.res(response, true, MessageType.Data.getMessage(), null);
+     return new ResponseEntity<>(basicResponse, HttpStatus.OK);
+    }
     @PostMapping(value = "/category/delete")
     public ResponseEntity<ItemObjectCategoryResponse> deleteCategory(Long id){
     	ItemObjectCategoryResponse itemCategory = itemObjectCategoryService.deleteItemObjectCategory(id);
