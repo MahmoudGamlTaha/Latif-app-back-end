@@ -82,7 +82,8 @@ public class UserServiceImpl implements UserService {
         user.setAddress(registerUserRequest.getAddress());
         Cites city= this.cityRepository.findById(registerUserRequest.getCity()).orElse(null);
         if(city != null) {
-        user.setCity(city.getCityAr());
+        user.setCity(city);
+        user.setCityName(city.getCityEn());
         user.setCountry(city.getCountry().getNameAr());
         }        
         String[] names = registerUserRequest.getName().split(" ");
@@ -168,15 +169,13 @@ public class UserServiceImpl implements UserService {
                 if(updateUserRequest.getEmail() != null) {
                     user.setEmail(updateUserRequest.getEmail());
                 }
-                if(updateUserRequest.getCity() != null) {
-                    user.setCity(updateUserRequest.getCity());
-                }
-                if(updateUserRequest.getCountry() != null) {
-                    user.setCountry(updateUserRequest.getCountry());
-                }
-                if(updateUserRequest.getState() != null) {
-                    user.setState(updateUserRequest.getState());
-                }
+                Cites city= this.cityRepository.findById(updateUserRequest.getCity()).orElse(null);
+                if(city != null) {
+                user.setCity(city);
+                user.setCityName(city.getCityEn());
+                user.setCountry(city.getCountry().getNameAr());
+                }        
+               
                 if(updateUserRequest.getAddress() != null) {
                     user.setAddress(updateUserRequest.getAddress());
                 }
@@ -197,11 +196,13 @@ public class UserServiceImpl implements UserService {
     public UserResponse updateUserAddress(UpdateUserAddressRequest updateUserAddressRequest) {
         User user = getUser();
         user.setAddress(updateUserAddressRequest.getAddress());
-        user.setCity(updateUserAddressRequest.getCity());
-        user.setState(updateUserAddressRequest.getState());
+        Cites city= this.cityRepository.findById(updateUserAddressRequest.getCity()).orElse(null);
+        if(city != null) {
+        user.setCity(city);
+        user.setCityName(city.getCityEn());
+        user.setCountry(city.getCountry().getNameAr());
+        }        
         user.setZip(updateUserAddressRequest.getZip());
-        user.setCountry(updateUserAddressRequest.getCountry());
-
         user = userRepository.save(user);
         return userResponseConverter.apply(user);
     }
@@ -250,9 +251,12 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         user.setEmail(accountDto.getEmail());
         user.setRegistrationDate(new Date());
-        user.setCity(accountDto.getCity());
-        user.setCountry(accountDto.getCountry());
-        user.setState(accountDto.getState());
+        Cites city= this.cityRepository.findById(accountDto.getCity()).orElse(null);
+        if(city != null) {
+        user.setCity(city);
+        user.setCityName(city.getCityEn());
+        user.setCountry(city.getCountry().getNameAr());
+        }        
         user.setAddress(accountDto.getAddress());
         user.setRoles(roleRepository.findByName("USER"));
         return userRepository.save(user);

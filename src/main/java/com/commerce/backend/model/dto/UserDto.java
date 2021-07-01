@@ -39,14 +39,7 @@ public class UserDto {
     @Size(min = 1)
     private String email;
 
-    @NotNull
-    private String city;
-
-    @NotNull
-    private String state;
-
-    @NotNull
-    private String country;
+    private Long city;
 
     @NotNull
     private String address;
