@@ -104,8 +104,7 @@ public class UserAds {
 	 ItemObjectCategory category;
 
 	@JsonManagedReference
-	 @OneToMany(mappedBy="userAdsImage", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	//@OneToMany(cascade = CascadeType.ALL)
+	 @OneToMany(mappedBy="userAdsImage", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Set<UserAdsImage> userAdsImage = new HashSet<UserAdsImage>();
 	
