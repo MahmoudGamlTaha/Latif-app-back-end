@@ -142,10 +142,10 @@ class UserControllerTest {
         String address = faker.address().streetAddress();
 
         UpdateUserAddressRequest updateUserAddressRequest = new UpdateUserAddressRequest();
-        updateUserAddressRequest.setCity(city);
-        updateUserAddressRequest.setState(state);
+      //  updateUserAddressRequest.setCity(city);
+        //updateUserAddressRequest.setState(state);
         updateUserAddressRequest.setZip(zip);
-        updateUserAddressRequest.setCountry(country);
+       // updateUserAddressRequest.setCountry(country);
         updateUserAddressRequest.setAddress(address);
 
         UserResponse userResponse = new UserResponse();
@@ -177,10 +177,10 @@ class UserControllerTest {
         String address = faker.address().streetAddress();
 
         UpdateUserAddressRequest updateUserAddressRequest = new UpdateUserAddressRequest();
-        updateUserAddressRequest.setCity(city);
-        updateUserAddressRequest.setState(state);
+    //    updateUserAddressRequest.setCity(city);
+      //  updateUserAddressRequest.setState(state);
         updateUserAddressRequest.setZip(zip);
-        updateUserAddressRequest.setCountry(country);
+        //updateUserAddressRequest.setCountry(country);
         updateUserAddressRequest.setAddress(address);
 
         // when

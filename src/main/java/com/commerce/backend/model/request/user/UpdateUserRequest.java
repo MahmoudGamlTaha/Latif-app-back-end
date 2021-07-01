@@ -26,17 +26,15 @@ public class UpdateUserRequest {
     private String phone;
 
     @ValidEmail
-    @Size(min = 1)
+    @Size(min = 5)
     private String email;
 
-    @Size(min = 1)
+    @Size(min = 3)
     private String username;
 
-    private String city;
+    private Long city;
 
-    private String state;
-
-    private String country;
+    private Long country;
 
     private String address;
 

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Type;
@@ -36,7 +37,7 @@ public class User {
   //private Cart cart;
 
   @JsonManagedReference
-  @OneToMany(mappedBy = "createdBy", fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "createdBy" ,fetch = FetchType.EAGER)
   private Set<UserAds> ads;
   
   @Column(name = "email", unique = true)
@@ -52,8 +53,12 @@ public class User {
   private String lastName;
 
   @Column(name = "city")
-  private String city;
-
+  private String cityName;
+  
+  @ManyToOne(fetch =  FetchType.EAGER)
+  @JoinColumn(name = "city_id")
+  private Cites city;
+  
   @Column(name = "state")
   private String state;
 
