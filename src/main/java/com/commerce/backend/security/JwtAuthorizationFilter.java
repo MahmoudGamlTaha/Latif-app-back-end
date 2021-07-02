@@ -79,7 +79,8 @@ try {
                 if(!test.val){
                     return null;
                 }*/
-                UserDetailsImpl principal = new UserDetailsImpl(user);
+                UserDetailsImpl principal = new UserDetailsImpl();
+                principal.setUser(user);
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(mobile, null, principal.getAuthorities());
                 return auth;
             }

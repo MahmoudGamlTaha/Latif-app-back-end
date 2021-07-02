@@ -280,7 +280,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isAdmin(){
         User user = getCurrentUser();
-        UserDetailsImpl userDetails = new UserDetailsImpl(user);
+        UserDetailsImpl userDetails = new UserDetailsImpl();
+        userDetails.setUser(user);
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
         return authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }

@@ -30,7 +30,7 @@ public class Role {
     @JsonIgnore(value = true)
     private Set<User> users;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role_permissions",
             joinColumns = {@JoinColumn(name = "role_id")},

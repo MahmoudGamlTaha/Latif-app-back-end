@@ -22,6 +22,7 @@ public class CustomUserAdsCriteriaHelper {
    
 	@PersistenceContext(type  =  PersistenceContextType.EXTENDED)
 	private EntityManager entityManager;
+
 	private static final Logger loggerS = LoggerFactory.getLogger(CustomUserAdsCriteriaHelper.class);
 	
 	@Autowired
@@ -89,8 +90,8 @@ public class CustomUserAdsCriteriaHelper {
 	     
 		 String paging = "(select count(*) total_item, count(*)/:size total_page from user_ads  WHERE 1 = 1";
 		 if(type != AdsType.ALL) {
-			 sql += " AND type = :type ";
-			 paging+=" AND type = :type ";
+			 sql   += " AND type = :type ";
+			 paging+= " AND type = :type ";
 		 }
 		 if(category != null) {
 			 sql   += " AND category_id = :cat ";
@@ -99,6 +100,7 @@ public class CustomUserAdsCriteriaHelper {
 		
 		 paging +=") as page_info";
 		 sql = sql.replace("page_quey", paging);
+		 sql += " order by created_at desc";
 		 this.loggerS.info("query:" + sql);
 		 Query query = this.entityManager.createNativeQuery(sql, UserAds.class);
 		 

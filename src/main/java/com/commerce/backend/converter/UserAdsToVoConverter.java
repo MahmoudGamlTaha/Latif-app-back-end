@@ -51,13 +51,13 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		if(UserAds.class.cast(source).getType() == AdsType.ACCESSORIES) {
 			userAdsVo = new UserAccVO();
 		}
-		else if(UserAds.class.cast(source).getType() == AdsType.PET_CARE){
+		else if(source.getType() == AdsType.PET_CARE){
 			userAdsVo = new UserMedicalVO();
 		}
-		else if(UserAds.class.cast(source).getType() == AdsType.PETS) {
+		else if(source.getType() == AdsType.PETS) {
 			userAdsVo = new UserPetAdsVO();
 		}
-		else if(UserAds.class.cast(source).getType() == AdsType.SERVICE) {
+		else if(source.getType() == AdsType.SERVICE) {
 			userAdsVo = new UserServiceVO();
 		}
 		else {
@@ -65,7 +65,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			// throw new ResourceNotFoundException("Category Not Found");
 		}
 		
-		System.out.println(UserAds.class.cast(source).getType());
+		System.out.println(source.getType());
 		assert userAdsVo != null;
 		return convertToVo(source);
 	}
