@@ -22,7 +22,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             if (user == null) {
                 throw new UsernameNotFoundException("No user found with phone: " + s);
             }
-            return new UserDetailsImpl(user);
+            UserDetailsImpl userDetail = new UserDetailsImpl();
+            userDetail.setUser(user);
+            return userDetail;
       //  } catch (final Exception e) {
         //    throw new RuntimeException(e);
        // }
@@ -34,7 +36,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             if (user == null) {
                 throw new UsernameNotFoundException("No user found with phone: " + mobile);
             }
-            return new UserDetailsImpl(user);
+            UserDetailsImpl userDetail = new UserDetailsImpl();
+            userDetail.setUser(user);
+            return userDetail;
        // } catch (final Exception e) {
          //   throw new RuntimeException(e);
        // }

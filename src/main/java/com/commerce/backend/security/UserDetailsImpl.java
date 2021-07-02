@@ -2,21 +2,36 @@ package com.commerce.backend.security;
 
 import com.commerce.backend.model.entity.Role;
 import com.commerce.backend.model.entity.User;
+
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-public class UserDetailsImpl implements UserDetails {
-    private User user;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
+import javax.transaction.Transactional;
 
-    public UserDetailsImpl(User user){
-        this.user = user;
-    }
+@Service
+public class UserDetailsImpl implements UserDetails {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private User user;
+	@PersistenceContext
+	  private EntityManager entityManager;
+   
+    @Transactional
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         final List<GrantedAuthority> authorities = new ArrayList<>();
@@ -31,6 +46,8 @@ public class UserDetailsImpl implements UserDetails {
             for (Role _role : _roles) {
                 GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_"+_role.getName());
                 authorities.add(authority);
+            // entityManager.find(entityClass, primaryKey)
+              //  Hibernate.initialize(_role.getPermissions());
                 _role.getPermissions().forEach(p -> authorities.add(new SimpleGrantedAuthority(p.getName())));
             }
         }
@@ -73,6 +90,9 @@ public class UserDetailsImpl implements UserDetails {
     
     public User getCurrentUser() {
     	return this.user;
+    }
+    public void setUser(User user) {
+    	this.user = user;
     }
 }
 
