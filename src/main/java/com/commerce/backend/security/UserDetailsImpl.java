@@ -41,8 +41,6 @@ public class UserDetailsImpl implements UserDetails {
             for (Role _role : _roles) {
                 GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_"+_role.getName());
                 authorities.add(authority);
-            // entityManager.find(entityClass, primaryKey)
-               // Hibernate.initialize(_role.getPermissions());
                 _role.getPermissions().forEach(p -> authorities.add(new SimpleGrantedAuthority(p.getName())));
             }
         }
