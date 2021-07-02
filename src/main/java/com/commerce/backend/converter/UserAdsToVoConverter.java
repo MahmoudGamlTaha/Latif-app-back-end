@@ -48,7 +48,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
        if(source == null) {
     	   return userAdsVo;
        }
-		if(UserAds.class.cast(source).getType() == AdsType.ACCESSORIES) {
+		if(source.getType() == AdsType.ACCESSORIES) {
 			userAdsVo = new UserAccVO();
 		}
 		else if(source.getType() == AdsType.PET_CARE){
@@ -123,7 +123,8 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 		if(entity.getCreatedBy() != null) {
 			UserVO user = new UserVO();
 			user.setId(entity.getCreatedBy().getId());
-			user.setFirstName(entity.getCreatedBy().getFirstName());
+			String last = entity.getCreatedBy().getLastName() == null? "" : entity.getCreatedBy().getLastName();
+			user.setFirstName(last);
 			user.setLastName(entity.getCreatedBy().getLastName());
 			user.setAvatar(entity.getCreatedBy().getAvatar());
 			user.setPhone(entity.getCreatedBy().getMobile());
