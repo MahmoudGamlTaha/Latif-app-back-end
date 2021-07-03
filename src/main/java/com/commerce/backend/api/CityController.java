@@ -125,7 +125,19 @@ public class CityController extends PublicApiController {
 	public BasicResponse disableCountry(@RequestParam Long country, @RequestParam boolean active){
 		BasicResponse response = new BasicResponse();
 		HashMap<String, Object>  responseMap = new HashMap<String, Object>();
-		
+		Integer retValue = this.countryRepository.activateCountry(country, active);
+		response.setMsg(MessageType.Data.getMessage());
+		response.setSuccess(true);
+		response.setResponse(responseMap);
+		return response;
+	}
+	
+	@PostMapping(value = "city/disable")
+	@ResponseBody
+	public BasicResponse disableCity(@RequestParam Long city, @RequestParam boolean active){
+		BasicResponse response = new BasicResponse();
+		HashMap<String, Object>  responseMap = new HashMap<String, Object>();
+		Integer retValue = this.cityReposioty.activateCity(city, active);
 		response.setMsg(MessageType.Data.getMessage());
 		response.setSuccess(true);
 		response.setResponse(responseMap);

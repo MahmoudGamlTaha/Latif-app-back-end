@@ -14,8 +14,11 @@ public interface CityRepository extends JpaRepository<Cites, Long> {
 	@Query(value = "SELECT c FROM Cites c")   
     public List<Cites> findByActive(boolean active);
     
-	@Query(value = "SELECT c FROM Cites c WHERE c.country = ?1")
+	@Query(value = "SELECT c FROM Cites c WHERE c.country = ?1 WHERE c.active = true")
 	public List<Cites> findByCounty(Country id);
+	
+	@Query(value = "UPDATE Cites C SET C.active = ?2 WHERE C.id = ?1 ")
+	Integer activateCity(Long id, boolean active);
 	
 	public List<Cites> findAll();
   
