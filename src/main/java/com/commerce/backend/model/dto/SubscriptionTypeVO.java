@@ -17,6 +17,8 @@ public class SubscriptionTypeVO {
 
     private Integer numberUser;
 
+    private String descriptionAr;
+    
     private String description;
 
     private Float price;

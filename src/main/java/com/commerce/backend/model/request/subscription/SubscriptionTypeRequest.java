@@ -17,6 +17,8 @@ public class SubscriptionTypeRequest {
     private Integer periodInDays;
 
     private String description;
-
+    
+    private String descriptionAr;
+    
     private Float price;
 }

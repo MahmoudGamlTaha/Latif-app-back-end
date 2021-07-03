@@ -9,6 +9,11 @@ import lombok.Setter;
 @Setter
 public class BasicResponse {
   private String msg;
+  private String message;
   private boolean success;
+  public void setMsg(String msg) {
+	  this.message = msg;
+	  this.msg = msg;
+  }
   private HashMap<String, Object> response;
 }
