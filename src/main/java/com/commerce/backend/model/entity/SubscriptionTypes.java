@@ -37,9 +37,12 @@ public class SubscriptionTypes {
     @Column(name = "number_user")
     private Integer numberUser;
 
-    @Column(name = "description", length = 250)
-    private String description;
-
+    @Column(name = "description_en", length = 250)
+    private String descriptionEn;
+    
+    @Column(name = "description_ar", length = 250)
+    private String descriptionAr;
+    
     @Column(name = "period_unit")
     @Enumerated(EnumType.STRING)
     private PeriodUnit periodUnit;

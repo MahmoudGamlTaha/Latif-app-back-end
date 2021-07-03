@@ -14,7 +14,8 @@ public class SubscriptionConverter implements Function<SubscriptionTypes, Subscr
         SubscriptionTypeVO vo = new SubscriptionTypeVO();
         vo.setId(subscriptionTypes.getId());
         vo.setName(subscriptionTypes.getName());
-        vo.setDescription(subscriptionTypes.getDescription());
+        vo.setDescription(subscriptionTypes.getDescriptionEn());
+        vo.setDescriptionAr(subscriptionTypes.getDescriptionAr());
         vo.setPrice(subscriptionTypes.getPrice());
         vo.setAdsNumber(subscriptionTypes.getAdsNumber());
         vo.setPeriodInDays(subscriptionTypes.getPeriodInDays());
@@ -25,7 +26,8 @@ public class SubscriptionConverter implements Function<SubscriptionTypes, Subscr
     {
         SubscriptionTypes subscriptionTypes = new SubscriptionTypes();
         subscriptionTypes.setName(String.valueOf(request.getName()));
-        subscriptionTypes.setDescription(String.valueOf(request.getDescription()));
+        subscriptionTypes.setDescriptionEn(String.valueOf(request.getDescription()));
+        subscriptionTypes.setDescriptionAr(String.valueOf(request.getDescriptionAr()));
         subscriptionTypes.setPrice(Float.parseFloat(String.valueOf(request.getPrice())));
         subscriptionTypes.setAdsNumber(request.getAdsNumber());
         subscriptionTypes.setPeriodInDays(request.getPeriodInDays());
@@ -38,7 +40,10 @@ public class SubscriptionConverter implements Function<SubscriptionTypes, Subscr
             entity.setName(String.valueOf(request.getName()));
         }
         if(request.getDescription() != null) {
-            entity.setDescription(String.valueOf(request.getDescription()));
+            entity.setDescriptionEn(String.valueOf(request.getDescription()));
+        }
+        if(request.getDescriptionAr() != null) {
+        	entity.setDescriptionAr(request.getDescriptionAr());
         }
         if(request.getPrice() != null) {
             entity.setPrice(Float.parseFloat(String.valueOf(request.getPrice())));
