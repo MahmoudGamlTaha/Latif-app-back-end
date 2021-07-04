@@ -10,7 +10,7 @@
   {"name": "breed", "type": "string","label": "Breed", "label_ar":"التربية", "required": true,"requiredcond":"selling_type==\"Selling\""},
   {"name": "stock", "type": "Integer","label": "Stock","label_ar":"الكمية", "required": true,"requiredcond":"selling_type==\"Selling\""},
   {"name": "weaned", "type": "boolean","label": "Weaned","label_ar":"مفطوم", "required": true,"show":"category==8 || category == 3","requiredcond":"selling_type==\"Selling\""},
-  {"name": "neutering", "type": "boolean","label": "Neutering","label_ar":"مخصي", "required": true,"show":"category==8 || category == 3","requiredcond":"selling_type==\"Selling\""},
+  {"name": "neutering", "type": "boolean","label": "Neutering","label_ar":"مخصي", "required": true,"show":[{"key" : "category", "value":["3","8"]}],"requiredcond":"selling_type==\"Selling\""},
   {"name": "vaccinationCertificate", "type": "boolean","label": "Vaccination Certificate","label_ar":"التطعيم", "required": true,"requiredcond":"selling_type==\"Selling\""},
   {"name": "training", "type": "select","label": "Training","label_ar":"التدريب", "required": true, "options":[{"label":"Litter box", "code":"LITTER_BOX"}, {"label":"Guarding", "code":"GUARDING"}], "multi":true,"requiredcond":"selling_type==\"Selling\""},
   {"name": "passport", "type": "boolean","label": "Passport","label_ar":"لديه باسبور", "required": true,"requiredcond":"selling_type==\"Selling\""},
