@@ -8,7 +8,9 @@
   {"name": "price", "type": "money","label": "Price", "label_ar":"السعر", "required": true,"requiredcond":""},
   {"name": "images", "type": "files","label": "Image", "label_ar":"الصور", "required": true,"requiredcond":""},
   {"name": "longitude", "type": "map","label": "Longitude", "required": true,"requiredcond":""},
-  {"name": "latitude", "type": "map","label": "Latitude", "required": true,"requiredcond":""}
+  {"name": "latitude", "type": "map","label": "Latitude", "required": true,"requiredcond":""},
+  {"name": "driver_method", "type": "select","label": "Drive Method","show":"category == 10", "label_ar": "طريقة التوصيل", "required": true, "options":[{"label" : "Car", "code":"Car"}, {"label" : "MotoCycle", "code":"MOTO_CYCLE"}], "multi":false,"requiredcond":""},
+  
 ],
 "url": "/api/public/ads/create?type=SERVICE"
 }
