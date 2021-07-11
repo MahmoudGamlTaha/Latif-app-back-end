@@ -24,10 +24,15 @@ import org.locationtech.jts.io.WKTReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
+import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -168,8 +173,12 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         String userId =  String.valueOf(getHashMapKeyWithCheck(hashedData,"created_by", 0));
         userId = userId.equals("0")? "1" : userId;
         user.setId(Long.parseLong(userId));*/
-        
-        entity.setCreatedBy(userService.getCurrentUser());
+        User user = userService.getCurrentUser();
+        if(user == null) {
+        	OAuth2Error err = new OAuth2Error(OAuth2ErrorCodes.ACCESS_DENIED);
+			throw new OAuth2AuthenticationException(err, "unAuthorized Action");	 
+        }
+        entity.setCreatedBy(user);
 
         if(request.getType() == AdsType.PETS || request.getType() == AdsType.Dogs)
         {
@@ -184,13 +193,13 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
             ((UserPetAds)entity).setWeaned(Boolean.parseBoolean(String.valueOf(getHashMapKeyWithCheck(hashedData,"weaned", 1))));
             ((UserPetAds)entity).setFood(String.valueOf(getHashMapKeyWithCheck(hashedData,"food", -1)));
             ((UserPetAds)entity).setDiseasesDisabilities(hashedData.get("diseasesdisabilities").toString().equalsIgnoreCase(String.valueOf(true)));
-            ((UserPetAds)entity).setDiseasesDisabilitiesDesc((String) hashedData.get("diseasesdisabilitiesdesc"));
-            ((UserPetAds)entity).setNeutering(hashedData.get("neutering").toString().equalsIgnoreCase(String.valueOf(true)));
+            ((UserPetAds)entity).setDiseasesDisabilitiesDesc(String.valueOf(getHashMapKeyWithCheck(hashedData,"diseasesdisabilitiesdesc", -1)));
+            ((UserPetAds)entity).setNeutering(String.valueOf(getHashMapKeyWithCheck(hashedData,"neutering", 1)).equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setTraining(String.valueOf(hashedData.get("training")));
-            ((UserPetAds)entity).setPlayWithKids(hashedData.get("playwithkids").toString().equalsIgnoreCase(String.valueOf(true)));
-            ((UserPetAds)entity).setPassport(hashedData.get("passport").toString().equalsIgnoreCase(String.valueOf(true)));
-            ((UserPetAds)entity).setVaccinationCertifcate(hashedData.get("vaccinationcertificate").toString().equalsIgnoreCase(String.valueOf(true)));
-            ((UserPetAds)entity).setSelling_type(String.valueOf(hashedData.get("selling_type")));
+            ((UserPetAds)entity).setPlayWithKids(String.valueOf(getHashMapKeyWithCheck(hashedData,"playwithkids", 1)).equalsIgnoreCase(String.valueOf(true)));
+            ((UserPetAds)entity).setPassport(String.valueOf(getHashMapKeyWithCheck(hashedData,"passport", 1)).equalsIgnoreCase(String.valueOf(true)));
+            ((UserPetAds)entity).setVaccinationCertifcate(String.valueOf(getHashMapKeyWithCheck(hashedData,"vaccinationcertificate",1)).equalsIgnoreCase(String.valueOf(true)));
+            ((UserPetAds)entity).setSelling_type(String.valueOf(getHashMapKeyWithCheck(hashedData,"selling_type", -1)));
             ((UserPetAds)entity).setCategory(category);
         }
        

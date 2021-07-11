@@ -61,9 +61,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
+                    .logout()
+                    .logoutUrl("/account/logout")
+                    .and()
                     .addFilter(new JwtAuthenticationFilter(authenticationManager(), this.verificationTokenRepository))
                     .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
                     .authorizeRequests()
+                    
                     .antMatchers(HttpMethod.valueOf(m.getHttpMethod()), m.getHttpPath())
                     .hasAuthority(m.getName());
         }

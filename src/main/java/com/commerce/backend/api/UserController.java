@@ -73,11 +73,20 @@ public class UserController extends ApiController {
     @PostMapping(value = "/activate-user")
     public ResponseEntity<BasicResponse> activateUser(Long user_id, boolean active){
     	Object sucess = this.userService.activateUser(user_id, active);
-     	MessageType message = sucess == null?MessageType.NotAuthorized:MessageType.Success;
+     	MessageType message = sucess == null ? MessageType.NotAuthorized:MessageType.Success;
         boolean success = sucess == null? false : true;
         HashMap<String, Object> returnValue = new HashMap<String, Object>();
         returnValue.put("updated", sucess );
     	BasicResponse response = resHelper.res(returnValue, success, message.getMessage(), null);
     	return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    
+    @PostMapping(value = "/account/logout")
+    public ResponseEntity<BasicResponse> logout(Long user){
+    	 boolean check = this.userService.logout(user);
+    	 BasicResponse response  = resHelper.res(check, true, MessageType.Data.getMessage(), null);
+    	 return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    
+    
 }

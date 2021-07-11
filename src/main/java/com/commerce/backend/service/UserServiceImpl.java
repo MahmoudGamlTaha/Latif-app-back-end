@@ -407,4 +407,10 @@ public class UserServiceImpl implements UserService {
 	        }
 	        return resHelper.res(null, false, MessageType.Fail.getMessage(), pageable);
 	    }
+
+	@Override
+	public boolean logout(Long id) {
+	
+		return false;
+	}
 }

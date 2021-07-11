@@ -47,6 +47,9 @@ public class UserChat {
 	@Column(name = "device_model")
 	private String deviceModel;
 	
+	@Column(name = "read")
+	private boolean readed;
+	
 	@Column(name = "created_at")
 	private Date createAt;
 	

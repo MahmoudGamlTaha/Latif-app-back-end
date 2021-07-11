@@ -146,11 +146,11 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			extraInfo.add(new KeyResponse("diseasesOrDisabilitiesDesc",FieldsNames.diseasesOrDisabilitiesDesc, FieldsNames.diseasesOrDisabilitiesDesc_ar, checkValue(((UserPetAds)entity).getDiseasesDisabilitiesDesc(), SystemConstant.STRING)));
 			extraInfo.add(new KeyResponse("Neutering",FieldsNames.Neutering, FieldsNames.Neutering_ar, checkValue(((UserPetAds)entity).getNeutering(), SystemConstant.BOOLEAN)));
 			extraInfo.add(new KeyResponse("training",FieldsNames.training, FieldsNames.training_ar, ((UserPetAds)entity).getTraining()));
-			extraInfo.add(new KeyResponse("PlayWithKids",FieldsNames.PlayWithKids, FieldsNames.PlayWithKids_ar, checkValue(((UserPetAds)entity).getPlayWithKids(), SystemConstant.BOOLEAN)));
-			extraInfo.add(new KeyResponse("Passport",FieldsNames.Passport, FieldsNames.Passport_ar, checkValue(((UserPetAds)entity).getPassport(), SystemConstant.BOOLEAN)));
-			extraInfo.add(new KeyResponse("VaccinationCertificate",FieldsNames.VaccinationCertificate, FieldsNames.VaccinationCertificate_ar, checkValue(((UserPetAds)entity).getVaccinationCertifcate(), SystemConstant.BOOLEAN)));
+			extraInfo.add(new KeyResponse("playWithKids",FieldsNames.PlayWithKids, FieldsNames.PlayWithKids_ar, checkValue(((UserPetAds)entity).getPlayWithKids(), SystemConstant.BOOLEAN)));
+			extraInfo.add(new KeyResponse("passport",FieldsNames.Passport, FieldsNames.Passport_ar, checkValue(((UserPetAds)entity).getPassport(), SystemConstant.BOOLEAN)));
+			extraInfo.add(new KeyResponse("vaccinationCertificate",FieldsNames.VaccinationCertificate, FieldsNames.VaccinationCertificate_ar, checkValue(((UserPetAds)entity).getVaccinationCertifcate(), SystemConstant.BOOLEAN)));
 			extraInfo.add(new KeyResponse("weaned",FieldsNames.weaned, FieldsNames.weaned_ar, checkValue(((UserPetAds)entity).getWeaned(), SystemConstant.BOOLEAN)));
-			extraInfo.add(new KeyResponse("Stock",FieldsNames.Stock, FieldsNames.Stock_ar, ((UserPetAds)entity).getStock()));
+			extraInfo.add(new KeyResponse("stock",FieldsNames.Stock, FieldsNames.Stock_ar, ((UserPetAds)entity).getStock()));
 			extraInfo.add(new KeyResponse("selling_type",FieldsNames.selling_type, FieldsNames.selling_type, ((UserPetAds)entity).getSelling_type()));
 
 			
@@ -191,7 +191,7 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
             	ex.printStackTrace();
 			}
 		}else if(entity.getType() == AdsType.ACCESSORIES) {
-			extraInfo.add(new KeyResponse("AllowAtHome",FieldsNames.AllowAtHome, FieldsNames.AllowAtHome_ar, ((UserAccAds)entity).getAllowServiceAtHome()));
+			extraInfo.add(new KeyResponse("allowAtHome",FieldsNames.AllowAtHome, FieldsNames.AllowAtHome_ar, ((UserAccAds)entity).getAllowServiceAtHome()));
 			extraInfo.add(new KeyResponse("used",FieldsNames.used, FieldsNames.used_ar, ((UserAccAds)entity).getUsed()));
 			extraInfo.add(new KeyResponse("Stock",FieldsNames.Stock, FieldsNames.Stock_ar, ((UserAccAds)entity).getStock()));
 			ItemCategory category = (ItemCategory)((UserAccAds)entity).getCategory();
