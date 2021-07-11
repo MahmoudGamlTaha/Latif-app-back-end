@@ -46,7 +46,9 @@ public interface UserService {
     User getCurrentUser();
 
     boolean isAuthorized(User user);
-
+    
+    boolean logout(Long id);
+    
     BasicResponse getUsersList(Long roleId);
    
     BasicResponse getUsersList(Pageable pageable);

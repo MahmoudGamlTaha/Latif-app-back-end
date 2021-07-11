@@ -1,6 +1,6 @@
 {"form":[
-  {"name": "category", "type": "url_option", "label": "Category", "url":"/api/public/cat-by-adType/type=1" , "required": true,  "requiredcond":""},
-  {"name": "type", "type": "url_option_val", "value":"category", "label": "type", "url":"/api/public/category/get-categories-by-parent?id=" , "required": true,  "requiredcond":""}, 
+  {"name": "category", "type": "url_option", "label": "Category","label_ar":"الصنف", "url":"/api/public/cat-by-adType/type=1" , "required": true,  "requiredcond":""},
+  {"name": "type", "type": "url_option_val", "value":"category", "label": "type","label_ar":"النوع", "url":"/api/public/category/get-categories-by-parent?id=" , "required": true,  "requiredcond":""}, 
   {"name": "selling_type", "type": "radiobutton","label": "Type", "options":[{"label":"Selling", "code":"Selling"}, {"label":"Adopt", "code":"Adopt"}, {"label":"Lost", "code":"Lost"}, {"label":"Mating", "code":"Mating"}], "required": true,"requiredcond":""},
   {"name": "name","type": "string", "label": "Name", "label_ar": "الاسم", "required": true,"requiredcond":""},
   {"name": "description", "type": "string","label": "Description", "label_ar":"الوصف", "required": true,"requiredcond":""},
@@ -13,12 +13,12 @@
   {"name": "neutering", "type": "boolean","label": "Neutering","label_ar":"مخصي", "required": true,"show":[{"key" : "category", "value":["3","8"]}],"requiredcond":"selling_type==\"Selling\""},
   {"name": "vaccinationCertificate", "type": "boolean","label": "Vaccination Certificate","label_ar":"التطعيم", "required": true,"requiredcond":"selling_type==\"Selling\""},
   {"name": "training", "type": "select","label": "Training","label_ar":"التدريب", "required": true, "options":[{"label":"Litter box", "code":"LITTER_BOX"}, {"label":"Guarding", "code":"GUARDING"}], "multi":true,"requiredcond":"selling_type==\"Selling\""},
-  {"name": "passport", "type": "boolean","label": "Passport","label_ar":"لديه باسبور", "required": true,"requiredcond":"selling_type==\"Selling\""},
+  {"name": "passport", "type": "boolean","label": "Passport","label_ar":"لديه باسبور", "required": false,"requiredcond":"selling_type==\"Selling\""},
   {"name": "playWithKids", "type": "boolean","label": "Play with kids","label_ar":"يلعب مع الاطفال", "required": true,"requiredcond":"selling_type==\"Selling\""},
   {"name": "diseasesDisabilities", "type": "boolean","label": "Diseases or Disabilities","label_ar":"لدية اعاقة", "required": true,"requiredcond":"selling_type==\"Selling\""},
   {"name": "diseasesDisabilitiesDesc", "type": "string","label": "Diseases or Disabilities Desc", "required": false,"requiredcond":"selling_type==\"Selling\""},
   {"name": "food", "type": "dropdown","label": "Food","label_ar":"نوع الاكل", "required": true, "options":[{"label" : "Dry", "code":"DRY"}, {"label" : "Wet", "code":"WET"}, {"label" : "Home cooked", "code":"HOME_COOKED"}], "multi":true,"requiredcond":"selling_type==\"Selling\""},
-  {"name": "images", "type": "files","label": "Pet Images", "label_ar":"الصور", "required": true,"requiredcond":""},
+  {"name": "images", "type": "files","label": "Pet Images", "label_ar":"الصور", "required": false,"requiredcond":""},
   {"name": "longitude", "type": "map","label": "Longitude", "required": true,"requiredcond":""},
   {"name": "latitude", "type": "map","label": "Latitude", "required": true,"requiredcond":""}
 ],

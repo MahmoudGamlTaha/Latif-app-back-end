@@ -39,8 +39,10 @@ public class PublicUserController extends PublicApiController {
         User user = userService.register(registerUserRequest);
         tokenService.createEmailConfirmToken(user);
         BasicResponse response = new BasicResponse();
+        
         HashMap<String, Object> mapResponse = new HashMap<String, Object>();
-        mapResponse.put(MessageType.Data.getMessage(), user);
+        UserResponse userVO = userVOConverter.apply(user);
+        mapResponse.put(MessageType.Data.getMessage(), userVO);
         response.setSuccess(true);
         response.setResponse(mapResponse);
         return new ResponseEntity<BasicResponse>(response, HttpStatus.OK); 
