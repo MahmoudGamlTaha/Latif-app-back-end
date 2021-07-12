@@ -136,9 +136,9 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			extraInfo.add(new KeyResponse("weaned",FieldsNames.weaned, FieldsNames.weaned_ar, checkValue(((UserPetAds)entity).getWeaned(), SystemConstant.BOOLEAN)));
 			extraInfo.add(new KeyResponse("stock",FieldsNames.Stock, FieldsNames.Stock_ar, ((UserPetAds)entity).getStock()));
 			extraInfo.add(new KeyResponse("selling_type",FieldsNames.selling_type, FieldsNames.selling_type_ar, ((UserPetAds)entity).getSelling_type()));
-			
-			extraInfo.add(new KeyResponse("sub_cat",FieldsNames.catType, FieldsNames.catType_ar, ((UserPetAds)entity).getSubCategory()));
-
+		    if(((UserPetAds)entity).getSubCategory() != null) {
+			extraInfo.add(new KeyResponse("sub_cat",FieldsNames.catType, FieldsNames.catType_ar, ((UserPetAds)entity).getSubCategory().getNameAr()));
+		    }
 			
 			PetCategory category = (PetCategory)(entity).getCategory();
 			String categoryName = category == null ?null:category.getName();

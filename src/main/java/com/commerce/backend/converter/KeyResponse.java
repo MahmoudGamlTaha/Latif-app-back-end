@@ -11,7 +11,6 @@ public class KeyResponse {
     private String name;
     private String name_ar;
     private Object value;
-    private Object value_ar;
 
     public KeyResponse(String fieldNameKey,String name, String name_ar, Object value){
     	this.code  =fieldNameKey;
