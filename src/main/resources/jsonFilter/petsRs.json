@@ -1,6 +1,7 @@
 {"form":[
 {"name": "city", "type": "url_option","label": "City", "label_ar": "مكان الاعلان","url":"/api/public/cites", "required": true},
   {"name": "category", "type": "url_option", "label": "Category", "url":"/api/public/cat-by-adType/type=1" , "required": true},
+  {"name": "sub_cat", "type": "url_option_val", "value":"category", "label": "type","label_ar":"النوع", "url":"/api/public/category/get-categories-by-parent?id=" , "required": true,  "requiredcond":""},
   {"name": "name","type": "string", "label": "Name", "label_ar": "الاسم", "required": false},
   {"name": "price", "type": "money","label": "Price", "required": false},
   {"name": "breed", "type": "string","label": "Breed", "required": false},
