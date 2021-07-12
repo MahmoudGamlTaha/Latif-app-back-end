@@ -70,4 +70,6 @@ public class FieldsNames {
     public static final String selling_type_ar = "نوع الإعلان";
     public static final String driver_method = "Driver Method";
     public static final String driver_method_ar = "طريقة التوصيل";
+    public static final String catType = "category name";
+    public static final String catType_ar = "اسم الفئة";
 }

@@ -121,10 +121,11 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         entity.setLongitude(Double.parseDouble(String.valueOf(getHashMapKeyWithCheck(hashedData,"longitude", 0))));
         entity.setLatitude(Double.parseDouble(String.valueOf(getHashMapKeyWithCheck(hashedData,"latitude", 0))));
         entity.setCreatedAt((new Date()));
-        Cites city= this.cityRepository.findById(Long.parseLong(String.valueOf(getHashMapKeyWithCheck(hashedData,"city", 0)))).orElse(null);
+       
+        Cites city = this.cityRepository.findById(Long.parseLong(String.valueOf(getHashMapKeyWithCheck(hashedData,"city", 0)))).orElse(null);
         
         if(city != null) 
-        entity.setCity(city.getCityAr());
+          entity.setCity(city.getCityAr());
         
         Coordinate coordinate = new Coordinate();
         
@@ -180,14 +181,18 @@ public class UserAdsConverter implements Function<UserAds, UserAdsVO> {
         }
         entity.setCreatedBy(user);
 
-        if(request.getType() == AdsType.PETS || request.getType() == AdsType.Dogs)
+        if(request.getType() == AdsType.PETS )
         {
             PetCategory category = new PetCategory();
             category.setId(Long.parseLong(String.valueOf(getHashMapKeyWithCheck(hashedData,"category", 0))));
-     
-            if(request.getType() == AdsType.Dogs) {
-            ((UserPetAds)entity).setBarkingProblem(hashedData.get("barkingproblem").toString().equalsIgnoreCase(String.valueOf(true)));
+            PetCategory otherCategory = new PetCategory();
+             Long subCategory = Long.parseLong(String.valueOf(getHashMapKeyWithCheck(hashedData,"sub_cat", 0)));
+            if(subCategory != 0) {
+            	otherCategory.setId(subCategory);
+            	((UserPetAds)entity).setSubCategory(otherCategory);
             }
+            
+            ((UserPetAds)entity).setBarkingProblem(String.valueOf(getHashMapKeyWithCheck(hashedData,"barkingproblem", 1)).equalsIgnoreCase(String.valueOf(true)));
             ((UserPetAds)entity).setBreed(String.valueOf(getHashMapKeyWithCheck(hashedData, "breed", -1)));
             ((UserPetAds)entity).setStock(Integer.parseInt(String.valueOf(getHashMapKeyWithCheck(hashedData,"stock", 0))));
             ((UserPetAds)entity).setWeaned(Boolean.parseBoolean(String.valueOf(getHashMapKeyWithCheck(hashedData,"weaned", 1))));

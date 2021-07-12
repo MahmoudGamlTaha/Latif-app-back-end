@@ -13,6 +13,7 @@ import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Where;
 import org.locationtech.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
@@ -102,7 +103,13 @@ public class UserAds {
 	 @NotFound( action = NotFoundAction.IGNORE)
 	 @JoinColumn(name ="category_id")
 	 ItemObjectCategory category;
-
+	 
+	 @ManyToOne
+	 @NotFound( action = NotFoundAction.IGNORE)
+	 @JoinColumn(name ="sub_category")
+	 @Where(clause = "parent != null")
+	 ItemObjectCategory subCategory;
+	 
 	@JsonManagedReference
 	 @OneToMany(mappedBy="userAdsImage", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
 	@NotFound(action = NotFoundAction.IGNORE)

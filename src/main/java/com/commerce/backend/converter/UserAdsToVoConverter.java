@@ -72,22 +72,6 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 	@Transactional
 	public UserAdsVO convertToVo(UserAds entity){
 		UserAdsVO userAdsVo = new UserAdsVO();
-
-		/*userAdsVo.setId(new KeyResponse(FieldsNames.id, FieldsNames.id_ar, entity.getId()));
-		userAdsVo.setName(new KeyResponse(FieldsNames.name, FieldsNames.name_ar, entity.getName()));
-		userAdsVo.setCode(new KeyResponse(FieldsNames.code, FieldsNames.code_ar, entity.getCode()));
-		userAdsVo.setCity(new KeyResponse(FieldsNames.city, FieldsNames.code_ar, entity.getCity()));
-		userAdsVo.setDescription(new KeyResponse(FieldsNames.desc, FieldsNames.desc_ar, entity.getDescription()));
-		userAdsVo.setShort_description(new KeyResponse(FieldsNames.short_desc, FieldsNames.short_desc_ar, entity.getShortDescription()));
-	//	userAdsVo.setActive(new KeyResponse(FieldsNames.active, FieldsNames.active_ar, entity.isActive()));
-
-		userAdsVo.setType(new KeyResponse(FieldsNames.type, FieldsNames.type_ar, entity.getType()));
-		userAdsVo.setPrice(new KeyResponse(FieldsNames.price, FieldsNames.price_ar, entity.getPrice()));
-		userAdsVo.setLongitude(new KeyResponse(FieldsNames.longitude, FieldsNames.longitude_ar, entity.getLongitude()));
-		userAdsVo.setLatitude(new KeyResponse(FieldsNames.longitude, FieldsNames.latitude_ar, entity.getLatitude()));
-		userAdsVo.setCreated_at(new KeyResponse(FieldsNames.createdAt, FieldsNames.createdAt_ar, entity.getLatitude()));
-		userAdsVo.setUpdated_at(new KeyResponse(FieldsNames.updatedAt, FieldsNames.updatedAt_ar, entity.getUpdatedAt()));
-		userAdsVo.setExternal_link(new KeyResponse(FieldsNames.externalLink, FieldsNames.externalLink_ar, entity.getExternalLink()));*/
 		
 		userAdsVo.setId(entity.getId());
 		userAdsVo.setName(entity.getName());
@@ -151,8 +135,10 @@ public class UserAdsToVoConverter implements Function< UserAds, UserAdsVO> {
 			extraInfo.add(new KeyResponse("vaccinationCertificate",FieldsNames.VaccinationCertificate, FieldsNames.VaccinationCertificate_ar, checkValue(((UserPetAds)entity).getVaccinationCertifcate(), SystemConstant.BOOLEAN)));
 			extraInfo.add(new KeyResponse("weaned",FieldsNames.weaned, FieldsNames.weaned_ar, checkValue(((UserPetAds)entity).getWeaned(), SystemConstant.BOOLEAN)));
 			extraInfo.add(new KeyResponse("stock",FieldsNames.Stock, FieldsNames.Stock_ar, ((UserPetAds)entity).getStock()));
-			extraInfo.add(new KeyResponse("selling_type",FieldsNames.selling_type, FieldsNames.selling_type, ((UserPetAds)entity).getSelling_type()));
-
+			extraInfo.add(new KeyResponse("selling_type",FieldsNames.selling_type, FieldsNames.selling_type_ar, ((UserPetAds)entity).getSelling_type()));
+		    if(((UserPetAds)entity).getSubCategory() != null) {
+			extraInfo.add(new KeyResponse("sub_cat",FieldsNames.catType, FieldsNames.catType_ar, ((UserPetAds)entity).getSubCategory().getNameAr()));
+		    }
 			
 			PetCategory category = (PetCategory)(entity).getCategory();
 			String categoryName = category == null ?null:category.getName();

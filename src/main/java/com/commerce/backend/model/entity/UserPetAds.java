@@ -56,5 +56,4 @@ public class UserPetAds extends UserAds {
 	
 	@Column(name = "diseases_disabilities_desc")
 	private String diseasesDisabilitiesDesc;
-	
 }
